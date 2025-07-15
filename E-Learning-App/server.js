@@ -16,11 +16,26 @@ const io = new Server(server, {
     }
 });
 
+
 // Initialize Redis clients
 const pubClient = createClient();
 const subClient = createClient();
 await pubClient.connect();
 await subClient.connect();
+
+
+
+
+const users = new Map(); //(id, nickname)
+
+function handleConnection(userId) {
+    users.set(userId, "xxxxxxx");
+}
+
+function handleDisconnection(userId) {
+    users.delete(userId);
+}
+
 
 // Subscribe to the Redis channel for game updates
 await subClient.subscribe('game-moves', (message) => {
@@ -40,13 +55,19 @@ function resetGame() {
         board: Array(9).fill(null),
         xIsNext: true,
     };
+    users.clear();
 }
 
 io.on('connection', (socket) => {
+    console.log("-----------------------------------");
     console.log('New client connected:', socket.id);
-
+    console.log(users.size)
+    handleConnection(socket.id);
+    console.log(users.size);
     // Send the current game state to the newly connected client
     socket.emit('gameState', gameState);
+
+    socket.emit('nameChange', Array.from(users.entries()));
 
     // Handle player moves
     socket.on('makeMove', (index) => {
@@ -70,6 +91,7 @@ io.on('connection', (socket) => {
 
         socket.on('disconnect', () => {
             console.log('Client disconnected:', socket.id);
+            handleDisconnection(socket.id);
         });
     });
 })
@@ -90,9 +112,6 @@ function calculateWinner(board) {
     return null;
 }
 
-function isBoardFull(board) {
-    return board.every((cell) => cell !== null);
-}
 
 // Start the server
 const PORT = process.env.PORT || 3000;
