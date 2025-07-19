@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
-import Player from "./components/Player.jsx";
+import '../styles/Home.css';
+import Player from "../components/Player.jsx";
+import Header from "../components/Header.jsx";
+import {Link} from "react-router-dom";
+import {MainPageText} from "../components/MainPageText.jsx";
 
 let socket = io.connect('http://localhost:3000');
 
@@ -10,11 +14,11 @@ function fromArrayToMap(users, usersFromServerSide, setUsers) {
     setUsers(users);
 }
 
-function App() {
+function Home() {
+
 
     const [connected, setConnected] = useState(socket.connected)
-    //todo create the name and setName for socket.id here, lift the state up from Player component
-    // and do all the logic of changing name here in this component, glhf
+
 
     useEffect(() => {
         socket.on("connect", () => {
@@ -37,8 +41,12 @@ function App() {
 
 
     return ( connected === false ? <div>Loading...</div> :
-        <div>
-            <h1>Multiplayer Tic-Tac-Toe</h1>
+        <>
+            <Header/>
+            <MainPageText/>
+
+
+            <h1>eleonore learning platform</h1>
 
             <Player fromArrayToMap = {fromArrayToMap} nameFromAppComponent = {socket.id}/>
 
@@ -50,9 +58,9 @@ function App() {
             }
             >Restart Game</button>
 
-        </div>
+        </>
 
     );
 }
 
-export default App;
+export default Home;

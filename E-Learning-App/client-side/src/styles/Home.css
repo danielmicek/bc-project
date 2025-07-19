@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Qwitcher+Grypen:wght@400;700&display=swap');
+
+
+
+body{
+  margin: 0;
+}
+
+.eleonoreText{
+  margin: 0;
+  position: absolute;
+  left: 5%;
+}
+.header{
+
+  margin: 0;
+  display: flex;
+  justify-content: space-evenly;
+
+  font-family: "Qwitcher Grypen", cursive;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 2rem;
+}
+
+button{
+  font-family: inherit;
+  background-color: #ECDCBF;
+  cursor: pointer;
+  transition: border-color 0.6s, transform 0.2s ease-in-out;
+}
+
+.headerButton {
+  border-radius: 8px;
+
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+}
+.headerButton:hover {
+  border-color: #A31D1D;
+  border-width: 3px;
+  transform: scale(1.05);
+}
+
+.mainPageTextContainer{
+  display: flex;
+
+  border: solid #A31D1D;
+  background-color: #A31D1D;
+
+  position: relative;
+  top: 2vh;
+  height: 50vh;
+}
+
+.imgContainer{
+  border: 5px solid #F8F2DE;
+  border-radius: 50%;
+
+  height: 8cm;
+  width: 8cm;
+  z-index: 5;
+
+  position: relative;
+  display: flex;
+  top: 17px;
+  left: 5vw;
+
+
+  background-image: url("../../public/pc.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.mainPageText{
+  position: absolute;
+
+  width: 35vw;
+  right: 155px;
+  top: 10vh;
+
+  font-size: 2.5rem;
+  color: white;
+}
+
+.welcomeText{
+  position: absolute;
+  right: 390px;
+}
+
+.whyUsbButton{
+  position: absolute;
+
+  border-radius: 8px;
+  width: 100px;
+  height: 30px;
+  font-weight: 500;
+
+  font-size: 1rem;
+
+  right: 20px;
+  bottom: 0;
+}
+
+.whyUsbButton:hover {
+  border-color: #A31D1D;
+  border-width: 3px;
+  transform: scale(1.05);
+}
+

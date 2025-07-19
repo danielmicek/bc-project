@@ -24,7 +24,6 @@ export default function Player({fromArrayToMap, nameFromAppComponent}){
 
     return (
         <>
-            <h2>PLAYER {name}</h2>
             <form onSubmit={handleSubmit}>
                 <label>
                     <input type="text" value={name} onChange={handleChange}/>
