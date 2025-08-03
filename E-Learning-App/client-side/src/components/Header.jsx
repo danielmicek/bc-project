@@ -1,11 +1,19 @@
 import {Link} from "react-router-dom";
 import React from "react";
+import '../styles/HeaderStyle.css';
 
 
 export default function Header(){
     return (
         <div className = "header" >
-            <h1 className= "eleonoreText">eleonore</h1>
+
+            <Link to = "/" className= "eleonoreText">
+                <h1 >eleonore</h1>
+            </Link>
+
+            <Link to = "/" className="buttonLink">
+                <button className="headerButton">Home</button>
+            </Link>
             <Link to = "/course" className="buttonLink">
                 <button className="headerButton">Course</button>
             </Link>

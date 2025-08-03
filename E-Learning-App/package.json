@@ -11,8 +11,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.38.1",
     "dotenv": "^17.0.1",
     "express": "^5.1.0",
+    "framer-motion": "^12.23.11",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.3",

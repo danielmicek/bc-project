@@ -1,0 +1,43 @@
+.header{
+
+    margin-top: 8px;
+    display: flex;
+    justify-content: space-evenly;
+
+    font-family: "Qwitcher Grypen", cursive;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 2rem;
+
+    align-items: center;
+
+}
+
+.eleonoreText{
+    margin: 0;
+    position: absolute;
+    left: 3%;
+    color: white;
+    text-decoration: none;
+}
+
+button{
+    font-family: initial;
+    font-size: 1rem;
+
+    cursor: pointer;
+    transition: border-color 0.6s, transform 0.2s ease-in-out;
+}
+
+.headerButton {
+    border-radius: 8px;
+
+    padding: 0.6em 1.2em;
+    font-size: 0.5em;
+    font-weight: 500;
+}
+.headerButton:hover {
+    border-color: #A31D1D;
+    border-width: 3px;
+    transform: scale(1.05);
+}

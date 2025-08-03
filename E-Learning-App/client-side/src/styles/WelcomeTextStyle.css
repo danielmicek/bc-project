@@ -1,0 +1,84 @@
+.mainPageTextContainer{
+    display: flex;
+
+    border: solid #F7374F;
+    border-radius: 10px;
+    background-color: #F7374F;
+
+    position: relative;
+
+    margin: 0 auto; /*center horizontally*/
+    top: 2vh;
+
+    width: 98vw;
+    height: 60vh;
+
+
+}
+
+.imgContainer{
+    position: relative;
+    border: 5px solid white;
+    border-radius: 50%;
+
+    z-index: 5;
+
+    height: 25vw; /* 30% of viewport width */
+    width: 25vw;
+
+    background-image: url("/pc.jpg");
+    background-size: cover;
+    background-position: right;
+    background-repeat: no-repeat;
+}
+
+.textContainer{
+    position: absolute;
+
+    border: 5px solid white;
+
+    width: fit-content;
+    height: fit-content;
+
+    top: 10vh;
+    right: 20vw;
+}
+
+.welcomeText{
+}
+
+.mainPageText{
+
+    width: 38vw;
+
+
+    font-family: "Saira", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
+    font-size: 2rem;
+    color: white;
+}
+
+
+
+.whyUsbButton{
+    position: absolute;
+
+    border-radius: 8px;
+    width: 100px;
+    height: 30px;
+    font-weight: 500;
+
+    font-size: 1rem;
+
+    right: 20px;
+    bottom: 0;
+}
+
+.whyUsbButton:hover {
+    border-color: #A31D1D;
+    border-width: 3px;
+    transform: scale(1.05);
+}
