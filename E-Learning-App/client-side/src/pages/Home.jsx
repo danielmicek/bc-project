@@ -5,7 +5,7 @@ import '../styles/Home.css';
 import Player from "../components/Player.jsx";
 import Header from "../components/Header.jsx";
 import {Link} from "react-router-dom";
-import { ClerkProvider } from '@clerk/clerk-react'
+import { ClerkProvider, useUser } from '@clerk/clerk-react'
 import {MainPageText} from "../components/MainPageText.jsx";
 
 let socket = io.connect('http://localhost:3000');
@@ -16,18 +16,14 @@ function fromArrayToMap(users, usersFromServerSide, setUsers) {
     setUsers(users);
 }
 
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
-console.log(PUBLISHABLE_KEY);
-console.log(import.meta.env);
-if (!PUBLISHABLE_KEY) {
-    throw new Error('Missing Publishable Key')
-}
+
 
 
 function Home() {
 
 
     const [connected, setConnected] = useState(socket.connected)
+    const {isSignedIn, user, isLoaded } = useUser();
 
 
     useEffect(() => {
@@ -54,18 +50,13 @@ function Home() {
 
             <MainPageText/>
 
-
-
-
             <Player fromArrayToMap = {fromArrayToMap} nameFromAppComponent = {socket.id}/>
 
 
             <button onClick={() => {
-                setUsers(new Map());
-                console.log(users.size);
-                }
+                console.log(isSignedIn);
             }
-            >Restart Game</button>
+            } >User signed in?</button>
 
         </>
 

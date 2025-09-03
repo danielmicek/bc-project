@@ -1,6 +1,7 @@
 import {Link} from "react-router-dom";
 import React from "react";
 import '../styles/HeaderStyle.css';
+import {SignedIn, SignedOut, SignInButton, UserButton} from "@clerk/clerk-react";
 
 
 export default function Header(){
@@ -21,6 +22,13 @@ export default function Header(){
             <Link to = "/profile" className="buttonLink">
                 <button className="headerButton">Profile</button>
             </Link>
+
+            <SignedOut>
+                <SignInButton className = "headerButton" mode={"modal"}/>
+            </SignedOut>
+            <SignedIn>
+                <UserButton />
+            </SignedIn>
         </div>
         )
 

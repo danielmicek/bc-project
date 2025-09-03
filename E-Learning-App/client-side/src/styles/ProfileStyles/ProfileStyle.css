@@ -1,0 +1,255 @@
+html, body{
+    overflow-y: scroll;
+
+}
+
+.grid-container2{
+    height: auto;
+
+    gap: 5px;
+    justify-self: end;
+
+    position: absolute;
+    grid-template-columns: 30vw 30vw;
+    grid-template-rows: 50px 50px 50px 50px;
+    display: grid;
+    grid-template-areas:
+    "zero zero"
+    "first-left first-right"
+    "sec-left sec-right"
+    "last-left last-right";
+
+    justify-content: center;
+    top: 45vh;
+    right: 10vw;
+
+}
+
+.gridItem2{
+    display: flex;
+    align-items: center; /*VERTIKALNE os y*/
+    justify-content: center; /*HORIZONTALNE os x*/
+
+    color: white;
+    border: solid #F7374F;
+    border-radius: 16px;
+
+    transition: transform 0.3s ease;
+}
+
+
+.gridItem2:hover{
+    transform: scale(1.05);
+    transition: 0.3s ease;
+    background-color: #F7374F;
+}
+
+.item-a {
+    grid-area: zero;
+}
+
+.item-b {
+    grid-area: first-left;
+}
+
+.item-c {
+    grid-area: first-right;
+}
+
+.item-d {
+    grid-area: sec-left;
+}
+
+.item-e {
+    grid-area: sec-right;
+}
+
+
+.grid-container2{
+    height: auto;
+
+    gap: 5px;
+    justify-self: end;
+
+    position: absolute;
+    grid-template-columns: 30vw 30vw;
+    grid-template-rows: 50px 50px 50px 50px;
+    display: grid;
+    grid-template-areas:
+    "zero zero"
+    "first-left first-right"
+    "sec-left sec-right"
+    "last-left last-right";
+
+    justify-content: center;
+    top: 45vh;
+    right: 10vw;
+
+}
+
+.gridItem2{
+    display: flex;
+    align-items: center; /*VERTIKALNE os y*/
+    justify-content: center; /*HORIZONTALNE os x*/
+
+    color: white;
+    border: solid #F7374F;
+    border-radius: 16px;
+
+    transition: transform 0.3s ease;
+}
+
+
+.gridItem2:hover{
+    transform: scale(1.05);
+    transition: 0.3s ease;
+    background-color: #F7374F;
+}
+
+.item-a {
+    grid-area: zero;
+}
+
+.item-b {
+    grid-area: first-left;
+}
+
+.item-c {
+    grid-area: first-right;
+}
+
+.item-d {
+    grid-area: sec-left;
+}
+
+.item-e {
+    grid-area: sec-right;
+}
+
+
+.circle{
+    z-index: 10;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+
+    grid-template-areas:
+    ". ."
+    "doItNow circleBigText"
+    "signInButton circleBigText"
+    ". .";
+
+
+    border: #F7374F solid 15px;
+    border-left: none;
+    border-bottom-right-radius: 1000%;
+    border-top-right-radius: 1000%;
+
+    height: calc(100vh - 70px);
+    width: 100vh;
+    left: -60vh;
+
+    background-color: white;
+
+    transition: left 0.8s ease-in-out, background-color 0.8s ease-in-out;
+}
+
+.gridItem{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.circleBigText{
+    display: flex;
+    position: relative;
+
+    font-size: 2rem;
+    font-weight: 500;
+
+    left: 20px;
+    grid-area: circleBigText;
+}
+
+.circle:hover{
+    left: 0;
+}
+
+.doItNow{
+    font-size: 2rem;
+    font-weight: 1000;
+
+    grid-area: doItNow;
+
+}
+.signInButton{
+    align-items: center;
+    appearance: none;
+    background-color: #FCFCFD;
+    border-radius: 4px;
+    border-width: 0;
+    box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,rgba(45, 35, 66, 0.3) 0 7px 13px -3px,#D6D6E7 0 -3px 0 inset;
+    box-sizing: border-box;
+    color: #36395A;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: "JetBrains Mono",monospace;
+    grid-area: signInButton;;
+    justify-content: center;
+    line-height: 1;
+    list-style: none;
+    overflow: hidden;
+    padding-left: 16px;
+    padding-right: 16px;
+    height: 45px;
+    width: 100px;
+    left: 120px;
+    position: relative;
+    text-align: left;
+    text-decoration: none;
+    transition: box-shadow .15s,transform .15s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: nowrap;
+    will-change: box-shadow,transform;
+    font-size: 18px;
+}
+
+.signInButton:focus {
+    box-shadow: #D6D6E7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+}
+
+.signInButton:hover {
+    box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+    transform: translateY(-2px);
+}
+
+.signInButton:active {
+    box-shadow: #D6D6E7 0 3px 7px inset;
+    transform: translateY(2px);
+}
+
+
+
+.profileImg{
+    top: 28vh;
+    border-radius: 50%;
+    height: 40vh;
+    width: 40vh;
+}
+.loggedScreen{
+    color: white;
+    position: relative;
+    left: 500px;
+}
+
+/*INTERACTIVE DESIGN*/
+@media (max-width: 900px){
+    .circle{
+        width: 80vh;
+        left: -45vh;
+    }
+}
