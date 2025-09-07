@@ -2,12 +2,15 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import http from 'http';
+import cors from "cors";
 import { Server } from 'socket.io';
 import { createClient } from 'redis';
+import pool from "./database.js";
 
 dotenv.config(); // Load environment variables from .env file
-
+const PORT = process.env.PORT || 3000;
 const app = express();
+app.use(express.json());
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
@@ -15,6 +18,65 @@ const io = new Server(server, {
         methods: ["GET", "POST"],
     }
 });
+
+//this enables React frontend (running on port 5173) to make API calls to your Express backend (port 3000).
+app.use(cors({
+    origin: "http://localhost:5173"
+}));
+
+
+// ------------------GET REQUEST---------------------------------------------------------------
+app.get("/getuser/:user_id", (request, response)=> {
+    const user_id = request.params.user_id;
+
+    const getQuery = "SELECT user_id FROM users WHERE user_id = $1";
+    pool.query(getQuery, [user_id])
+        .then((result) => {
+            console.log(result);
+            if (result.rows.length === 0) {
+                response.status(404);
+                response.send("user_id: " + user_id + " not found.  Status code: " + response.statusCode);
+            }
+            else{
+                response.status(200);
+                response.send("user_id: " + user_id + " found.  Status code: " + response.statusCode);
+            }
+
+        })
+        .catch((error) => {
+            response.status(500);
+            console.log(error);
+        })
+});
+
+
+// ------------------POST REQUEST---------------------------------------------------------------
+app.post("/adduser", async (request, response) => {
+    const user_id = request.body["user_id"];
+    const username = request.body["username"];
+    const email = request.body["email"];
+    const first_name = request.body["first_name"];
+    const last_name = request.body["last_name"];
+
+    const insertQuery = "INSERT INTO users (user_id, username, email, first_name, last_name) VALUES ($1, $2, $3, $4, $5)";
+    pool.query(insertQuery, [user_id, username, email, first_name, last_name])
+        .then((result) => {
+        console.log(result);
+        response.status(200);
+        response.send("User added: " + username + "  Status code: " + response.statusCode);
+    })
+        .catch((error) => {
+            response.status(500);
+            console.log(error);
+        })
+})
+
+server.listen(PORT, () => {
+    console.log("Server listening on port " + PORT);
+});
+
+
+
 
 
 // Initialize Redis clients
@@ -113,10 +175,5 @@ function calculateWinner(board) {
 }
 
 
-// Start the server
-const PORT = process.env.PORT || 3000;
-server.listen(process.env.PORT, () => {
-    console.log(`Server running on port ${process.env.PORT}`);
-});
 
 
