@@ -2,18 +2,18 @@ import {SignedIn, SignedOut, SignInButton, UserButton, useUser} from "@clerk/cle
 import TypingAnimatedText from "../components/TypingAnimatedText.jsx";
 import '../styles/ProfileStyles/ProfileStyle.css';
 import {getRequest, postRequest} from "../fetchMethods.jsx";
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import randn from "randn"
 
 
 async function getUser(userId, user){ //async funkcia vzdy vracia promise
-    var responseObject = await getRequest(userId);
+    const responseObject = await getRequest(userId);
     if(responseObject.status === 200){
         console.log("User already exists in the database. GET status code: " + responseObject.status);
     }
     else{
         console.log("User does not exist in the database, GET status code: " + responseObject.status + ". Creating POST request... " );
-        postRequest(user.id, user.emailAddresses[0].emailAddress, user.firstName, user.lastName);
+        await postRequest(user.id, user.emailAddresses[0].emailAddress, user.firstName, user.lastName);
 
     }
 }
