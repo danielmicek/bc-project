@@ -12,6 +12,10 @@
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.38.1",
+    "@clerk/express": "^1.7.30",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/material": "^7.3.2",
     "dotenv": "^17.0.1",
     "express": "^5.1.0",
     "framer-motion": "^12.23.11",

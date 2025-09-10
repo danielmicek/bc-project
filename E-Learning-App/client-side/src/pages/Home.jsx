@@ -21,22 +21,7 @@ function fromArrayToMap(users, usersFromServerSide, setUsers) {
 
 function Home() {
 
-
-    const [connected, setConnected] = useState(socket.connected)
     const {isSignedIn, user, isLoaded } = useUser();
-
-
-    useEffect(() => {
-        socket.on("connect", () => {
-            console.log("Connected to server");
-            setConnected(true)
-        });
-
-        socket.on('nameChange', (usersFromServerSide) => {
-            fromArrayToMap(users, usersFromServerSide, setUsers)
-        })
-    }, [])
-
 
 
 
@@ -45,7 +30,7 @@ function Home() {
 
 
 
-    return ( connected === false ? <div>Loading...</div> :
+    return (
         <>
 
             <MainPageText/>

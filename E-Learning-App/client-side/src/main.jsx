@@ -19,10 +19,12 @@ if (!PUBLISHABLE_KEY) {
 const router = createBrowserRouter([
     {
         element: (
-            <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+            <>
                 <Header />
                 <Outlet />
-            </ClerkProvider>
+            </>
+
+
         ),
         children: [
             {
@@ -56,8 +58,9 @@ const router = createBrowserRouter([
 
 
 createRoot(document.getElementById('root')).render(
-
-  <StrictMode>
-    <RouterProvider  router={router}/>
-  </StrictMode>
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+      <StrictMode>
+        <RouterProvider  router={router}/>
+      </StrictMode>
+    </ClerkProvider>
 );

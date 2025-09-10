@@ -1,4 +1,5 @@
-export async function postRequest(clerk_id, email, first_name, last_name) {
+export async function postRequest(clerk_id, email, first_name, last_name, usernameFromUser) {
+    const usernameRemake = usernameFromUser === null ? first_name + " " + last_name : usernameFromUser;
     const x = await fetch(`http://localhost:3000/adduser`, {
         method: "POST",
         headers: {
@@ -6,7 +7,7 @@ export async function postRequest(clerk_id, email, first_name, last_name) {
         },
         body: JSON.stringify({
             user_id: clerk_id,
-            username: first_name + " " + last_name,
+            username: usernameRemake,
             email: email,//"test" + randn(2) + "@gmail.com",
             first_name: first_name,
             last_name: last_name

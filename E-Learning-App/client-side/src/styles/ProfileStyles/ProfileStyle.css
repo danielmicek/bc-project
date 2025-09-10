@@ -1,77 +1,63 @@
-html, body{
-
+body.backgroundImage{
+    background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8) ), url("/pc_man_from_back.png");
 }
 
-.grid-container2{
-    height: auto;
 
+/*LOGGED PROFILE PAGE*/
+.grid-container-logged-profile-page {
     gap: 5px;
-    justify-self: end;
-
-    position: absolute;
-    grid-template-columns: 30vw 30vw;
-    grid-template-rows: 50px 50px 50px 50px;
+    border-radius: 20px;
+    width: 13cm;
     display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 50px 50px 50px 50px;
+
+    grid-auto-flow: row;
     grid-template-areas:
-    "zero zero"
-    "first-left first-right"
-    "sec-left sec-right"
-    "last-left last-right";
-
-    justify-content: center;
-    top: 45vh;
-    right: 10vw;
-
+    "welcome welcome"
+    "userInfo testYourself"
+    "userInfo seeResults"
+    "userInfo getCertificate";
 }
-
-.gridItem2{
+.gclpp{
+    border: 3px solid #F7374F;
+    border-radius: 20px;
     display: flex;
-    align-items: center; /*VERTIKALNE os y*/
-    justify-content: center; /*HORIZONTALNE os x*/
-
-    color: white;
-    border: solid #F7374F;
-    border-radius: 16px;
-
-    transition: transform 0.3s ease;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.5s ease;
 }
+.gclpp:hover{
+    transform: scale(1.03);
 
-
-.gridItem2:hover{
-    transform: scale(1.05);
-    transition: 0.3s ease;
     background-color: #F7374F;
 }
+.userInfo { grid-area: userInfo; }
 
-.item-a {
-    grid-area: zero;
+.testYourself { grid-area: testYourself; }
+
+.seeResults { grid-area: seeResults; }
+
+.getCertificate { grid-area: getCertificate; }
+
+.welcomeUser {
+    grid-area: welcome;
+
 }
 
-.item-b {
-    grid-area: first-left;
-}
 
-.item-c {
-    grid-area: first-right;
-}
-
-.item-d {
-    grid-area: sec-left;
-}
-
-.item-e {
-    grid-area: sec-right;
-}
 
 
 .grid-container2{
     height: auto;
-
+    width: 13cm;
     gap: 5px;
-    justify-self: end;
 
     position: absolute;
-    grid-template-columns: 30vw 30vw;
+    top: 40vh;
+    left: 50vw;
+
+    grid-template-columns: 50% 50%;
     grid-template-rows: 50px 50px 50px 50px;
     display: grid;
     grid-template-areas:
@@ -81,8 +67,6 @@ html, body{
     "last-left last-right";
 
     justify-content: center;
-    top: 45vh;
-    right: 10vw;
 
 }
 
@@ -251,4 +235,22 @@ html, body{
         width: 80vh;
         left: -45vh;
     }
+}
+
+.createUser{
+    position: absolute;
+    top: 3cm;
+    right: 3cm;
+}
+
+.deleteUser{
+    position: absolute;
+    top: 4cm;
+    right: 3cm;
+}
+
+.loader{
+    position: absolute;
+    left: 50%;
+    top: 50%;
 }

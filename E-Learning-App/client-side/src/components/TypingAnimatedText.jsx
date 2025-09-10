@@ -62,6 +62,6 @@ function TypingText({
     );
 }
 
-export default function TypingAnimatedText() {
-    return <TypingText />;
+export default function TypingAnimatedText({words, delayBetweenWords}) {
+    return <TypingText words={words} delayBetweenWords = {delayBetweenWords}/>;
 }

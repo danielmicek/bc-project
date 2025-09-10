@@ -1,8 +1,10 @@
-import TypingAnimatedText from "../components/TypingAnimatedText.jsx";
+import CircularIndeterminate from "../components/Loader.jsx";
 
 
 export function Course(){
     return(
-        <></>
+        <>
+            <CircularIndeterminate/>
+        </>
     )
 }

@@ -1,9 +1,13 @@
 import {SignedIn, SignedOut, SignInButton, UserButton, useUser} from "@clerk/clerk-react";
 import TypingAnimatedText from "../components/TypingAnimatedText.jsx";
+import SignedInProfilePage from "../components/SignedInProfilePage.jsx";
 import '../styles/ProfileStyles/ProfileStyle.css';
 import {getRequest, postRequest} from "../fetchMethods.jsx";
 import React, {useEffect} from "react";
 import randn from "randn"
+import { clerkClient } from '@clerk/express'
+import CircularIndeterminate from "../components/Loader.jsx";
+
 
 
 async function getUser(userId, user){ //async funkcia vzdy vracia promise
@@ -13,15 +17,28 @@ async function getUser(userId, user){ //async funkcia vzdy vracia promise
     }
     else{
         console.log("User does not exist in the database, GET status code: " + responseObject.status + ". Creating POST request... " );
-        await postRequest(user.id, user.emailAddresses[0].emailAddress, user.firstName, user.lastName);
+        await postRequest(user.id, user.emailAddresses[0].emailAddress, user.firstName, user.lastName, user.username);
+        console.log("POST request sent. GET status code: " + responseObject.status)
 
     }
 }
 
 
 export function Profile(){
-    const {isSignedIn, user, isLoaded } = useUser();
 
+    useEffect(() => { // Add the backgroundImage class to the body element so i can have different background image on each page
+        document.body.classList.add("backgroundImage");
+        return () => {
+            document.body.classList.remove("backgroundImage");
+        };
+    }, []);
+
+    const {isSignedIn, user, isLoaded } = useUser();
+    if(isSignedIn && user){
+        if(user.username === null || user.username === undefined){
+            user.username = user.firstName + " " + user.lastName;
+        }
+    }
     // Call the postRequest function when the user state changes
     useEffect(() => {
         if (isSignedIn && user) {
@@ -33,7 +50,7 @@ export function Profile(){
     // Wait until the user state is fully loaded
     if (!isLoaded) {
         console.log("Clerk is loading the user.");
-        return <div>Loading...</div>;
+        return <CircularIndeterminate/>;
     }
 
 
@@ -53,8 +70,7 @@ export function Profile(){
 
         {isSignedIn ?
             <div className = "loggedScreen">
-                {user.firstName + " " + user.lastName + " is logged"}
-
+                <SignedInProfilePage userName = {user.username}/>
 
             </div> :
             <>
@@ -76,6 +92,8 @@ export function Profile(){
 
         <button className = "createUser" onClick = {() =>
             postRequest("Jonatan", "test" + randn(2) + "@gmail.com")}> Create user in  dbs </button>
+        <button className = "deleteUser" onClick = {() =>
+            clerkClient.users.deleteUser("123")}> Delete user from Clerk </button>
 
     </>
 
