@@ -2,6 +2,10 @@ body.backgroundImage{
     background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8) ), url("/pc_man_from_back.png");
 }
 
+html, body{
+    overflow-y: scroll;
+}
+
 
 /*LOGGED PROFILE PAGE*/
 .grid-container-logged-profile-page {
@@ -253,4 +257,34 @@ body.backgroundImage{
     position: absolute;
     left: 50%;
     top: 50%;
+}
+
+
+.container-grid-click-to-copy{
+    display: grid;
+    width: 18cm;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 0px 10px;
+    grid-template-areas:
+    "copyText copyText copyText copyButton";
+    border: 3px solid #F7374F;
+}
+
+/*----------------------CLICK TO COPY*/
+.copyText {
+    grid-area: copyText;
+    color: white;
+    border-radius: 20px;
+}
+
+.copyButton{
+    grid-area: copyText;
+    height: 100%;
+    width: 100%;
+    border-radius: 20px;
+}
+
+.container-grid-click-to-copy tooltip {
+    display: none !important;
 }

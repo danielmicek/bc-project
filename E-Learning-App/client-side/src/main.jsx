@@ -8,7 +8,8 @@ import { Profile } from './pages/Profile.jsx'
 import { WhyUs } from './pages/WhyUs.jsx'
 import { ErrorNotFound } from "./pages/ErrorNotFound.jsx";
 import Header from "./components/Header.jsx";
-import {ClerkProvider} from "@clerk/clerk-react";
+import {ClerkProvider, UserProfile} from "@clerk/clerk-react";
+import UserPage from "./pages/UserPage.jsx";
 
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
@@ -50,6 +51,11 @@ const router = createBrowserRouter([
             {
                 path: '*',
                 element: <ErrorNotFound/>,
+                errorElement: <ErrorNotFound/>
+            },
+            {
+                path: '/userPage/:uid',
+                element: <UserPage/>,
                 errorElement: <ErrorNotFound/>
             }
         ]

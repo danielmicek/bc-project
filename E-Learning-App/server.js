@@ -25,21 +25,25 @@ app.use(cors({
 }));
 
 
-// ------------------GET REQUEST---------------------------------------------------------------
+// ------------------GET REQUEST - USER---------------------------------------------------------------
 app.get("/getuser/:user_id", (request, response)=> {
-    const user_id = request.params.user_id;
+    const user_id_from_request = request.params.user_id;
 
-    const getQuery = "SELECT user_id FROM users WHERE user_id = $1";
-    pool.query(getQuery, [user_id])
+    const getQuery = "SELECT user_id, username, email FROM users WHERE user_id = $1";
+    pool.query(getQuery, [user_id_from_request])
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
                 response.status(404);
-                response.send("user_id: " + user_id + " not found.  Status code: " + response.statusCode);
+                response.send("user_id: " + user_id_from_request + " not found.  Status code: " + response.statusCode);
             }
             else{
                 response.status(200);
-                response.send("user_id: " + user_id + " found.  Status code: " + response.statusCode);
+                const foundUser = result.rows[0]
+                response.send({userId: foundUser.user_id,
+                                    userName: foundUser.username,
+                                    userEmail: foundUser.email
+                });
             }
 
         })

@@ -2,31 +2,19 @@ import {SignedIn, SignedOut, SignInButton, UserButton, useUser} from "@clerk/cle
 import TypingAnimatedText from "../components/TypingAnimatedText.jsx";
 import SignedInProfilePage from "../components/SignedInProfilePage.jsx";
 import '../styles/ProfileStyles/ProfileStyle.css';
-import {getRequest, postRequest} from "../fetchMethods.jsx";
+import {getRequest, postRequest} from "../methods/fetchMethods.jsx";
 import React, {useEffect} from "react";
 import randn from "randn"
 import { clerkClient } from '@clerk/express'
 import CircularIndeterminate from "../components/Loader.jsx";
+import {getUser} from "../methods/methodsClass.jsx";
 
 
-
-async function getUser(userId, user){ //async funkcia vzdy vracia promise
-    const responseObject = await getRequest(userId);
-    if(responseObject.status === 200){
-        console.log("User already exists in the database. GET status code: " + responseObject.status);
-    }
-    else{
-        console.log("User does not exist in the database, GET status code: " + responseObject.status + ". Creating POST request... " );
-        await postRequest(user.id, user.emailAddresses[0].emailAddress, user.firstName, user.lastName, user.username);
-        console.log("POST request sent. GET status code: " + responseObject.status)
-
-    }
-}
 
 
 export function Profile(){
 
-    useEffect(() => { // Add the backgroundImage class to the body element so i can have different background image on each page
+    useEffect(() => { // Add the backgroundImage class to the body element so I can have different background image on each page
         document.body.classList.add("backgroundImage");
         return () => {
             document.body.classList.remove("backgroundImage");
@@ -55,6 +43,7 @@ export function Profile(){
 
 
 
+
     return <>
 
             <SignedIn>
@@ -70,7 +59,7 @@ export function Profile(){
 
         {isSignedIn ?
             <div className = "loggedScreen">
-                <SignedInProfilePage userName = {user.username}/>
+                <SignedInProfilePage uid = {user.id} userName = {user.username}/>
 
             </div> :
             <>
@@ -95,6 +84,10 @@ export function Profile(){
         <button className = "deleteUser" onClick = {() =>
             clerkClient.users.deleteUser("123")}> Delete user from Clerk </button>
 
-    </>
+        {/*<Link to = {`/userPage/${user.id}`} className="buttonLink">*/}
+        {/*    <button className="headerButton">user profile</button>*/}
+        {/*</Link>*/}
 
+
+    </>
 }

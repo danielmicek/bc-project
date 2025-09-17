@@ -1,0 +1,15 @@
+import {getRequest, postRequest} from "./fetchMethods.jsx";
+
+export async function getUser(userId, user){ //async funkcia vzdy vracia promise
+    const responseObject = await getRequest(userId);
+    if(responseObject.status === 200){
+        console.log("User already exists in the database. GET status code: " + responseObject.status);
+        console.log(await responseObject.json());
+    }
+    else{
+        console.log("User does not exist in the database, GET status code: " + responseObject.status + ". Creating POST request... " );
+        await postRequest(user.id, user.emailAddresses[0].emailAddress, user.firstName, user.lastName, user.username);
+        console.log("POST request sent. GET status code: " + responseObject.status)
+
+    }
+}

@@ -1,0 +1,54 @@
+import TypingAnimatedText from "../components/TypingAnimatedText.jsx";
+import React, {useEffect, useState} from "react";
+import {useParams} from "react-router-dom";
+import {getRequest} from "../methods/fetchMethods.jsx";
+import CircularIndeterminate from "../components/Loader.jsx";
+import DividerVariants from "../components/DividerVariants.jsx";
+import '../styles/ProfileStyles/UserPage.css';
+
+
+async function getUser(userId){ //async funkcia vzdy vracia promise
+    const responseObject = await getRequest(userId);
+    const responseJson = await responseObject.json();
+    return({userId: responseJson.userId,
+        userName: responseJson.userName,
+        userEmail: responseJson.userEmail
+    });
+
+}
+
+
+export default function UserPage() {
+
+    useEffect(() => { // Add the backgroundImage class to the body element so I can have different background image on each page
+        document.body.classList.add("backgroundImage");
+        return () => {
+            document.body.classList.remove("backgroundImage");
+        };
+    }, []);
+
+    const { uid } = useParams();
+    //funguje to nasledovne: v useEffect volam funkciu outterGetUser(), v ktorej volam getUser, ten vracia JSON objekt, tato hodnota sa zapise do foundUser a nastane rerender
+    //musi to byt v useEffect pretoze potrebujem mat dependenciu, ktora ked sa zmeni tak sa vykona telo useEffect -> tam je useState ktory ulozi hodnotu vrateneho JSON objektu
+    //setTimeout je tam kvoli tomu, aby sa po kratkej chvili zmenila hodnota premennej  tempValue a mohol nastat rerender
+    const [foundUser, setFoundUser] = useState(null);
+    const [tempValue, setTempValue] = useState(0);
+
+    useEffect(() => {
+        async function outterGetUser() {
+            const data = await getUser(uid);
+            setFoundUser(data);
+        }
+        outterGetUser();
+        console.log(foundUser);
+    }, [tempValue]);
+
+    setTimeout(function() {
+        setTempValue(1);
+    }, 100);
+    return( foundUser ? <>
+            <DividerVariants name ={foundUser.userName} email = {foundUser.userEmail} uid = {foundUser.userId}/>
+        </> : <CircularIndeterminate/>)
+
+
+}

@@ -1,8 +1,9 @@
 import TypingAnimatedText from "./TypingAnimatedText.jsx";
 import React from "react";
+import ClickToCopy from "./ClickToCopy.jsx";
 
 
-export default function SignedInProfilePage({userName}){
+export default function SignedInProfilePage({uid, userName}){
     return(<>
 
         <div className="grid-container-logged-profile-page">
@@ -13,6 +14,7 @@ export default function SignedInProfilePage({userName}){
             <div className="gclpp seeResults" title = {"click to see results"}>seeResults</div>
             <div className="gclpp getCertificate" title = {"click to get certificate"}>getCertificate</div>
         </div>
+        <ClickToCopy className = "clickToCopy" userId = {uid}/>
 
     </>)
 }
