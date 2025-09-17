@@ -8,6 +8,8 @@ import randn from "randn"
 import { clerkClient } from '@clerk/express'
 import CircularIndeterminate from "../components/Loader.jsx";
 import {getUser} from "../methods/methodsClass.jsx";
+import { UserProfile } from "@clerk/clerk-react";
+import DropdownButton from "../components/DropdownButton.jsx";
 
 
 
@@ -47,13 +49,13 @@ export function Profile(){
     return <>
 
             <SignedIn>
-                <UserButton
-                    appearance={{
-                        elements: {
-                            userButtonAvatarBox: "profileImg", // Apply your custom CSS class
-                        },
-                    }}
-                />
+                <UserButton className = "profileImg"
+                            appearance={{
+                                elements: {
+                                    rootBox: "userButtonRoot",            // wrapper box
+                                    userButtonAvatarBox: "profileImg",    // user avatar
+                                },
+                            }}/>
             </SignedIn>
 
 
@@ -83,7 +85,6 @@ export function Profile(){
             postRequest("Jonatan", "test" + randn(2) + "@gmail.com")}> Create user in  dbs </button>
         <button className = "deleteUser" onClick = {() =>
             clerkClient.users.deleteUser("123")}> Delete user from Clerk </button>
-
         {/*<Link to = {`/userPage/${user.id}`} className="buttonLink">*/}
         {/*    <button className="headerButton">user profile</button>*/}
         {/*</Link>*/}

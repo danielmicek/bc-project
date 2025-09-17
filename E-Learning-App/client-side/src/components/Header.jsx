@@ -1,13 +1,26 @@
 import {Link} from "react-router-dom";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import '../styles/HeaderStyle.css';
 import {SignedIn, SignedOut, SignInButton, UserButton, useUser} from "@clerk/clerk-react";
 import {getUser} from "../methods/methodsClass.jsx";
+import DropdownButton from "./DropdownButton.jsx";
 
 
 export default function Header(){
 
     const {isSignedIn, user, isLoaded } = useUser();
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+
+        window.addEventListener("resize", handleResize);
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
 
     useEffect(() => {
         if (isSignedIn && user) {
@@ -15,32 +28,47 @@ export default function Header(){
         }
     }, [isSignedIn, user]);
 
-    return (
-        <div className = "header" >
+    return <div className = "header" >
 
             <Link to = "/" className= "eleonoreText">
                 <h1>eleonore</h1>
             </Link>
 
-            <Link to = "/" className="buttonLink">
-                <button className="headerButton">Home</button>
-            </Link>
-            <Link to = "/course" className="buttonLink">
-                <button className="headerButton">Course</button>
-            </Link>
+            {windowWidth > 630 ?
+            <>
+                <Link to = "/" className="buttonLink">
+                    <button className="headerButton">Home</button>
+                </Link>
 
-            <Link to = "/profile" className="buttonLink">
-                <button className="headerButton">Profile</button>
-            </Link>
+                <Link to = "/course" className="buttonLink">
+                    <button className="headerButton">Course</button>
+                </Link>
 
-            <SignedOut>
-                <SignInButton className = "headerButton" mode={"modal"}/>
-            </SignedOut>
-            <SignedIn>
-                <UserButton />
-            </SignedIn>
+                <Link to = "/profile" className="buttonLink">
+                    <button className="headerButton">Profile</button>
+                </Link>
+
+                <SignedOut>
+                    <SignInButton className = "headerButton" mode={"modal"}/>
+                </SignedOut>
+
+                <SignedIn>
+                    <UserButton className = "profileImg"
+                                appearance={{
+                                    elements: {
+                                        rootBox: "userButtonRoot",            // wrapper box
+                                        userButtonAvatarBox: "profileImgInHeader",    // user avatar
+                                    },
+                                }}/>
+                </SignedIn>
+            </>
+                :
+                <DropdownButton/>
+            }
         </div>
-        )
+
+
+
 
 
 

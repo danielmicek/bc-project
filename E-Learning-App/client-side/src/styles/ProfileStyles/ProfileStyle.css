@@ -3,16 +3,23 @@ body.backgroundImage{
 }
 
 html, body{
-    overflow-y: scroll;
+    height: 100vh;
+    width: 100%;
+    overflow-y: hidden;
 }
 
 
 /*LOGGED PROFILE PAGE*/
-.grid-container-logged-profile-page {
+.grid-container-logged-profile-page { /* welcome user */
+    display: grid;
+    position: absolute;
+
     gap: 5px;
     border-radius: 20px;
     width: 13cm;
-    display: grid;
+    top: 170px;
+    right: 65%;
+
     grid-template-columns: 50% 50%;
     grid-template-rows: 50px 50px 50px 50px;
 
@@ -23,6 +30,7 @@ html, body{
     "userInfo seeResults"
     "userInfo getCertificate";
 }
+
 .gclpp{
     border: 3px solid #F7374F;
     border-radius: 20px;
@@ -222,11 +230,18 @@ html, body{
 
 
 .profileImg{
-    top: 28vh;
     border-radius: 50%;
     height: 40vh;
     width: 40vh;
+    margin-top: 85vh;
+    border: 5px solid white;
+    position: absolute;
 }
+
+.userButtonRoot{
+    height: 0;
+}
+
 .loggedScreen{
     color: white;
     position: relative;
@@ -283,8 +298,4 @@ html, body{
     height: 100%;
     width: 100%;
     border-radius: 20px;
-}
-
-.container-grid-click-to-copy tooltip {
-    display: none !important;
 }
