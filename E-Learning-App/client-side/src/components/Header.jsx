@@ -1,4 +1,4 @@
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import '../styles/HeaderStyle.css';
 import {SignedIn, SignedOut, SignInButton, UserButton, useUser} from "@clerk/clerk-react";
@@ -7,6 +7,9 @@ import DropdownButton from "./DropdownButton.jsx";
 
 
 export default function Header(){
+
+    let location = useLocation();
+
 
     const {isSignedIn, user, isLoaded } = useUser();
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -28,7 +31,7 @@ export default function Header(){
         }
     }, [isSignedIn, user]);
 
-    return <div className = "header" >
+    return location.pathname !== '/test' ? <div className = "header" >
 
             <Link to = "/" className= "eleonoreText">
                 <h1>eleonore</h1>
@@ -37,19 +40,19 @@ export default function Header(){
             {windowWidth > 630 ?
             <>
                 <Link to = "/" className="buttonLink">
-                    <button className="headerButton">Home</button>
+                    <button className="customButton">Home</button>
                 </Link>
 
-                <Link to = "/course" className="buttonLink">
-                    <button className="headerButton">Course</button>
+                <Link to = "/courseInfoPage" className="buttonLink">
+                    <button className="customButton">Course</button>
                 </Link>
 
                 <Link to = "/profile" className="buttonLink">
-                    <button className="headerButton">Profile</button>
+                    <button className="customButton">Profile</button>
                 </Link>
 
                 <SignedOut>
-                    <SignInButton className = "headerButton" mode={"modal"}/>
+                    <SignInButton className = "customButton" mode={"modal"}/>
                 </SignedOut>
 
                 <SignedIn>
@@ -66,6 +69,8 @@ export default function Header(){
                 <DropdownButton/>
             }
         </div>
+        :
+        <></>
 
 
 

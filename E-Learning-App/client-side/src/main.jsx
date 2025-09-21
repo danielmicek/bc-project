@@ -3,13 +3,14 @@ import { createRoot } from 'react-dom/client'
 import {createBrowserRouter, Outlet, RouterProvider} from 'react-router-dom';
 import './styles/index.css'
 import Home from './pages/Home.jsx'
-import { Course } from './pages/Course.jsx'
+import { CourseInfoPage } from './pages/CourseInfoPage.jsx'
 import { Profile } from './pages/Profile.jsx'
 import { WhyUs } from './pages/WhyUs.jsx'
 import { ErrorNotFound } from "./pages/ErrorNotFound.jsx";
 import Header from "./components/Header.jsx";
 import {ClerkProvider, UserProfile} from "@clerk/clerk-react";
 import UserPage from "./pages/UserPage.jsx";
+import Test from "./pages/Test.jsx";
 
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
@@ -17,14 +18,15 @@ if (!PUBLISHABLE_KEY) {
     throw new Error('Missing Publishable Key')
 }
 
+
+
 const router = createBrowserRouter([
     {
         element: (
             <>
-                <Header />
+                <Header/>
                 <Outlet />
             </>
-
 
         ),
         children: [
@@ -34,8 +36,8 @@ const router = createBrowserRouter([
                 errorElement: <ErrorNotFound/>
             },
             {
-                path: '/course',
-                element: <Course/>,
+                path: '/courseInfoPage',
+                element: <CourseInfoPage/>,
                 errorElement: <ErrorNotFound/>
             },
             {
@@ -56,6 +58,11 @@ const router = createBrowserRouter([
             {
                 path: '/userPage/:uid',
                 element: <UserPage/>,
+                errorElement: <ErrorNotFound/>
+            },
+            {
+                path: '/test',
+                element: <Test/>,
                 errorElement: <ErrorNotFound/>
             }
         ]

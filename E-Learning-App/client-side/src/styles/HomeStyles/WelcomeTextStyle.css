@@ -13,7 +13,6 @@
     width: 98vw;
     height: 60vh;
 
-
 }
 
 .imgContainer{
@@ -23,10 +22,11 @@
 
     z-index: 5;
 
-    height: 25vw; /* 30% of viewport width */
-    width: 25vw;
+    height: 400px; /* 30% of viewport width */
+    width: 400px;
 
     background-image: url("/pc.jpg");
+    /*filter: grayscale(100%);*/
     background-size: cover;
     background-position: right;
     background-repeat: no-repeat;
@@ -37,20 +37,17 @@
 
     border: 5px solid white;
 
-    width: fit-content;
+    width: 500px;
     height: fit-content;
 
-    top: 10vh;
-    right: 20vw;
+    top: 30px;
+    right: 10vw;
 }
 
 .welcomeText{
 }
 
 .mainPageText{
-
-    width: 38vw;
-
 
     font-family: "Saira", sans-serif;
     font-optical-sizing: auto;

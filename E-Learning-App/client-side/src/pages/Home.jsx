@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client'
 import io from 'socket.io-client';
-import '../styles/Home.css';
+import '../styles/HomeStyles/HomeStyle.css';
 import Player from "../components/Player.jsx";
 import Header from "../components/Header.jsx";
 import {Link} from "react-router-dom";
@@ -23,10 +23,12 @@ function Home() {
 
     const {isSignedIn, user, isLoaded } = useUser();
 
-
-
-
-    const [users, setUsers] = useState(new Map());
+    useEffect(() => { // Add the backgroundImage class to the body element so I can have different background image on each page
+        document.body.classList.add("backgroundImageHomePage");
+        return () => {
+            document.body.classList.remove("backgroundImageHomePage");
+        };
+    }, []);
 
 
 
@@ -35,13 +37,6 @@ function Home() {
 
             <MainPageText/>
 
-            <Player fromArrayToMap = {fromArrayToMap} nameFromAppComponent = {socket.id}/>
-
-
-            <button onClick={() => {
-                console.log(isSignedIn);
-            }
-            } >User signed in?</button>
 
         </>
 

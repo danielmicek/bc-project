@@ -1,0 +1,40 @@
+.questionContainer{
+    /*--------------------------CENTER DIV-------------------------*/
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /*-------------------------------------------------------------*/
+    border: 3px solid #F7374F;
+    border-radius: 20px;
+
+    width: 8cm;
+    height: 5cm;
+
+    color: white;
+    background-color: black;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 0px 0px;
+    grid-template-areas:
+    "readyText readyText"
+    "yesButton noButton";
+}
+.readyText { grid-area: readyText; }
+.yesButton { grid-area: yesButton; }
+.noButton { grid-area: noButton; }
+
+.flag{
+    font-family: "Qwitcher Grypen", cursive;
+    background-color: #F7374F;
+    width: 5cm;
+    margin-top: 50px;
+    padding-left: 10px;
+
+    font-size: 3rem;
+    font-weight: bold;
+    color: white;
+}

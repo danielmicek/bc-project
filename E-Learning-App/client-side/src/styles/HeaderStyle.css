@@ -34,7 +34,7 @@ button{
     transition: border-color 0.6s, transform 0.2s ease-in-out;
 }
 
-.headerButton{
+.customButton{
     align-items: center;
     appearance: none;
     background-color: #FCFCFD;
@@ -66,16 +66,16 @@ button{
     font-size: 18px;
 }
 
-.headerButton:focus {
+.customButton:focus {
     box-shadow: #D6D6E7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
 }
 
-.headerButton:hover {
+.customButton:hover {
     box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
     transform: translateY(-2px);
 }
 
-.headerButton:active {
+.customButton:active {
     box-shadow: #D6D6E7 0 3px 7px inset;
     transform: translateY(2px);
 }
@@ -149,5 +149,19 @@ button{
     background-image: url("/dropdownMenu_icon.png");
     background-size: contain;
     background-repeat: no-repeat;
+}
 
+.avatarButton{
+    width: 1cm;
+    height: 1cm;
+    border: none;
+    border-radius: 50%;
+    position: relative;
+    top: 3px;
+    right: 5px;
+}
+
+.avatarButton:hover{
+    box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+    transform: translateY(-2px);
 }

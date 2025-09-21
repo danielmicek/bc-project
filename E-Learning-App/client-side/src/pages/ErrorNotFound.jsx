@@ -1,4 +1,4 @@
-import '../styles/ErrorPage.css';
+import '../styles/ErrorPageStyle.css';
 
 
 

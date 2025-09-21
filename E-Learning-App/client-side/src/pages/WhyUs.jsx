@@ -1,4 +1,4 @@
-import "../styles/WhyUs.css"
+import "../styles/HomeStyles/WhyUsStyle.css"
 
 
 

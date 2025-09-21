@@ -8,8 +8,7 @@ import randn from "randn"
 import { clerkClient } from '@clerk/express'
 import CircularIndeterminate from "../components/Loader.jsx";
 import {getUser} from "../methods/methodsClass.jsx";
-import { UserProfile } from "@clerk/clerk-react";
-import DropdownButton from "../components/DropdownButton.jsx";
+
 
 
 
@@ -86,7 +85,7 @@ export function Profile(){
         <button className = "deleteUser" onClick = {() =>
             clerkClient.users.deleteUser("123")}> Delete user from Clerk </button>
         {/*<Link to = {`/userPage/${user.id}`} className="buttonLink">*/}
-        {/*    <button className="headerButton">user profile</button>*/}
+        {/*    <button className="customButton">user profile</button>*/}
         {/*</Link>*/}
 
 
