@@ -1,0 +1,51 @@
+body{
+    margin: 0;
+}
+
+.question{
+    border: 3px solid #F7374F;
+    border-radius: 20px;
+
+    width: 15cm;
+    height: 7cm;
+    color: white;
+
+
+    display: grid;
+    justify-self: center;
+    align-self: center;
+    grid-template-columns: 7% repeat(3, 1fr) 7%;
+    grid-template-rows: repeat(5, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+.title, .body, .points, .sideText, .questionNumber{
+    border: 1px solid #F7374F;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+}
+
+.title{
+    grid-area: 1 / 1 / 2 / 5;
+
+}
+
+.body{
+    grid-area: 2 / 1 / 6 / 5;
+}
+
+.points{
+    grid-area: 1 / 5 / 2 / 6;
+}
+
+.sideText{
+    grid-area: 2 / 5 / 6 / 6;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+}
+
+.questionNumber{
+    grid-area: 1 / 1 / 2 / 2;
+}

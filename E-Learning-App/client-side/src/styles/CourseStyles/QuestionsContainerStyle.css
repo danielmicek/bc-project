@@ -1,0 +1,15 @@
+body{
+    margin: 0;
+    overflow: auto;
+}
+
+.questionsContainer{
+    width: calc(100vw - 20px);
+    height: 50vh;
+
+    display: flex;
+
+
+
+    border: solid red;
+}
