@@ -7,6 +7,7 @@ import Header from "../components/Header.jsx";
 import {Link} from "react-router-dom";
 import { ClerkProvider, useUser } from '@clerk/clerk-react'
 import {MainPageText} from "../components/MainPageText.jsx";
+import StaggeredMenu from "../components/StaggeredMenu.jsx";
 
 let socket = io.connect('http://localhost:3000');
 
@@ -17,6 +18,12 @@ function fromArrayToMap(users, usersFromServerSide, setUsers) {
 }
 
 
+const menuItems = [
+    { label: 'Home', ariaLabel: 'Go to home page', link: '/' },
+    { label: 'About', ariaLabel: 'Learn about us', link: '/about' },
+    { label: 'Services', ariaLabel: 'View our services', link: '/services' },
+    { label: 'Contact', ariaLabel: 'Get in touch', link: '/contact' }
+];
 
 
 function Home() {
@@ -36,8 +43,6 @@ function Home() {
         <>
 
             <MainPageText/>
-
-
         </>
 
     );

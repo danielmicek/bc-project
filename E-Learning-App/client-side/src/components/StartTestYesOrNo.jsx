@@ -3,11 +3,15 @@ import React from "react";
 
 
 
-export default function StartTestYesOrNo({setter}) {
+export default function StartTestYesOrNo({showOrHidePopup, refForStart, openedStartPopup, setOpenedStartPopup, setTestStarted}) {
     return <>
-        <div className = "questionContainer">
+        <div className = "testYesOrNoContainer" ref = {refForStart}>
             <p className = "readyText">Ready to start the test?</p>
-            <button className = "customButton yesButton" onClick={() => setter(true)}>Yes</button>
+            <button className = "customButton yesButton" onClick={() => {
+                showOrHidePopup(refForStart, openedStartPopup, setOpenedStartPopup);
+                setTestStarted(true);
+                }
+            }>Yes</button>
             <Link to = "/courseInfoPage" className="buttonLink">
                 <button className = "customButton noButton" >No</button>
             </Link>

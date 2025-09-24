@@ -1,4 +1,4 @@
-.questionContainer{
+.testYesOrNoContainer{
     /*--------------------------CENTER DIV-------------------------*/
     margin: 0;
     position: absolute;
@@ -22,6 +22,10 @@
     grid-template-areas:
     "readyText readyText"
     "yesButton noButton";
+}
+
+.noContainer{
+    display: none;
 }
 .readyText { grid-area: readyText; }
 .yesButton { grid-area: yesButton; }
