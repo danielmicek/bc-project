@@ -57,7 +57,7 @@ export default function Test() {
     //its in useState hook to ensure it is ready to use right after first render
     const [testQuestions, setTestQuestions] = useState(testMaker());
     return <>
-        <div className = "flag">eleonore</div>
+        <div className = "flag">eleonore test</div>
         <StartTestYesOrNo refForStart = {refForStart} showOrHidePopup={showOrHidePopup} setTestStarted = {setTestStarted}
                           openedStartPopup = {openedStartTestPopup} setOpenedStartPopup = {setOpenedStartTestPopup}/>
 

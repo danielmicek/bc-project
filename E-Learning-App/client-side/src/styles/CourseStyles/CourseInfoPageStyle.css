@@ -1,4 +1,50 @@
+
 body{
-    background-color: black
-;
+    background-color: black;
 }
+
+.columnContainer{
+    border: 5px solid white;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+
+    height: 100vh;
+
+}
+
+.testColumnCommon{
+
+    border: 3px solid red;
+    border-radius: 20px;
+
+    color: white;
+}
+
+.learnColumn{
+    grid-area: 1 / 1 / 3 / 4;
+}
+
+.easyTestColumn{
+    grid-area: 3 / 1 / 6 / 2;
+}
+
+.mediumTestColumn{
+    grid-area: 3 / 2 / 6 / 3;
+}
+
+.hardTestColumn{
+    grid-area: 3 / 3 / 6 / 4;
+}
+
+@media(max-width: 750px) {
+    .columnContainer{
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(5, 0.5fr);
+        /*grid-template-rows: repeat(2, 0.5fr) repeat(3, 1fr);*/
+    }
+}
+

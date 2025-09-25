@@ -5,11 +5,12 @@ body{
 
 .questionsContainer{
     width: calc(100vw - 20px);
-    height: 50vh;
+    height: 100vh;
 
     display: flex;
 
-
+    overflow-x: auto;
 
     border: solid red;
+    background-color: grey;
 }
