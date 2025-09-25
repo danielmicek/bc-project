@@ -29,7 +29,9 @@ const menuItems = [
 function Home() {
 
     const {isSignedIn, user, isLoaded } = useUser();
-
+    /*window.addEventListener("popstate", () => {  kliknutie na backbutton v browseri
+        console.log("popstate");
+    });*/
     useEffect(() => { // Add the backgroundImage class to the body element so I can have different background image on each page
         document.body.classList.add("backgroundImageHomePage");
         return () => {
@@ -43,6 +45,7 @@ function Home() {
         <>
 
             <MainPageText/>
+
         </>
 
     );
