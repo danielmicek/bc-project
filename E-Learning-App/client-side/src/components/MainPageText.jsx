@@ -13,7 +13,7 @@ export function MainPageText(){
             </div>
 
             <Link to = "/whyus" className="buttonLink">
-                <button className="whyUsbButton">Why us</button>
+                <button className="customButton whyUsbButton">Why us</button>
             </Link>
         </div>
     )

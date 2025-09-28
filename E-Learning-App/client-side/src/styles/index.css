@@ -1,5 +1,9 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
+    --main-color-creme: #f8f3ea;
+    --main-color-blue: #0b1957;
+    --main-color-brown: #ffdbd1;
+    --main-color-pink: #fa9ebc;
 }
 
 body {

@@ -3,11 +3,12 @@
 
 
 body.backgroundImageHomePage{
-  margin: 0;
-  background-image: url("/dots.png");
+    margin: 0;
+  /*background-image: url("/dots.png");
     background-position: right;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: cover;*/
+    background-color: var(--main-color-creme);
 }
 
 

@@ -1,23 +1,25 @@
 .mainPageTextContainer{
     display: flex;
 
-    border: solid #F7374F;
-    border-radius: 10px;
-    background-color: #F7374F;
+    border: 5px solid var(--main-color-pink);
+    border-radius: 20px;
+    background-color: var(--main-color-blue);
 
     position: relative;
 
     margin: 0 auto; /*center horizontally*/
-    top: 2vh;
+    top: 100px;
 
     width: 98vw;
     height: 60vh;
+
+    filter: drop-shadow(15px 10px 8px #6a6969);
 
 }
 
 .imgContainer{
     position: relative;
-    border: 5px solid white;
+    border: 5px solid var(--main-color-pink);
     border-radius: 50%;
 
     z-index: 5;
@@ -34,28 +36,31 @@
 
 .textContainer{
     position: absolute;
+    background-color: white;
+    border: 5px solid var(--main-color-pink);
+    border-radius: 20px;
 
-    border: 5px solid white;
+    color: black;
 
     width: 500px;
     height: fit-content;
 
     top: 30px;
     right: 10vw;
+
+    padding: 10px;
 }
 
 .welcomeText{
 }
 
 .mainPageText{
-
-    font-family: "Saira", sans-serif;
     font-optical-sizing: auto;
     font-weight: 500;
     font-style: normal;
     font-variation-settings: "wdth" 100;
     font-size: 2rem;
-    color: white;
+    color: black;
 }
 
 
@@ -63,19 +68,11 @@
 .whyUsbButton{
     position: absolute;
 
-    border-radius: 8px;
-    width: 100px;
-    height: 30px;
     font-weight: 500;
+    border-bottom-right-radius: 10px;
 
     font-size: 1rem;
 
-    right: 20px;
-    bottom: 0;
-}
-
-.whyUsbButton:hover {
-    border-color: #A31D1D;
-    border-width: 3px;
-    transform: scale(1.05);
+    right: 7px;
+    bottom: 7px;
 }
