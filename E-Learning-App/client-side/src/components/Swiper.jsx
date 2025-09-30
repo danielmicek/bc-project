@@ -1,15 +1,10 @@
 import React, { useRef, useState } from 'react';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
-
-// Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import '../styles/CourseStyles/QuestionStyle.css'
-
-
-// import required modules
 import { Navigation, Pagination, Mousewheel, Keyboard } from 'swiper/modules';
 import Question from "./Question.jsx";
 
@@ -22,9 +17,12 @@ export default function SwiperComponent({testQuestions}) {
         },
     };
 
+    const refSwiper = useRef(null);
+    const [activeIndex, setActiveIndex] = useState(0);
     return (
         <>
             <Swiper
+                onSwiper={(swiper) => { refSwiper.current = swiper;}}
                 slidesPerView={1}
                 spaceBetween={30}
                 loop={false}
@@ -32,12 +30,16 @@ export default function SwiperComponent({testQuestions}) {
                 navigation={true}
                 modules={[Pagination, Navigation]}
                 className="mySwiper"
+                onSlideChange = {() => {
+                    setActiveIndex(refSwiper.current.activeIndex);
+                }}
             >
                 {testQuestions.map((question, index) => {
 
-                    return <SwiperSlide><Question question = {question} key = {index}/></SwiperSlide>
+                    return <SwiperSlide><Question activeIndex = {activeIndex} question = {question} key = {index}/></SwiperSlide>
 
                 })}
+
             </Swiper>
         </>
     );

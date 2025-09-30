@@ -5,7 +5,7 @@
     border-bottom: 5px solid var(--main-color-pink);
     border-radius: 20px;
 
-    padding-bottom: 5px;
+    padding: 0 7px 5px 0;
     margin: 8px 10px 0 10px;
     justify-content: space-between;
 
@@ -16,10 +16,7 @@
 
     align-items: center;
 
-
 }
-
-
 
 .profileImgInHeader{
     width: 1.2cm;
@@ -31,14 +28,7 @@
     text-decoration: none;
 }
 
-button{
 
-    font-family: initial;
-    font-size: 1rem;
-
-    cursor: pointer;
-    transition: border-color 0.6s, transform 0.2s ease-in-out;
-}
 
 .customButton{
     align-items: center;

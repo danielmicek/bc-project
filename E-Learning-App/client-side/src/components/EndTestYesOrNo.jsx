@@ -5,8 +5,9 @@ import React from "react";
 
 export default function EndTestYesOrNo({showOrHidePopup, refForEnd, openedEndPopup, setOpenedEndPopup, setTestStarted}) {
     return <>
-        <div className = "testYesOrNoContainer noContainer" ref = {refForEnd}>
-            <p className = "readyText">Sure you want to end?</p>
+        <div className = "popupContainer noContainer" ref = {refForEnd}>
+            <h2 className = "upperText">Sure you want to quit?</h2>
+            <h3 className = "bottomText">Entire progress will be lost</h3>
 
             <button className = "customButton noButton" onClick={() => {
                 showOrHidePopup(refForEnd, openedEndPopup, setOpenedEndPopup);

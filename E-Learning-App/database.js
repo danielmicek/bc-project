@@ -1,4 +1,4 @@
-// make conenction to the dbs
+// make connection to the dbs
 import { Pool } from "pg";
 
 const pool = new Pool({

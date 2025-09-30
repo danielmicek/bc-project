@@ -1,17 +1,15 @@
 import "../styles/CourseStyles/TestStyle.css"
-import React, {useState, useRef} from "react";
-import StartTestYesOrNo from "../components/StartTestYesOrNo.jsx";
+import React, {useState, useRef, useEffect} from "react";
+import StartTestPopup from "../components/StartTestPopup.jsx";
 import EndTestYesOrNo from "../components/EndTestYesOrNo.jsx";
 import Question from "../components/Question.jsx";
 import { QUESTIONS } from "../questions.js";
-import QuestionsContainer from "../components/QuestionsContainer.jsx";
+import Timer from "../components/Timer.jsx";
+import {useUser} from "@clerk/clerk-react";
+import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
+import {postRequest_test} from "../methods/fetchMethods.jsx";
+import SwiperComponent from "../components/Swiper.jsx";
 
-
-
-function showOrHidePopup(ref, openedPopup, setOpenedPopup) {
-    openedPopup === true ? ref.current.style.display = "none" : ref.current.style.display = "grid";
-    setOpenedPopup((boolean_value) => !boolean_value);
-}
 
 
 function getRandomElementsFromArray(array, numberOfElements, questionsForTest) {
@@ -43,34 +41,53 @@ function testMaker(){
     return questionsForTest;
 }
 
+function getCurrentDate(){
+    return new Date().toJSON().slice(0, 10);
+}
 
-export default function Test() {
-    const refForStart = useRef(null);
+export default function Test({showOrHidePopup}) {
+    const {user} = useUser();
+    const params = useParams();
+
+
+    const [testStarted, setTestStarted] = useState(true);
+
+    const ref = useRef(null);
+
     const refForEnd = useRef(null);
     const refForEndButton = useRef(null);
 
-    const [testStarted, setTestStarted] = useState(false);
-    const [openedStartTestPopup, setOpenedStartTestPopup] = useState(true);
     const [openedEndTestPopup, setOpenedEndTestPopup] = useState(false);
 
     //create a random set of test questions, from each difficulty level select random 2 questions
     //its in useState hook to ensure it is ready to use right after first render
     const [testQuestions, setTestQuestions] = useState(testMaker());
+
+
+    addEventListener("beforeunload", (event) => {
+        event.preventDefault(); //zabrani refreshu
+    })
+
+
     return <>
-        <div className = "flag">eleonore test</div>
-        <StartTestYesOrNo refForStart = {refForStart} showOrHidePopup={showOrHidePopup} setTestStarted = {setTestStarted}
-                          openedStartPopup = {openedStartTestPopup} setOpenedStartPopup = {setOpenedStartTestPopup}/>
+        <Timer minutes = {2}/>
+        <div className = "flag" ref={ref}>eleonore test</div>
 
 
         {testStarted && !openedEndTestPopup &&
             <>
-                <button className="customButton" ref = {refForEndButton}
+                <button className = "submitTest_button customButton"
+                        onClick={() => postRequest_test(params.testID, 50, getCurrentDate(), "C", "Silver", user.id, testQuestions)}
+                >Submit test</button>
+
+                <button className="quitTest_button customButton" ref = {refForEndButton}
                 onClick={() => {
                     showOrHidePopup(refForEnd, openedEndTestPopup, setOpenedEndTestPopup);
-                }}>End test</button>
-                <QuestionsContainer testQuestions = {testQuestions}/>
-                <Question question = {testQuestions[0]}/>
-                <button className = "nextQuestionButton">next question</button>
+                }}>Quit test</button>
+
+
+                <SwiperComponent testQuestions = {testQuestions}/>
+
             </>
         }
         <EndTestYesOrNo refForEnd = {refForEnd} showOrHidePopup={showOrHidePopup} setTestStarted = {setTestStarted}

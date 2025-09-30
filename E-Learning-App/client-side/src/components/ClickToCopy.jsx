@@ -1,4 +1,4 @@
-import {Clipboard, ClipboardWithIcon} from "flowbite-react";
+import {ClipboardWithIcon} from "flowbite-react";
 import '../styles/ProfileStyles/ProfileStyle.css';
 
 export default function ClickToCopy({userId}) {

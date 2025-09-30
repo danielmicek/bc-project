@@ -1,4 +1,4 @@
-.testYesOrNoContainer{
+.popupContainer{
     /*--------------------------CENTER DIV-------------------------*/
     margin: 0;
     position: absolute;
@@ -6,34 +6,55 @@
     left: 50%;
     transform: translate(-50%, -50%);
     /*-------------------------------------------------------------*/
-    border: 3px solid #F7374F;
+
     border-radius: 20px;
+    padding: 10px;
 
     width: 8cm;
-    height: 5cm;
+    height: fit-content;
+    z-index: 999;
 
-    color: white;
-    background-color: black;
+    color: black;
+    background-color: white;
+    border: solid black;
 
-    display: grid;
+    align-items: center;
+    justify-items: center;
+
+
+    display: none;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
     gap: 0px 0px;
     grid-template-areas:
-    "readyText readyText"
+    "upperText upperText"
+    "bottomText bottomText"
     "yesButton noButton";
 }
 
 .noContainer{
     display: none;
 }
-.readyText { grid-area: readyText; }
+.upperText {
+    text-align: center;
+    align-self: center;
+    grid-area: upperText;
+}
+.bottomText{ grid-area: bottomText;}
 .yesButton { grid-area: yesButton; }
 .noButton { grid-area: noButton; }
+.submitTest_button{
+    display: inline-flex;
+    width: 120px;
+    margin: 5px;
+}
 
 .flag{
     font-family: initial;
-    background-color: #F7374F;
+    background-color: var(--main-color-blue);
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+
     width: 10cm;
     margin-top: 50px;
     padding-left: 10px;
@@ -41,4 +62,10 @@
     font-size: 3rem;
     font-weight: bold;
     color: white;
+}
+
+.timer{
+    width: fit-content;
+    display: flex;
+    gap: 10px;
 }

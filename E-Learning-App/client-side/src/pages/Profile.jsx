@@ -2,7 +2,7 @@ import {SignedIn, SignedOut, SignInButton, UserButton, useUser} from "@clerk/cle
 import TypingAnimatedText from "../components/TypingAnimatedText.jsx";
 import SignedInProfilePage from "../components/SignedInProfilePage.jsx";
 import '../styles/ProfileStyles/ProfileStyle.css';
-import {getRequest, postRequest} from "../methods/fetchMethods.jsx";
+import {postRequest_user} from "../methods/fetchMethods.jsx";
 import React, {useEffect} from "react";
 import randn from "randn"
 import { clerkClient } from '@clerk/express'
@@ -81,7 +81,7 @@ export function Profile(){
         }
 
         <button className = "createUser" onClick = {() =>
-            postRequest("Jonatan", "test" + randn(2) + "@gmail.com")}> Create user in  dbs </button>
+            postRequest_user("Jonatan", "test" + randn(2) + "@gmail.com")}> Create user in  dbs </button>
         <button className = "deleteUser" onClick = {() =>
             clerkClient.users.deleteUser("123")}> Delete user from Clerk </button>
         {/*<Link to = {`/userPage/${user.id}`} className="buttonLink">*/}

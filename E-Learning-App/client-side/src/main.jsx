@@ -18,7 +18,10 @@ if (!PUBLISHABLE_KEY) {
     throw new Error('Missing Publishable Key')
 }
 
-
+function showOrHidePopup(ref, openedPopup, setOpenedPopup) {
+    openedPopup === true ? ref.current.style.display = "none" : ref.current.style.display = "grid";
+    setOpenedPopup((boolean_value) => !boolean_value);
+}
 
 const router = createBrowserRouter([
     {
@@ -37,7 +40,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/courseInfoPage',
-                element: <CourseInfoPage/>,
+                element: <CourseInfoPage showOrHidePopup={showOrHidePopup}/>,
                 errorElement: <ErrorNotFound/>
             },
             {
@@ -61,8 +64,8 @@ const router = createBrowserRouter([
                 errorElement: <ErrorNotFound/>
             },
             {
-                path: '/test',
-                element: <Test/>,
+                path: '/test/:testID',
+                element: <Test showOrHidePopup={showOrHidePopup}/>,
                 errorElement: <ErrorNotFound/>
             }
         ]

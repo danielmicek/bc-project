@@ -1,14 +1,14 @@
 import TypingAnimatedText from "../components/TypingAnimatedText.jsx";
 import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
-import {getRequest} from "../methods/fetchMethods.jsx";
+import {getRequest_user, postRequest_user} from "../methods/fetchMethods.jsx";
 import CircularIndeterminate from "../components/Loader.jsx";
 import DividerVariants from "../components/DividerVariants.jsx";
 import '../styles/ProfileStyles/UserPage.css';
 
 
 async function getUser(userId){ //async funkcia vzdy vracia promise
-    const responseObject = await getRequest(userId);
+    const responseObject = await getRequest_user(userId);
     const responseJson = await responseObject.json();
     return({userId: responseJson.userId,
         userName: responseJson.userName,
