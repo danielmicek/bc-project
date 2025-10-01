@@ -1,22 +1,13 @@
 /* global process */
 import dotenv from 'dotenv';
 import express from 'express';
-import http from 'http';
 import cors from "cors";
-import { Server } from 'socket.io';
 import pool from "./database.js";
 
 dotenv.config(); // Load environment variables from .env file
 const PORT = process.env.PORT || 3000;
 const app = express();
 app.use(express.json());
-const server = http.createServer(app);
-const io = new Server(server, {
-    cors: {
-        origin: "http://localhost:5173",
-        methods: ["GET", "POST"],
-    }
-});
 
 //this enables React frontend (running on port 5173) to make API calls to your Express backend (port 3000).
 app.use(cors({
@@ -24,7 +15,7 @@ app.use(cors({
 }));
 
 
-// ------------------GET REQUEST - USER---------------------------------------------------------------
+// ------------------GET REQUEST - GET USER---------------------------------------------------------------
 app.get("/getuser/:user_id", (request, response)=> {
     const user_id_from_request = request.params.user_id;
 
@@ -58,11 +49,10 @@ app.post("/adduser", async (request, response) => {
     const user_id = request.body["user_id"];
     const username = request.body["username"];
     const email = request.body["email"];
-    const first_name = request.body["first_name"];
-    const last_name = request.body["last_name"];
 
-    const insertQuery = "INSERT INTO users (user_id, username, email, first_name, last_name) VALUES ($1, $2, $3, $4, $5)";
-    pool.query(insertQuery, [user_id, username, email, first_name, last_name])
+
+    const insertQuery = "INSERT INTO users (user_id, username, email) VALUES ($1, $2, $3)";
+    pool.query(insertQuery, [user_id, username, email])
         .then((result) => {
         console.log(result);
         response.status(200);
@@ -98,11 +88,6 @@ app.post("/addtest", async (request, response) => {
         })
 })
 
-server.listen(PORT, () => {
+app.listen(PORT, () => {
     console.log("Server listening on port " + PORT);
 });
-
-
-
-
-

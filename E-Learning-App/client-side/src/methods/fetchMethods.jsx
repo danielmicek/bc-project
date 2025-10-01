@@ -1,6 +1,6 @@
 /*-------------USER API CALLS----------------------------------------------------------------*/
-export async function postRequest_user(clerk_id, email, first_name, last_name, usernameFromUser) {
-    const usernameRemake = usernameFromUser === null ? first_name + " " + last_name : usernameFromUser;
+export async function postRequest_user(clerk_id, email, first_name, last_name, username) {
+
     const x = await fetch(`http://localhost:3000/adduser`, {
         method: "POST",
         headers: {
@@ -8,10 +8,8 @@ export async function postRequest_user(clerk_id, email, first_name, last_name, u
         },
         body: JSON.stringify({
             user_id: clerk_id,
-            username: usernameRemake,
-            email: email,//"test" + randn(2) + "@gmail.com",
-            first_name: first_name,
-            last_name: last_name
+            username: username,
+            email: email //"test" + randn(2) + "@gmail.com",
         })
     })
         console.log(await x.text());
