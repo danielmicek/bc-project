@@ -8,7 +8,7 @@ import { Profile } from './pages/Profile.jsx'
 import { WhyUs } from './pages/WhyUs.jsx'
 import { ErrorNotFound } from "./pages/ErrorNotFound.jsx";
 import Header from "./components/Header.jsx";
-import {ClerkProvider, UserProfile} from "@clerk/clerk-react";
+import {ClerkProvider} from "@clerk/clerk-react";
 import UserPage from "./pages/UserPage.jsx";
 import Test from "./pages/Test.jsx";
 
@@ -64,7 +64,7 @@ const router = createBrowserRouter([
                 errorElement: <ErrorNotFound/>
             },
             {
-                path: '/test/:testID',
+                path: '/test',
                 element: <Test showOrHidePopup={showOrHidePopup}/>,
                 errorElement: <ErrorNotFound/>
             }

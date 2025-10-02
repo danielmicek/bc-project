@@ -1,3 +1,6 @@
+body{
+    font-family: "Roboto", sans-serif;
+}
 .popupContainer{
     /*--------------------------CENTER DIV-------------------------*/
     margin: 0;
@@ -50,7 +53,6 @@
 }
 
 .flag{
-    font-family: initial;
     background-color: var(--main-color-blue);
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;

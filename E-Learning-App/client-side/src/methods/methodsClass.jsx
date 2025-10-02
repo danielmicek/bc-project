@@ -13,3 +13,23 @@ export async function getUser(userId, user){ //async funkcia vzdy vracia promise
 
     }
 }
+
+let RIGHT_ANSWER_POINTS;
+let WRONG_ANSWER_POINTS;
+let DONT_ANSWER_POINTS
+let totalPoints;
+
+export function calculateTestResult({test}){
+    totalPoints = 0;
+    switch (test.difficulty) {
+        case "easy":
+            RIGHT_ANSWER_POINTS
+    }
+    for(let question of test){
+        for(let answer of question){
+            if(answer.selected && answer.correct){
+                totalPoints += RIGHT_ANSWER_POINTS;
+            }
+        }
+    }
+}

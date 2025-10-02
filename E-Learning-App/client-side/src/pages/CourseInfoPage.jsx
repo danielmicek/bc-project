@@ -5,7 +5,6 @@ import TestComponentVersion from "../components/TestComponentVersion.jsx";
 
 
 export function CourseInfoPage({showOrHidePopup}){
-
     return(
         <>
             {/*TODO this learningColumn will be probably changed*/}

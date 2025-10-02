@@ -31,7 +31,7 @@ export default function Header(){
         }
     }, [isSignedIn, user]);
 
-    return !location.pathname.startsWith("/test/") ? <div className = "header" >
+    return !location.pathname.startsWith("/test") ? <div className = "header" >
 
             <Link to = "/" className= "eleonoreText">
                 <h1>eleonore</h1>

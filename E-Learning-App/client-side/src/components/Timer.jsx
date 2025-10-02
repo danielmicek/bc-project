@@ -33,7 +33,9 @@ export default function Timer({minutes}) {
                 initialRemainingTime={minutes*60-1}
                 onComplete={(totalElapsedTime) => {
                     console.log("completed");
-                    return {shouldRepeat: totalElapsedTime === minutes*60}
+                    if(totalElapsedTime === minutes*60){
+                        return {shouldRepeat:true}
+                    }
                 }}
             >
                 {({ remainingTime, color }) => (

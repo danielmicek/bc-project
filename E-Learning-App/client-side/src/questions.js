@@ -6,11 +6,12 @@ export const QUESTIONS = [
         points: 5,
         body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         answered: false,
+        numOfRightAnswers: 1,
         answers: [
             { answer: "Answer 1", correct: true, selected: false, dontAnswer: false },
             { answer: "Answer 2", correct: false, selected: false, dontAnswer: false },
             { answer: "Answer 3", correct: false, selected: false, dontAnswer: false },
-            { answer: "Answer 4", correct: true, selected: false, dontAnswer: false },
+            { answer: "Answer 4", correct: false, selected: false, dontAnswer: false },
             { answer: "Don't answer", correct: false, selected: false, dontAnswer: true }
         ]
     },

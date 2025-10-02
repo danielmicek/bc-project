@@ -24,7 +24,7 @@ export default function SwiperComponent({testQuestions}) {
             <Swiper
                 onSwiper={(swiper) => { refSwiper.current = swiper;}}
                 slidesPerView={1}
-                spaceBetween={30}
+                spaceBetween={500}
                 loop={false}
                 pagination={pagination}
                 navigation={true}
@@ -36,7 +36,11 @@ export default function SwiperComponent({testQuestions}) {
             >
                 {testQuestions.map((question, index) => {
 
-                    return <SwiperSlide><Question activeIndex = {activeIndex} question = {question} key = {index}/></SwiperSlide>
+                    return <SwiperSlide><Question activeIndex = {activeIndex}
+                                                  question = {question}
+                                                  key = {index}
+
+                    /></SwiperSlide>
 
                 })}
 

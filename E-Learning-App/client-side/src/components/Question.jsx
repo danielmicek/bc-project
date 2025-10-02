@@ -1,7 +1,13 @@
 import "../styles/CourseStyles/QuestionStyle.css"
 import {useEffect, useState} from "react";
+import {useSearchParams} from "react-router-dom";
 
-function handleClick(selectedArray, setSelectedArray, index) {
+function getNumberOfCorrectAnswers(answers) {
+    return answers.reduce(
+        (accumulator, currentValue) => accumulator + (currentValue.correct ? 1 : 0), 0);
+}
+
+function handleClick(selectedArray, setSelectedArray, index, difficulty, answers) {
     if(index === 4){
         setSelectedArray(prevSelectedArray => {
             const newSelectedArray = [...prevSelectedArray];
@@ -18,11 +24,15 @@ function handleClick(selectedArray, setSelectedArray, index) {
         setSelectedArray(prevSelectedArray => {
             const newSelectedArray = [...prevSelectedArray];
             newSelectedArray[index] = !newSelectedArray[index];
+            if((difficulty === "Easy" || difficulty === "Medium") && getNumberOfCorrectAnswers(answers) === 1){
+                return newSelectedArray.map((value, i) => {
+                    return i === index; // return true if the index is selected, false otherwise
+                });
+            }
             newSelectedArray[newSelectedArray.length-1] = false;
             return newSelectedArray;
         })
     }
-
 }
 
 function styleSetter(selectedArray, index){
@@ -36,8 +46,8 @@ function styleSetter(selectedArray, index){
 
 export default function Question({activeIndex, question}) {
     const[selectedArray, setSelectedArray] = useState([false, false, false, false, false]);
-
-
+    const [searchParams] = useSearchParams();
+    const testDifficulty = searchParams.get("testDifficulty")
 
     useEffect(() => {
         for(let i = 0; i < selectedArray.length; i++){
@@ -47,31 +57,33 @@ export default function Question({activeIndex, question}) {
 
     return <>
         <div className="question">
+            {testDifficulty === "Medium" && <div className="selectionType" title="SS - Single-select | MM - Multi-select">
+                {getNumberOfCorrectAnswers(question.answers) > 1 ? "MS" : "SS"}</div>}
             <div className="title">{question.title}</div>
             <div className="body">{question.body}</div>
-            <div className="points">{question.points}</div>
+            <div title = "points" className="points">{question.points}</div>
             <div className="sideText">eleonore</div>
             <div className="questionNumber"></div>
         </div>
         <ul className="answers">
             <li className = "ans a" style = {styleSetter(selectedArray, 0)}
-            onClick={() => {handleClick(selectedArray, setSelectedArray, 0)}}>{question.answers[0].answer}
+            onClick={() => {handleClick(selectedArray, setSelectedArray, 0, testDifficulty, question.answers)}}>{question.answers[0].answer}
             </li>
 
             <li className = "ans b" style = {styleSetter(selectedArray, 1)}
-                onClick={() => {handleClick(selectedArray, setSelectedArray, 1)}}>{question.answers[1].answer}
+                onClick={() => {handleClick(selectedArray, setSelectedArray, 1, testDifficulty, question.answers)}}>{question.answers[1].answer}
             </li>
 
             <li className = "ans c" style = {styleSetter(selectedArray, 2)}
-                onClick={() => {handleClick(selectedArray, setSelectedArray, 2)}}>{question.answers[2].answer}
+                onClick={() => {handleClick(selectedArray, setSelectedArray, 2, testDifficulty, question.answers)}}>{question.answers[2].answer}
             </li>
 
             <li className = "ans d" style = {styleSetter(selectedArray, 3)}
-                onClick={() => {handleClick(selectedArray, setSelectedArray, 3)}}>{question.answers[3].answer}
+                onClick={() => {handleClick(selectedArray, setSelectedArray, 3, testDifficulty, question.answers)}}>{question.answers[3].answer}
             </li>
 
             <li className = "ans e" style = {styleSetter(selectedArray, 4)}
-                onClick = {() => {handleClick(selectedArray, setSelectedArray, 4)}}>{question.answers[4].answer}
+                onClick = {() => {handleClick(selectedArray, setSelectedArray, 4, testDifficulty, question.answers)}}>{question.answers[4].answer}
             </li>
         </ul>
         {/*<button onClick={() => {

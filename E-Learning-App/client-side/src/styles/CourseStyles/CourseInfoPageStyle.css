@@ -1,5 +1,5 @@
 body{
-    background-color: var(--main-color-creme);
+    background-color: white;
     overflow-y: auto;
 }
 
@@ -41,12 +41,18 @@ body{
     font-weight: 600;
 }
 
+.learnColumn, .pinkBackgroundFiller,
+.easyTestColumn, .brownBackgroundFiller,
+.mediumTestColumn, .whiteBackgroundFiller,
+.hardTestColumn, .blueBackgroundFiller{
+    border-radius: 20px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+}
 
 /*--------------------LEARN COLUMN-------------------------------------------------------*/
 .learnColumn{
     background-color: var(--main-color-blue);
     color: white;
-    filter: drop-shadow(15px 10px 8px #6a6969);
 
     grid-area: learnColumn;
 
@@ -72,8 +78,10 @@ body{
 }
 
 .learnColumn:hover .pinkBackgroundFiller{
-    top: 0;
-    right: 0;
+    top: -5px;
+    right: -5px;
+    height: 105%;
+    width: 105%;
 
     border-bottom-left-radius: 20px;
 }
@@ -87,7 +95,6 @@ body{
 /*--------------------EASY-BRONZE-TEST COLUMN--------------------------------------------------*/
 .easyTestColumn{
     background-color: white;
-    filter: drop-shadow(15px 10px 8px #6a6969);
 
     grid-area: easyTestColumn;
 
@@ -126,7 +133,6 @@ body{
 /*--------------------MEDIUM-SILVER-TEST COLUMN-------------------------------------------------------*/
 .mediumTestColumn{
     background-color: var(--main-color-pink);
-    filter: drop-shadow(15px 10px 8px #6a6969);
 
     grid-area: mediumTestColumn;
 
@@ -166,7 +172,6 @@ body{
 .hardTestColumn{
     background-color: var(--main-color-brown);
     position: relative;
-    filter: drop-shadow(15px 10px 8px #6a6969);
 
     grid-area: hardTestColumn;
 
