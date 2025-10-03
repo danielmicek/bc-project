@@ -1,6 +1,6 @@
 import TypingAnimatedText from "../components/TypingAnimatedText.jsx";
 import React, {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {useParams, useSearchParams} from "react-router-dom";
 import {getRequest_user, postRequest_user} from "../methods/fetchMethods.jsx";
 import CircularIndeterminate from "../components/Loader.jsx";
 import DividerVariants from "../components/DividerVariants.jsx";
@@ -27,16 +27,18 @@ export default function UserPage() {
         };
     }, []);
 
-    const { uid } = useParams();
+    const [searchParams] = useSearchParams();
+    const userId = searchParams.get("userId")
+
     //funguje to nasledovne: v useEffect volam funkciu outterGetUser(), v ktorej volam getUser, ten vracia JSON objekt, tato hodnota sa zapise do foundUser a nastane rerender
-    //musi to byt v useEffect pretoze potrebujem mat dependenciu, ktora ked sa zmeni tak sa vykona telo useEffect -> tam je useState ktory ulozi hodnotu vrateneho JSON objektu
-    //setTimeout je tam kvoli tomu, aby sa po kratkej chvili zmenila hodnota premennej  tempValue a mohol nastat rerender
+    //musi to byt v useEffect pretoze potrebujem mat dependenciu, ktora ked sa zmeni ak sa vykona telo useEffect -> tam je useState ktory ulozi hodnotu vrateneho JSON objektu
+    //setTimeout je tam kvoli tomu, aby sa po kratkej chvili zmenila hodnota premennej tempValue a mohol nastat rerender
     const [foundUser, setFoundUser] = useState(null);
     const [tempValue, setTempValue] = useState(0);
 
     useEffect(() => {
         async function outterGetUser() {
-            const data = await getUser(uid);
+            const data = await getUser(userId);
             setFoundUser(data);
         }
         outterGetUser();

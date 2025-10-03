@@ -41,7 +41,6 @@ body{
 }
 
 
-
 .answers{
     display: flex;
     position: relative;
@@ -109,6 +108,7 @@ body{
 .selectionType{
     color: black;
     border-radius: inherit;
+    z-index: 1;
 
     background-color: var(--main-color-brown);
     grid-area: 1 / 1 / 1 / 2;

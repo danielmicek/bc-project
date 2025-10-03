@@ -30,9 +30,10 @@ app.get("/getuser/:user_id", (request, response)=> {
             else{
                 response.status(200);
                 const foundUser = result.rows[0]
-                response.send({userId: foundUser.user_id,
-                                    userName: foundUser.username,
-                                    userEmail: foundUser.email
+                response.send({
+                    userId: foundUser.user_id,
+                    userName: foundUser.username,
+                    userEmail: foundUser.email
                 });
             }
 
@@ -87,6 +88,73 @@ app.post("/addtest", async (request, response) => {
             console.log(error);
         })
 })
+
+app.listen(PORT, () => {
+    console.log("Server listening on port " + PORT);
+});
+
+
+// ------------------POST REQUEST - POST FRIEND_REQUEST TO DBS---------------------------------------------------------------
+app.post("/friendRequest", async (request, response) => {
+    const user_id = request.body["user_id"];
+    const friend_id = request.body["friend_id"];
+    const status = request.body["status"];
+
+    const insertQuery_user_to_friend = "INSERT INTO friendship (user_id, friend_id, status) VALUES ($1, $2, $3)";
+    pool.query(insertQuery_user_to_friend, [user_id, friend_id, status])
+        .then((result) => {
+            console.log(result);
+            response.status(200);
+            response.send("Friend request send to: " + friend_id + "  Status code: " + response.statusCode);
+        })
+        .catch((error) => {
+            response.status(500);
+            console.log(error);
+        })
+
+    const insertQuery_friend_to_user = "INSERT INTO friendship (friend_id, user_id, status) VALUES ($1, $2, $3)";
+    pool.query(insertQuery_friend_to_user, [user_id, friend_id, status])
+        .then((result) => {
+            console.log(result);
+            response.status(200);
+            response.send("Friend request send to: " + friend_id + "  Status code: " + response.statusCode);
+        })
+        .catch((error) => {
+            response.status(500);
+            console.log(error);
+        })
+})
+
+
+// ------------------GET REQUEST - GET FRIENDSHIP---------------------------------------------------------------
+
+// making 2 queries because in dbs the friendship is in 2 rows - (user -> friend) and (friend -> user)
+
+app.get("/getFriendship/:userId/:friendId", (request, response)=> {
+    const { userId, friendId } = request.params;
+
+    const getQuery = "SELECT status FROM friendship WHERE user_id = $1 AND friend_id = $2";
+    pool.query(getQuery, [userId, friendId])
+        .then((result) => {
+            console.log(result);
+            if (result.rows.length === 0) {
+                response.status(404);
+                response.send("Friendship among users: " + userId + " and " + friendId + " does not exist.  Status code: " + response.statusCode);
+            }
+            else{
+                response.status(200);
+                const foundFrinedshipStatus = result.rows[0]
+                response.send({
+                    status: foundFrinedshipStatus.status
+                });
+            }
+
+        })
+        .catch((error) => {
+            response.status(500);
+            console.log(error);
+        })
+});
 
 app.listen(PORT, () => {
     console.log("Server listening on port " + PORT);

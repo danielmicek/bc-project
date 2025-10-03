@@ -4,7 +4,7 @@ import EndTestYesOrNo from "../components/EndTestYesOrNo.jsx";
 import { QUESTIONS } from "../questions.js";
 import Timer from "../components/Timer.jsx";
 import {useUser} from "@clerk/clerk-react";
-import {useParams, useSearchParams} from "react-router-dom";
+import {useSearchParams} from "react-router-dom";
 import {postRequest_test} from "../methods/fetchMethods.jsx";
 import SwiperComponent from "../components/Swiper.jsx";
 
@@ -86,20 +86,22 @@ export default function Test({showOrHidePopup}) {
     })
 
     return <>
-        <Timer minutes = {2}/>
-        <div className = "flag" ref={ref}>eleonore test</div>
 
+        <div className = "flag" ref={ref}>eleonore test</div>
+        <Timer minutes = {2}/>
 
         {testStarted && !openedEndTestPopup &&
             <>
-                <button className = "submitTest_button customButton"
-                        onClick={() => postRequest_test(searchParams.get("testID"), 50, getCurrentDate(), "C", "Silver", user.id, testQuestions)}
-                >Submit test</button>
+                <div className = "buttonContainer">
+                    <button className = "submitTest_button customButton"
+                            onClick={() => postRequest_test(searchParams.get("testID"), 50, getCurrentDate(), "C", "Silver", user.id, testQuestions)}
+                    >Submit test</button>
 
-                <button className="quitTest_button customButton" ref = {refForEndButton}
-                onClick={() => {
-                    showOrHidePopup(refForEnd, openedEndTestPopup, setOpenedEndTestPopup);
-                }}>Quit test</button>
+                    <button className="quitTest_button customButton" ref = {refForEndButton}
+                            onClick={() => {
+                                showOrHidePopup(refForEnd, openedEndTestPopup, setOpenedEndTestPopup);
+                            }}>Quit test</button>
+                </div>
 
 
                 <SwiperComponent testQuestions = {testQuestions}/>
@@ -107,8 +109,6 @@ export default function Test({showOrHidePopup}) {
         }
         <EndTestYesOrNo refForEnd = {refForEnd} showOrHidePopup={showOrHidePopup} setTestStarted = {setTestStarted}
                         openedEndPopup = {openedEndTestPopup} setOpenedEndPopup = {setOpenedEndTestPopup}/>
-        </>
 
-
-
+    </>
 }

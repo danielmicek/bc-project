@@ -17,12 +17,31 @@ export async function postRequest_user(clerk_id, email, first_name, last_name, u
 
 export async function getRequest_user(userId){
     return await fetch(`http://localhost:3000/getuser/${userId}`, {
-        method: "GET",
+        method: "GET"
+    })
+}
+/*----------------------------------------------------------------------------------------------*/
+
+/*-------------FRIENDSHIP_REQUEST API CALLS----------------------------------------------------------------*/
+export async function postRequest_friendship(userId, friendId) {
+    const x = await fetch(`http://localhost:3000/friendRequest`, {
+        method: "POST",
         headers: {
             "Content-Type": "application/json"
-        }
+        },
+        body: JSON.stringify({
+            user_id: userId,
+            friend_id: friendId,
+            status: "PENDING"
+        })
     })
+    console.log(await x.text());
+}
 
+export async function getRequest_friendship(userId, friendId){
+    return await fetch(`http://localhost:3000/getFriendship/${userId}/${friendId}`, {
+        method: "GET"
+    })
 }
 /*----------------------------------------------------------------------------------------------*/
 

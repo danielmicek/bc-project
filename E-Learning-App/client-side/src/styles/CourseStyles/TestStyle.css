@@ -46,10 +46,32 @@ body{
 .bottomText{ grid-area: bottomText;}
 .yesButton { grid-area: yesButton; }
 .noButton { grid-area: noButton; }
+
+.buttonContainer{
+    display: flex;
+    margin-right: 30px;
+}
+
 .submitTest_button{
-    display: inline-flex;
+    position: relative;
     width: 120px;
-    margin: 5px;
+    margin: 0 10px 20px 25px;
+    z-index: 999;
+}
+
+.quitTest_button{
+    position: relative;
+    z-index: 999;
+}
+
+@media (max-width: 750px){
+    .buttonContainer{
+        justify-content: center;
+    }
+
+    .timer{
+        justify-self: center;
+    }
 }
 
 .flag{
@@ -67,6 +89,7 @@ body{
 }
 
 .timer{
+    margin: 20px;
     width: fit-content;
     display: flex;
     gap: 10px;

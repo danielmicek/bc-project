@@ -2,12 +2,12 @@ import {SignedIn, SignedOut, SignInButton, UserButton, useUser} from "@clerk/cle
 import TypingAnimatedText from "../components/TypingAnimatedText.jsx";
 import SignedInProfilePage from "../components/SignedInProfilePage.jsx";
 import '../styles/ProfileStyles/ProfileStyle.css';
-import {postRequest_user} from "../methods/fetchMethods.jsx";
+import {getRequest_friendship, postRequest_friendship, postRequest_user} from "../methods/fetchMethods.jsx";
 import React, {useEffect} from "react";
 import randn from "randn"
 import { clerkClient } from '@clerk/express'
 import CircularIndeterminate from "../components/Loader.jsx";
-import {getUser} from "../methods/methodsClass.jsx";
+import {getUser, sendFriendRequest} from "../methods/methodsClass.jsx";
 
 
 
@@ -57,12 +57,17 @@ export function Profile(){
                             }}/>
             </SignedIn>
 
+        <button className = "customButton" onClick={() => {
+            sendFriendRequest(user.id, "http://localhost:5173/userPage/?userId=user_33ZF02HSM9FeYH1cD8GRpXTlMuZ")
+        }}>Send FR</button>
+
+
 
         {isSignedIn ?
-            <div className = "loggedScreen">
-                <SignedInProfilePage uid = {user.id} userName = {user.username}/>
 
-            </div> :
+            <SignedInProfilePage uid = {user.id} userName = {user.username}/>
+
+             :
             <>
                 <div className= "circle">
                     <p className= "gridItem circleBigText">Not signed yet?</p>
@@ -79,11 +84,6 @@ export function Profile(){
                     <div className="gridItem2 item-e">Get certificate</div>
                 </div></>
         }
-
-        <button className = "createUser" onClick = {() =>
-            postRequest_user("Jonatan", "test" + randn(2) + "@gmail.com")}> Create user in  dbs </button>
-        <button className = "deleteUser" onClick = {() =>
-            clerkClient.users.deleteUser("123")}> Delete user from Clerk </button>
         {/*<Link to = {`/userPage/${user.id}`} className="buttonLink">*/}
         {/*    <button className="customButton">user profile</button>*/}
         {/*</Link>*/}

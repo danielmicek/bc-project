@@ -4,21 +4,26 @@ body.backgroundImage{
 
 html, body{
     height: 100vh;
-    width: 100%;
-    overflow-y: hidden;
+    width: 100vw;
+    overflow-x: hidden;
 }
 
-
+.clickToCopy{
+    display: block;
+    width: fit-content;
+}
 /*LOGGED PROFILE PAGE*/
 .grid-container-logged-profile-page { /* welcome user */
     display: grid;
     position: absolute;
 
+    border: 5px solid var(--main-color-brown);
     gap: 5px;
     border-radius: 20px;
-    width: 13cm;
+    width: 25cm;
+    height: 10cm;
     top: 170px;
-    right: 65%;
+    right: 5cm;
 
     grid-template-columns: 50% 50%;
     grid-template-rows: 50px 50px 50px 50px;
@@ -256,18 +261,6 @@ html, body{
     }
 }
 
-.createUser{
-    position: absolute;
-    top: 3cm;
-    right: 3cm;
-}
-
-.deleteUser{
-    position: absolute;
-    top: 4cm;
-    right: 3cm;
-}
-
 .loader{
     position: absolute;
     left: 50%;
@@ -275,16 +268,6 @@ html, body{
 }
 
 
-.container-grid-click-to-copy{
-    display: grid;
-    width: 18cm;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr;
-    gap: 0px 10px;
-    grid-template-areas:
-    "copyText copyText copyText copyButton";
-    border: 3px solid #F7374F;
-}
 
 /*----------------------CLICK TO COPY*/
 .copyText {

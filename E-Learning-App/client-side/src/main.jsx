@@ -59,7 +59,7 @@ const router = createBrowserRouter([
                 errorElement: <ErrorNotFound/>
             },
             {
-                path: '/userPage/:uid',
+                path: '/userPage',
                 element: <UserPage/>,
                 errorElement: <ErrorNotFound/>
             },

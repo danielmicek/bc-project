@@ -1,6 +1,5 @@
 import { motion, useAnimationControls } from "framer-motion";
 import { useEffect, useState } from "react";
-import '../styles/ProfileStyles/AnimatedTextStyle.css';
 function TypingText({
                         words = ["Your Journey", "Starts Here.", "Now."],
                         typingSpeed = 50,

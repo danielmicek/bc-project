@@ -28,7 +28,7 @@ export default function Timer({minutes}) {
                 isPlaying={true}
                 size={120}
                 strokeWidth={6}
-                colors="#EF798A"
+                colors="var(--main-color-pink)"
                 duration={minutes*60}
                 initialRemainingTime={minutes*60-1}
                 onComplete={(totalElapsedTime) => {
@@ -48,7 +48,7 @@ export default function Timer({minutes}) {
                 isPlaying={true}
                 size={120}
                 strokeWidth={6}
-                colors="#218380"
+                colors="var(--main-color-blue)"
                 duration={60}
                 initialRemainingTime={minutes*60-1}
                 onComplete={(totalElapsedTime) => {
