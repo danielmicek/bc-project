@@ -7,7 +7,7 @@ import React, {useEffect} from "react";
 import randn from "randn"
 import { clerkClient } from '@clerk/express'
 import CircularIndeterminate from "../components/Loader.jsx";
-import {getUser, sendFriendRequest} from "../methods/methodsClass.jsx";
+import {acceptFriendRequest, getUser, sendFriendRequest} from "../methods/methodsClass.jsx";
 
 
 
@@ -60,6 +60,10 @@ export function Profile(){
         <button className = "customButton" onClick={() => {
             sendFriendRequest(user.id, "http://localhost:5173/userPage/?userId=user_33ZF02HSM9FeYH1cD8GRpXTlMuZ")
         }}>Send FR</button>
+
+        <button className = "customButton" onClick={() => {
+            acceptFriendRequest(user.id)
+        }}>Accept FR</button>
 
 
 

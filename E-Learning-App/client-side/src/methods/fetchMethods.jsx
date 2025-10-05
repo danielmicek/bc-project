@@ -32,15 +32,28 @@ export async function postRequest_friendship(userId, friendId) {
         body: JSON.stringify({
             user_id: userId,
             friend_id: friendId,
-            status: "PENDING"
+            status: "PENDING",
+            from: userId
         })
     })
     console.log(await x.text());
 }
 
-export async function getRequest_friendship(userId, friendId){
+export async function getRequest_friendship(userId, friendId){         // check if friendship with particular user exists (the state does not matter)
     return await fetch(`http://localhost:3000/getFriendship/${userId}/${friendId}`, {
         method: "GET"
+    })
+}
+
+export async function getRequest_allFriendRequests(userId){
+    return await fetch(`http://localhost:3000/getAllFriendRequests/${userId}`, {
+        method: "GET"
+    })
+}
+
+export async function patchRequest_allFriendRequests(userId, friendId){    // accepting frined request by updating status PENDING to ACCEPTED
+    return await fetch(`http://localhost:3000/getFriendship/${userId}/${friendId}`, {
+        method: "PATCH"
     })
 }
 /*----------------------------------------------------------------------------------------------*/

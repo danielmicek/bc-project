@@ -99,9 +99,10 @@ app.post("/friendRequest", async (request, response) => {
     const user_id = request.body["user_id"];
     const friend_id = request.body["friend_id"];
     const status = request.body["status"];
+    const from = request.body["from"];
 
-    const insertQuery_user_to_friend = "INSERT INTO friendship (user_id, friend_id, status) VALUES ($1, $2, $3)";
-    pool.query(insertQuery_user_to_friend, [user_id, friend_id, status])
+    const insertQuery_user_to_friend = "INSERT INTO friendship (user_id, friend_id, status, from_user) VALUES ($1, $2, $3, $4)";
+    pool.query(insertQuery_user_to_friend, [user_id, friend_id, status, from])
         .then((result) => {
             console.log(result);
             response.status(200);
@@ -112,8 +113,8 @@ app.post("/friendRequest", async (request, response) => {
             console.log(error);
         })
 
-    const insertQuery_friend_to_user = "INSERT INTO friendship (friend_id, user_id, status) VALUES ($1, $2, $3)";
-    pool.query(insertQuery_friend_to_user, [user_id, friend_id, status])
+    const insertQuery_friend_to_user = "INSERT INTO friendship (friend_id, user_id, status, from_user) VALUES ($1, $2, $3, $4)";
+    pool.query(insertQuery_friend_to_user, [user_id, friend_id, status, from])
         .then((result) => {
             console.log(result);
             response.status(200);
@@ -127,8 +128,6 @@ app.post("/friendRequest", async (request, response) => {
 
 
 // ------------------GET REQUEST - GET FRIENDSHIP---------------------------------------------------------------
-
-// making 2 queries because in dbs the friendship is in 2 rows - (user -> friend) and (friend -> user)
 
 app.get("/getFriendship/:userId/:friendId", (request, response)=> {
     const { userId, friendId } = request.params;
@@ -158,4 +157,46 @@ app.get("/getFriendship/:userId/:friendId", (request, response)=> {
 
 app.listen(PORT, () => {
     console.log("Server listening on port " + PORT);
+});
+
+// ------------------GET REQUEST - GET ALL USER'S FRIEND REQUESTS---------------------------------------------------------------
+app.get("/getAllFriendRequests/:userId", (request, response)=> {
+    const user_id = request.params.userId;
+    const getQuery = "SELECT friend_id FROM friendship WHERE user_id = $1 AND from_user != $1 AND status = 'PENDING'";
+    pool.query(getQuery, [user_id])
+        .then((result) => {
+            console.log(result);
+            if (result.rows.length === 0) {
+                response.status(404);
+                response.send("No pending friend requests.");
+            }
+            else{
+                response.status(200);
+                let foundFriends = result.rows.map(row => row.friend_id); // returns an array of user's friends
+                response.send(foundFriends);
+            }
+
+        })
+        .catch((error) => {
+            response.status(500);
+            console.log(error);
+        })
+});
+
+
+// ------------------PATCH REQUEST - UPDATE STATUS PENDING TO ACCEPTED---------------------------------------------------------------
+app.patch("/getFriendship/:userId/:friendId", (request, response)=> {
+    const { userId, friendId } = request.params;
+
+    const getQuery = "UPDATE friendship SET status = 'ACCEPTED' WHERE (user_id = $1 OR user_id = $2) AND (friend_id = $2 OR friend_id = $1) AND status = 'PENDING'";
+    pool.query(getQuery, [userId, friendId])
+        .then((result) => {
+            console.log(result);
+            response.status(200);
+            response.send("Friend request accepted\nStatus code: " + response.statusCode);
+        })
+        .catch((error) => {
+            response.status(500);
+            console.log(error);
+        })
 });
