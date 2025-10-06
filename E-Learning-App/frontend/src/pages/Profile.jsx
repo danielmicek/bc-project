@@ -2,10 +2,7 @@ import {SignedIn, SignedOut, SignInButton, UserButton, useUser} from "@clerk/cle
 import TypingAnimatedText from "../components/TypingAnimatedText.jsx";
 import SignedInProfilePage from "../components/SignedInProfilePage.jsx";
 import '../styles/ProfileStyles/ProfileStyle.css';
-import {getRequest_friendship, postRequest_friendship, postRequest_user} from "../methods/fetchMethods.jsx";
 import React, {useEffect} from "react";
-import randn from "randn"
-import { clerkClient } from '@clerk/express'
 import CircularIndeterminate from "../components/Loader.jsx";
 import {acceptFriendRequest, getUser, sendFriendRequest} from "../methods/methodsClass.jsx";
 

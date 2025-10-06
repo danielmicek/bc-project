@@ -5,7 +5,7 @@ import cors from "cors";
 import pool from "./database.js";
 
 dotenv.config(); // Load environment variables from .env file
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.BACKEND_PORT || 3000;
 const app = express();
 app.use(express.json());
 
@@ -89,10 +89,6 @@ app.post("/addtest", async (request, response) => {
         })
 })
 
-app.listen(PORT, () => {
-    console.log("Server listening on port " + PORT);
-});
-
 
 // ------------------POST REQUEST - POST FRIEND_REQUEST TO DBS---------------------------------------------------------------
 app.post("/friendRequest", async (request, response) => {
@@ -155,9 +151,6 @@ app.get("/getFriendship/:userId/:friendId", (request, response)=> {
         })
 });
 
-app.listen(PORT, () => {
-    console.log("Server listening on port " + PORT);
-});
 
 // ------------------GET REQUEST - GET ALL USER'S FRIEND REQUESTS---------------------------------------------------------------
 app.get("/getAllFriendRequests/:userId", (request, response)=> {
@@ -199,4 +192,14 @@ app.patch("/getFriendship/:userId/:friendId", (request, response)=> {
             response.status(500);
             console.log(error);
         })
+});
+
+
+
+
+
+
+
+app.listen(PORT, () => {
+    console.log("Server listening on port " + PORT);
 });
