@@ -7,9 +7,6 @@ import CircularIndeterminate from "../components/Loader.jsx";
 import {acceptFriendRequest, getUser, sendFriendRequest} from "../methods/methodsClass.jsx";
 
 
-
-
-
 export function Profile(){
 
     useEffect(() => { // Add the backgroundImage class to the body element so I can have different background image on each page

@@ -16,7 +16,7 @@ app.use(cors({
 
 
 // ------------------GET REQUEST - GET USER---------------------------------------------------------------
-app.get("/getuser/:user_id", (request, response)=> {
+app.get("/api/getUser/:user_id", (request, response)=> {
     const user_id_from_request = request.params.user_id;
 
     const getQuery = "SELECT user_id, username, email FROM users WHERE user_id = $1";
@@ -46,7 +46,7 @@ app.get("/getuser/:user_id", (request, response)=> {
 
 
 // ------------------POST REQUEST - POST USER TO DBS---------------------------------------------------------------
-app.post("/adduser", async (request, response) => {
+app.post("/api/addUser", async (request, response) => {
     const user_id = request.body["user_id"];
     const username = request.body["username"];
     const email = request.body["email"];
@@ -67,7 +67,7 @@ app.post("/adduser", async (request, response) => {
 
 
 // ------------------POST REQUEST - POST TEST TO DBS---------------------------------------------------------------
-app.post("/addtest", async (request, response) => {
+app.post("/api/addTest", async (request, response) => {
     const test_id = request.body["test_id"];
     const points = request.body["points"];
     const date = request.body["date"];
@@ -91,7 +91,7 @@ app.post("/addtest", async (request, response) => {
 
 
 // ------------------POST REQUEST - POST FRIEND_REQUEST TO DBS---------------------------------------------------------------
-app.post("/friendRequest", async (request, response) => {
+app.post("/api/friendRequest", async (request, response) => {
     const user_id = request.body["user_id"];
     const friend_id = request.body["friend_id"];
     const status = request.body["status"];
@@ -125,7 +125,7 @@ app.post("/friendRequest", async (request, response) => {
 
 // ------------------GET REQUEST - GET FRIENDSHIP---------------------------------------------------------------
 
-app.get("/getFriendship/:userId/:friendId", (request, response)=> {
+app.get("/api/getFriendship/:userId/:friendId", (request, response)=> {
     const { userId, friendId } = request.params;
 
     const getQuery = "SELECT status FROM friendship WHERE user_id = $1 AND friend_id = $2";
@@ -153,7 +153,7 @@ app.get("/getFriendship/:userId/:friendId", (request, response)=> {
 
 
 // ------------------GET REQUEST - GET ALL USER'S FRIEND REQUESTS---------------------------------------------------------------
-app.get("/getAllFriendRequests/:userId", (request, response)=> {
+app.get("/api/getAllFriendRequests/:userId", (request, response)=> {
     const user_id = request.params.userId;
     const getQuery = "SELECT friend_id FROM friendship WHERE user_id = $1 AND from_user != $1 AND status = 'PENDING'";
     pool.query(getQuery, [user_id])
@@ -178,7 +178,7 @@ app.get("/getAllFriendRequests/:userId", (request, response)=> {
 
 
 // ------------------PATCH REQUEST - UPDATE STATUS PENDING TO ACCEPTED---------------------------------------------------------------
-app.patch("/getFriendship/:userId/:friendId", (request, response)=> {
+app.patch("/api/getFriendship/:userId/:friendId", (request, response)=> {
     const { userId, friendId } = request.params;
 
     const getQuery = "UPDATE friendship SET status = 'ACCEPTED' WHERE (user_id = $1 OR user_id = $2) AND (friend_id = $2 OR friend_id = $1) AND status = 'PENDING'";

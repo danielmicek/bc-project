@@ -1,7 +1,7 @@
 /*-------------USER API CALLS----------------------------------------------------------------*/
 export async function postRequest_user(clerk_id, email, first_name, last_name, username) {
 
-    const x = await fetch(`http://localhost:3000/adduser`, {
+    const x = await fetch(`http://localhost:3000/api/addUser`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -16,7 +16,7 @@ export async function postRequest_user(clerk_id, email, first_name, last_name, u
 }
 
 export async function getRequest_user(userId){
-    return await fetch(`http://localhost:3000/getuser/${userId}`, {
+    return await fetch(`http://localhost:3000/api/getUser/${userId}`, {
         method: "GET"
     })
 }
@@ -24,7 +24,7 @@ export async function getRequest_user(userId){
 
 /*-------------FRIENDSHIP_REQUEST API CALLS----------------------------------------------------------------*/
 export async function postRequest_friendship(userId, friendId) {
-    const x = await fetch(`http://localhost:3000/friendRequest`, {
+    const x = await fetch(`http://localhost:3000/api/friendRequest`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -40,19 +40,19 @@ export async function postRequest_friendship(userId, friendId) {
 }
 
 export async function getRequest_friendship(userId, friendId){         // check if friendship with particular user exists (the state does not matter)
-    return await fetch(`http://localhost:3000/getFriendship/${userId}/${friendId}`, {
+    return await fetch(`http://localhost:3000/api/getFriendship/${userId}/${friendId}`, {
         method: "GET"
     })
 }
 
 export async function getRequest_allFriendRequests(userId){
-    return await fetch(`http://localhost:3000/getAllFriendRequests/${userId}`, {
+    return await fetch(`http://localhost:3000/api/getAllFriendRequests/${userId}`, {
         method: "GET"
     })
 }
 
 export async function patchRequest_allFriendRequests(userId, friendId){    // accepting frined request by updating status PENDING to ACCEPTED
-    return await fetch(`http://localhost:3000/getFriendship/${userId}/${friendId}`, {
+    return await fetch(`http://localhost:3000/api/getFriendship/${userId}/${friendId}`, {
         method: "PATCH"
     })
 }
@@ -60,7 +60,7 @@ export async function patchRequest_allFriendRequests(userId, friendId){    // ac
 
 /*-------------TEST API CALLS----------------------------------------------------------------*/
 export async function postRequest_test(testID, points, date, grade, medal, userID, structure) {
-    const x = await fetch(`http://localhost:3000/addtest`, {
+    const x = await fetch(`http://localhost:3000/api/addTest`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
