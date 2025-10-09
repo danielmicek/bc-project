@@ -3,7 +3,7 @@ import ClickToCopy from "./ClickToCopy.jsx";
 import {useUser} from "@clerk/clerk-react";
 
 
-export default function SignedInProfilePage({uid, userName}){
+export default function SignedInProfilePage(){
     const {user} = useUser();
     return(<>
 
@@ -21,7 +21,7 @@ export default function SignedInProfilePage({uid, userName}){
             <div className = "bestTest">Best test score: TBA</div>
             {/*todo done tests*/}
         </div>
-        <ClickToCopy className = "clickToCopy" userId = {uid}/>
+        <ClickToCopy className = "clickToCopy" username = {user.username}/>
 
     </>)
 }

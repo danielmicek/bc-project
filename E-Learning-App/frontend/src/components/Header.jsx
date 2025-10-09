@@ -25,9 +25,9 @@ export default function Header(){
         };
     }, []);
 
-    useEffect(() => {
+    useEffect(() => { //todo probably wont need this, can delete later
         if (isSignedIn && user) {
-            getUser_info(user.id, user);
+            getUser_info(user);
         }
     }, [isSignedIn, user]);
 

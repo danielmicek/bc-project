@@ -2,14 +2,17 @@ import {SignedIn, SignedOut, SignInButton, UserButton, useUser} from "@clerk/cle
 import TypingAnimatedText from "../components/TypingAnimatedText.jsx";
 import SignedInProfilePage from "../components/SignedInProfilePage.jsx";
 import '../styles/ProfileStyles/ProfileStyle.css';
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import CircularIndeterminate from "../components/Loader.jsx";
 import {acceptFriendRequest, getUser_info, sendFriendRequest} from "../methods/methodsClass.jsx";
+import {GET_allFriendRequests} from "../methods/fetchMethods.jsx";
 
 
 export function Profile(){
 
-    const [userImgUrlArray, setUserImgUrlArray] = useState([]);
+    const [userFriendRequestsArray, setUserFriendRequestsArray] = useState([]);
+    const [userFriendsArray, setUserFriendsArray] = useState([]);
+    const inputRef = useRef(null);
 
     useEffect(() => { // Add the backgroundImage class to the body element so I can have different background image on each page
         document.body.classList.add("backgroundImage");
@@ -24,10 +27,10 @@ export function Profile(){
             user.username = user.firstName + " " + user.lastName;
         }
     }
-    // Call the postRequest function when the user state changes
+    // Call the postRequest function when the user state changes to save the user's information to the database
     useEffect(() => {
         if (isSignedIn && user) {
-            getUser_info(user.id, user);
+            getUser_info(user);
         }
     }, [isSignedIn, user]);
 
@@ -39,7 +42,8 @@ export function Profile(){
     }
 
 
-    //console.log(userImgUrlArray);
+    console.log("friends: " + userFriendsArray);
+    console.log("friend requests: " + userFriendRequestsArray);
 
     return <>
 
@@ -54,23 +58,45 @@ export function Profile(){
             </SignedIn>
 
         <button className = "customButton" onClick={() => {
-            sendFriendRequest(user.id, "http://localhost:5173/userPage/?userId=user_33ZF02HSM9FeYH1cD8GRpXTlMuZ")
-        }}>Send FR</button>
-
-        <button className = "customButton" onClick={() => {
-            acceptFriendRequest(user.id)
-                .then(arrayOfAcceptedFriends => setUserImgUrlArray(arrayOfAcceptedFriends));
-
+            acceptFriendRequest(user.username, "sandor", setUserFriendsArray);
         }}>Accept FR</button>
 
+        <button className = "customButton" onClick={() => {
+            GET_allFriendRequests(user.username).then(result => async function () {
+                // first ↑ we get all friend-requests from the database, then we add each FR to array so we can display it on the page
+                if(result.status === 404){
+                    console.log(await result.text());
+                    return;
+                }
+                const friendRequests = await result.json();
+                setUserFriendRequestsArray([]); // reset the array so everytime we get fresh FR from the db
+                for(let friendRequest of friendRequests){
+                    setUserFriendRequestsArray(prevArray => [...prevArray, friendRequest]);
+                }
+            }())
+        }}>Show FR</button>
 
-
-
+        <form
+            onSubmit = {(event) => {
+                event.preventDefault();
+                sendFriendRequest(user.username, inputRef.current.value);
+            }}
+        >
+            <input
+                ref = {inputRef}
+                type = "text"
+                placeholder = "Enter user's id or URL"
+                pattern = "^([a-zA-Z0-9\-_\s]{4,15}|https?:\/\/.+)$" //regex for either being string of length č-15 or url address which i validate in sendFriendRequest
+                onInvalid = {() => console.log("Invalid input")}
+                required // when present, it specifies that an input field must be filled out before submitting the form
+            />
+            <button type="submit" className="customButton">Send FR</button>
+        </form>
 
 
         {isSignedIn ?
 
-            <SignedInProfilePage uid = {user.id} userName = {user.username}/>
+            <SignedInProfilePage/>
 
              :
             <>

@@ -16,7 +16,7 @@ export default function UserPage() {
     }, []);
 
     const [searchParams] = useSearchParams();
-    const userId = searchParams.get("userId")
+    const username = searchParams.get("username")
 
     //funguje to nasledovne: v useEffect volam funkciu outterGetUser(), v ktorej volam getUser, ten vracia JSON objekt, tato hodnota sa zapise do foundUser a nastane rerender
     //musi to byt v useEffect pretoze potrebujem mat dependenciu, ktora ked sa zmeni ak sa vykona telo useEffect -> tam je useState ktory ulozi hodnotu vrateneho JSON objektu
@@ -26,7 +26,7 @@ export default function UserPage() {
 
     useEffect(() => {
         async function outterGetUser() {
-            const data = await getUser_object(userId);
+            const data = await getUser_object(username);
             setFoundUser(data);
         }
         outterGetUser();

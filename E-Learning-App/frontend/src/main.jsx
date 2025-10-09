@@ -1,12 +1,12 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import {StrictMode} from 'react'
+import {createRoot} from 'react-dom/client'
 import {createBrowserRouter, Outlet, RouterProvider} from 'react-router-dom';
 import './styles/index.css'
 import Home from './pages/Home.jsx'
-import { CourseInfoPage } from './pages/CourseInfoPage.jsx'
-import { Profile } from './pages/Profile.jsx'
-import { WhyUs } from './pages/WhyUs.jsx'
-import { ErrorNotFound } from "./pages/ErrorNotFound.jsx";
+import {CourseInfoPage} from './pages/CourseInfoPage.jsx'
+import {Profile} from './pages/Profile.jsx'
+import {WhyUs} from './pages/WhyUs.jsx'
+import {ErrorNotFound} from "./pages/ErrorNotFound.jsx";
 import Header from "./components/Header.jsx";
 import {ClerkProvider} from "@clerk/clerk-react";
 import UserPage from "./pages/UserPage.jsx";

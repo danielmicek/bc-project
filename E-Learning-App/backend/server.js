@@ -16,16 +16,18 @@ app.use(cors({
 
 
 // ------------------GET REQUEST - GET USER---------------------------------------------------------------
-app.get("/api/getUser/:user_id", (request, response)=> {
-    const user_id_from_request = request.params.user_id;
+app.get("/api/getUser/:username", (request, response)=> {
+    let username = request.params.username;
 
-    const getQuery = "SELECT user_id, username, email FROM users WHERE user_id = $1";
-    pool.query(getQuery, [user_id_from_request])
+
+    const getQuery = "SELECT user_id, username, email, image_url FROM users WHERE username = $1";
+
+    pool.query(getQuery, [username])
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
                 response.status(404);
-                response.send("user_id: " + user_id_from_request + " not found.  Status code: " + response.statusCode);
+                response.send("user_id: " + username + " not found.  Status code: " + response.statusCode);
             }
             else{
                 response.status(200);
@@ -33,7 +35,8 @@ app.get("/api/getUser/:user_id", (request, response)=> {
                 response.send({
                     userId: foundUser.user_id,
                     userName: foundUser.username,
-                    userEmail: foundUser.email
+                    userEmail: foundUser.email,
+                    imageUrl: foundUser.image_url
                 });
             }
 
@@ -50,10 +53,11 @@ app.post("/api/addUser", async (request, response) => {
     const user_id = request.body["user_id"];
     const username = request.body["username"];
     const email = request.body["email"];
+    const image_url = request.body["image_url"];
 
 
-    const insertQuery = "INSERT INTO users (user_id, username, email) VALUES ($1, $2, $3)";
-    pool.query(insertQuery, [user_id, username, email])
+    const insertQuery = "INSERT INTO users (user_id, username, email, image_url) VALUES ($1, $2, $3, $4)";
+    pool.query(insertQuery, [user_id, username, email, image_url])
         .then((result) => {
         console.log(result);
         response.status(200);
@@ -73,11 +77,11 @@ app.post("/api/addTest", async (request, response) => {
     const date = request.body["date"];
     const grade = request.body["grade"];
     const medal = request.body["medal"];
-    const fk_user_id = request.body["fk_user_id"];
+    const fk_username = request.body["fk_username"];
     const structure = request.body["structure"];
 
-    const insertQuery = "INSERT INTO tests (test_id, points, date, grade, medal, fk_user_id, structure) VALUES ($1, $2, $3, $4, $5, $6, $7)";
-    pool.query(insertQuery, [test_id, points, date, grade, medal, fk_user_id, JSON.stringify(structure)])
+    const insertQuery = "INSERT INTO tests (test_id, points, date, grade, medal, fk_username, structure) VALUES ($1, $2, $3, $4, $5, $6, $7)";
+    pool.query(insertQuery, [test_id, points, date, grade, medal, fk_username, JSON.stringify(structure)])
         .then((result) => {
             console.log(result);
             response.status(200);
@@ -92,29 +96,29 @@ app.post("/api/addTest", async (request, response) => {
 
 // ------------------POST REQUEST - POST FRIEND_REQUEST TO DBS---------------------------------------------------------------
 app.post("/api/friendRequest", async (request, response) => {
-    const user_id = request.body["user_id"];
-    const friend_id = request.body["friend_id"];
+    const userUsername = request.body["user_username"];
+    const friendUsername = request.body["friend_username"];
     const status = request.body["status"];
     const from = request.body["from"];
 
-    const insertQuery_user_to_friend = "INSERT INTO friendship (user_id, friend_id, status, from_user) VALUES ($1, $2, $3, $4)";
-    pool.query(insertQuery_user_to_friend, [user_id, friend_id, status, from])
+    const insertQuery_user_to_friend = "INSERT INTO friendship (user_username, friend_username, status, from_user) VALUES ($1, $2, $3, $4)";
+    pool.query(insertQuery_user_to_friend, [userUsername, friendUsername, status, from])
         .then((result) => {
             console.log(result);
             response.status(200);
-            response.send("Friend request send to: " + friend_id + "  Status code: " + response.statusCode);
+            response.send("Friend request send to: " + friendUsername + "  Status code: " + response.statusCode);
         })
         .catch((error) => {
             response.status(500);
             console.log(error);
         })
 
-    const insertQuery_friend_to_user = "INSERT INTO friendship (friend_id, user_id, status, from_user) VALUES ($1, $2, $3, $4)";
-    pool.query(insertQuery_friend_to_user, [user_id, friend_id, status, from])
+    const insertQuery_friend_to_user = "INSERT INTO friendship (friend_username, user_username, status, from_user) VALUES ($1, $2, $3, $4)";
+    pool.query(insertQuery_friend_to_user, [userUsername, friendUsername, status, from])
         .then((result) => {
             console.log(result);
             response.status(200);
-            response.send("Friend request send to: " + friend_id + "  Status code: " + response.statusCode);
+            response.send("Friend request send to: " + friendUsername + "  Status code: " + response.statusCode);
         })
         .catch((error) => {
             response.status(500);
@@ -125,16 +129,16 @@ app.post("/api/friendRequest", async (request, response) => {
 
 // ------------------GET REQUEST - GET FRIENDSHIP---------------------------------------------------------------
 
-app.get("/api/getFriendship/:userId/:friendId", (request, response)=> {
-    const { userId, friendId } = request.params;
+app.get("/api/getFriendship/:userUsername/:friendUsername", (request, response)=> {
+    const { userUsername, friendUsername } = request.params;
 
-    const getQuery = "SELECT status FROM friendship WHERE user_id = $1 AND friend_id = $2";
-    pool.query(getQuery, [userId, friendId])
+    const getQuery = "SELECT status FROM friendship WHERE user_username = $1 AND friend_username = $2";
+    pool.query(getQuery, [userUsername, friendUsername])
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
                 response.status(404);
-                response.send("Friendship among users: " + userId + " and " + friendId + " does not exist.  Status code: " + response.statusCode);
+                response.send("Friendship among users: " + userUsername + " and " + friendUsername + " does not exist.  Status code: " + response.statusCode);
             }
             else{
                 response.status(200);
@@ -153,10 +157,10 @@ app.get("/api/getFriendship/:userId/:friendId", (request, response)=> {
 
 
 // ------------------GET REQUEST - GET ALL USER'S FRIEND REQUESTS---------------------------------------------------------------
-app.get("/api/getAllFriendRequests/:userId", (request, response)=> {
-    const user_id = request.params.userId;
-    const getQuery = "SELECT friend_id FROM friendship WHERE user_id = $1 AND from_user != $1 AND status = 'PENDING'";
-    pool.query(getQuery, [user_id])
+app.get("/api/getAllFriendRequests/:username", (request, response)=> {
+    const username = request.params.username;
+    const getQuery = "SELECT friend_username FROM friendship WHERE user_username = $1 AND from_user != $1 AND status = 'PENDING'";
+    pool.query(getQuery, [username])
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
@@ -165,7 +169,7 @@ app.get("/api/getAllFriendRequests/:userId", (request, response)=> {
             }
             else{
                 response.status(200);
-                let foundFriends = result.rows.map(row => row.friend_id); // returns an array of user's friends
+                let foundFriends = result.rows.map(row => row.friend_username); // returns an array of user's friends
                 response.send(foundFriends);
             }
 
@@ -178,15 +182,15 @@ app.get("/api/getAllFriendRequests/:userId", (request, response)=> {
 
 
 // ------------------PATCH REQUEST - UPDATE STATUS PENDING TO ACCEPTED---------------------------------------------------------------
-app.patch("/api/getFriendship/:userId/:friendId", (request, response)=> {
-    const { userId, friendId } = request.params;
+app.patch("/api/getFriendship/:userUsername/:friendUsername", (request, response)=> {
+    const { userUsername, friendUsername } = request.params;
 
-    const getQuery = "UPDATE friendship SET status = 'ACCEPTED' WHERE (user_id = $1 OR user_id = $2) AND (friend_id = $2 OR friend_id = $1) AND status = 'PENDING'";
-    pool.query(getQuery, [userId, friendId])
+    const getQuery = "UPDATE friendship SET status = 'ACCEPTED' WHERE (user_username = $1 OR user_username = $2) AND (friend_username = $2 OR friend_username = $1) AND status = 'PENDING'";
+    pool.query(getQuery, [userUsername, friendUsername])
         .then((result) => {
             console.log(result);
             response.status(200);
-            response.send(friendId);
+            response.send(friendUsername);
         })
         .catch((error) => {
             response.status(500);
@@ -196,7 +200,10 @@ app.patch("/api/getFriendship/:userId/:friendId", (request, response)=> {
 
 
 
-
+// ------------------POST REQUEST - CALCULATION OF TEST SCORE---------------------------------------------------------------
+app.post("/api/calculateTestScore/testStructure", (request, response)=> {
+    // TODO
+});
 
 
 

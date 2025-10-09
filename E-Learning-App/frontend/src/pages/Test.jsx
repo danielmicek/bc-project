@@ -93,7 +93,7 @@ export default function Test({showOrHidePopup}) {
             <>
                 <div className = "buttonContainer">
                     <button className = "submitTest_button customButton"
-                            onClick={() => POST_test(searchParams.get("testID"), 50, getCurrentDate(), "C", "Silver", user.id, testQuestions)}
+                            onClick={() => POST_test(searchParams.get("testID"), 50, getCurrentDate(), "C", "Silver", user.username, testQuestions)}
                     >Submit test</button>
 
                     <button className="quitTest_button customButton" ref = {refForEndButton}

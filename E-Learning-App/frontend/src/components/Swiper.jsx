@@ -1,11 +1,10 @@
-import React, { useRef, useState } from 'react';
-// Import Swiper React components
-import { Swiper, SwiperSlide } from 'swiper/react';
+import React, {useRef, useState} from 'react';
+import {Swiper, SwiperSlide} from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import '../styles/CourseStyles/QuestionStyle.css'
-import { Navigation, Pagination, Mousewheel, Keyboard } from 'swiper/modules';
+import {Navigation, Pagination} from 'swiper/modules';
 import Question from "./Question.jsx";
 
 export default function SwiperComponent({testQuestions}) {
@@ -39,8 +38,8 @@ export default function SwiperComponent({testQuestions}) {
                     return <SwiperSlide><Question activeIndex = {activeIndex}
                                                   question = {question}
                                                   key = {index}
-
-                    /></SwiperSlide>
+                    />
+                    </SwiperSlide>
 
                 })}
 

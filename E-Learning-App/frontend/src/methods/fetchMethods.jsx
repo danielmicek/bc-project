@@ -1,5 +1,6 @@
 /*-------------USER API CALLS----------------------------------------------------------------*/
-export async function POST_user(clerk_id, email, first_name, last_name, username) {
+
+export async function POST_user(clerk_id, email, first_name, last_name, username, imageUrl) {
 
     const x = await fetch(`http://localhost:3000/api/addUser`, {
         method: "POST",
@@ -9,57 +10,59 @@ export async function POST_user(clerk_id, email, first_name, last_name, username
         body: JSON.stringify({
             user_id: clerk_id,
             username: username,
-            email: email //"test" + randn(2) + "@gmail.com",
+            email: email, //"test" + randn(2) + "@gmail.com"
+            image_url: imageUrl
         })
     })
         console.log(await x.text());
 }
 
-export async function GET_user(userId){
-    return await fetch(`http://localhost:3000/api/getUser/${userId}`, {
+export async function GET_user(username){
+    return await fetch(`http://localhost:3000/api/getUser/${username}`, {
         method: "GET"
     })
 }
 /*----------------------------------------------------------------------------------------------*/
 
 /*-------------FRIENDSHIP_REQUEST API CALLS----------------------------------------------------------------*/
-export async function POST_friendship(userId, friendId) {
+export async function POST_friendship(userUsername, friendUsername) {
+
     const x = await fetch(`http://localhost:3000/api/friendRequest`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            user_id: userId,
-            friend_id: friendId,
+            user_username: userUsername,
+            friend_username: friendUsername,
             status: "PENDING",
-            from: userId
+            from: userUsername
         })
     })
     console.log(await x.text());
 }
 
-export async function GET_friendship(userId, friendId){         // check if friendship with particular user exists (the state does not matter)
-    return await fetch(`http://localhost:3000/api/getFriendship/${userId}/${friendId}`, {
+export async function GET_friendship(userUsername, friendUsername){         // check if friendship with particular user exists (the state does not matter)
+    return await fetch(`http://localhost:3000/api/getFriendship/${userUsername}/${friendUsername}`, {
         method: "GET"
     })
 }
 
-export async function GET_allFriendRequests(userId){
-    return await fetch(`http://localhost:3000/api/getAllFriendRequests/${userId}`, {
+export async function GET_allFriendRequests(username){
+    return await fetch(`http://localhost:3000/api/getAllFriendRequests/${username}`, {
         method: "GET"
     })
 }
 
-export async function PATCH_acceptFriendRequest(userId, friendId){    // accepting frined request by updating status PENDING to ACCEPTED
-    return await fetch(`http://localhost:3000/api/getFriendship/${userId}/${friendId}`, {
+export async function PATCH_acceptFriendRequest(userUsername, friendUsername){    // accepting frined request by updating status PENDING to ACCEPTED
+    return await fetch(`http://localhost:3000/api/getFriendship/${userUsername}/${friendUsername}`, {
         method: "PATCH"
     })
 }
 /*----------------------------------------------------------------------------------------------*/
 
 /*-------------TEST API CALLS----------------------------------------------------------------*/
-export async function POST_test(testID, points, date, grade, medal, userID, structure) {
+export async function POST_test(testID, points, date, grade, medal, username, structure) {
     const x = await fetch(`http://localhost:3000/api/addTest`, {
         method: "POST",
         headers: {
@@ -71,7 +74,7 @@ export async function POST_test(testID, points, date, grade, medal, userID, stru
             date: date,
             grade: grade,
             medal: medal,
-            fk_user_id: userID,
+            fk_username: username,
             structure: structure
         })
     })
