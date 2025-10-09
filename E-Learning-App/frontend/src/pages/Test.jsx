@@ -1,13 +1,12 @@
 import "../styles/CourseStyles/TestStyle.css"
-import React, {useState, useRef} from "react";
+import React, {useRef, useState} from "react";
 import EndTestYesOrNo from "../components/EndTestYesOrNo.jsx";
-import { QUESTIONS } from "../questions.js";
+import {QUESTIONS} from "../questions.js";
 import Timer from "../components/Timer.jsx";
 import {useUser} from "@clerk/clerk-react";
 import {useSearchParams} from "react-router-dom";
-import {postRequest_test} from "../methods/fetchMethods.jsx";
+import {POST_test} from "../methods/fetchMethods.jsx";
 import SwiperComponent from "../components/Swiper.jsx";
-
 
 
 function getRandomElementsFromArray(array, numberOfElements, questionsForTest) {
@@ -94,7 +93,7 @@ export default function Test({showOrHidePopup}) {
             <>
                 <div className = "buttonContainer">
                     <button className = "submitTest_button customButton"
-                            onClick={() => postRequest_test(searchParams.get("testID"), 50, getCurrentDate(), "C", "Silver", user.id, testQuestions)}
+                            onClick={() => POST_test(searchParams.get("testID"), 50, getCurrentDate(), "C", "Silver", user.id, testQuestions)}
                     >Submit test</button>
 
                     <button className="quitTest_button customButton" ref = {refForEndButton}

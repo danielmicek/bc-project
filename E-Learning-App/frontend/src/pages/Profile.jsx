@@ -2,12 +2,14 @@ import {SignedIn, SignedOut, SignInButton, UserButton, useUser} from "@clerk/cle
 import TypingAnimatedText from "../components/TypingAnimatedText.jsx";
 import SignedInProfilePage from "../components/SignedInProfilePage.jsx";
 import '../styles/ProfileStyles/ProfileStyle.css';
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import CircularIndeterminate from "../components/Loader.jsx";
-import {acceptFriendRequest, getUser, sendFriendRequest} from "../methods/methodsClass.jsx";
+import {acceptFriendRequest, getUser_info, sendFriendRequest} from "../methods/methodsClass.jsx";
 
 
 export function Profile(){
+
+    const [userImgUrlArray, setUserImgUrlArray] = useState([]);
 
     useEffect(() => { // Add the backgroundImage class to the body element so I can have different background image on each page
         document.body.classList.add("backgroundImage");
@@ -25,7 +27,7 @@ export function Profile(){
     // Call the postRequest function when the user state changes
     useEffect(() => {
         if (isSignedIn && user) {
-            getUser(user.id, user);
+            getUser_info(user.id, user);
         }
     }, [isSignedIn, user]);
 
@@ -37,7 +39,7 @@ export function Profile(){
     }
 
 
-
+    //console.log(userImgUrlArray);
 
     return <>
 
@@ -57,7 +59,12 @@ export function Profile(){
 
         <button className = "customButton" onClick={() => {
             acceptFriendRequest(user.id)
+                .then(arrayOfAcceptedFriends => setUserImgUrlArray(arrayOfAcceptedFriends));
+
         }}>Accept FR</button>
+
+
+
 
 
 

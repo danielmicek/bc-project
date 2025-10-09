@@ -1,21 +1,9 @@
-import TypingAnimatedText from "../components/TypingAnimatedText.jsx";
 import React, {useEffect, useState} from "react";
-import {useParams, useSearchParams} from "react-router-dom";
-import {getRequest_user, postRequest_user} from "../methods/fetchMethods.jsx";
+import {useSearchParams} from "react-router-dom";
 import CircularIndeterminate from "../components/Loader.jsx";
 import DividerVariants from "../components/DividerVariants.jsx";
 import '../styles/ProfileStyles/UserPage.css';
-
-
-async function getUser(userId){ //async funkcia vzdy vracia promise
-    const responseObject = await getRequest_user(userId);
-    const responseJson = await responseObject.json();
-    return({userId: responseJson.userId,
-        userName: responseJson.userName,
-        userEmail: responseJson.userEmail
-    });
-
-}
+import {getUser_object} from "../methods/methodsClass.jsx";
 
 
 export default function UserPage() {
@@ -38,7 +26,7 @@ export default function UserPage() {
 
     useEffect(() => {
         async function outterGetUser() {
-            const data = await getUser(userId);
+            const data = await getUser_object(userId);
             setFoundUser(data);
         }
         outterGetUser();

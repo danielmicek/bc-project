@@ -2,7 +2,7 @@ import {Link, useLocation} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import '../styles/HeaderStyle.css';
 import {SignedIn, SignedOut, SignInButton, UserButton, useUser} from "@clerk/clerk-react";
-import {getUser} from "../methods/methodsClass.jsx";
+import {getUser_info} from "../methods/methodsClass.jsx";
 import DropdownButton from "./DropdownButton.jsx";
 
 
@@ -27,7 +27,7 @@ export default function Header(){
 
     useEffect(() => {
         if (isSignedIn && user) {
-            getUser(user.id, user);
+            getUser_info(user.id, user);
         }
     }, [isSignedIn, user]);
 

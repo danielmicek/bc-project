@@ -1,5 +1,5 @@
 /*-------------USER API CALLS----------------------------------------------------------------*/
-export async function postRequest_user(clerk_id, email, first_name, last_name, username) {
+export async function POST_user(clerk_id, email, first_name, last_name, username) {
 
     const x = await fetch(`http://localhost:3000/api/addUser`, {
         method: "POST",
@@ -15,7 +15,7 @@ export async function postRequest_user(clerk_id, email, first_name, last_name, u
         console.log(await x.text());
 }
 
-export async function getRequest_user(userId){
+export async function GET_user(userId){
     return await fetch(`http://localhost:3000/api/getUser/${userId}`, {
         method: "GET"
     })
@@ -23,7 +23,7 @@ export async function getRequest_user(userId){
 /*----------------------------------------------------------------------------------------------*/
 
 /*-------------FRIENDSHIP_REQUEST API CALLS----------------------------------------------------------------*/
-export async function postRequest_friendship(userId, friendId) {
+export async function POST_friendship(userId, friendId) {
     const x = await fetch(`http://localhost:3000/api/friendRequest`, {
         method: "POST",
         headers: {
@@ -39,19 +39,19 @@ export async function postRequest_friendship(userId, friendId) {
     console.log(await x.text());
 }
 
-export async function getRequest_friendship(userId, friendId){         // check if friendship with particular user exists (the state does not matter)
+export async function GET_friendship(userId, friendId){         // check if friendship with particular user exists (the state does not matter)
     return await fetch(`http://localhost:3000/api/getFriendship/${userId}/${friendId}`, {
         method: "GET"
     })
 }
 
-export async function getRequest_allFriendRequests(userId){
+export async function GET_allFriendRequests(userId){
     return await fetch(`http://localhost:3000/api/getAllFriendRequests/${userId}`, {
         method: "GET"
     })
 }
 
-export async function patchRequest_allFriendRequests(userId, friendId){    // accepting frined request by updating status PENDING to ACCEPTED
+export async function PATCH_acceptFriendRequest(userId, friendId){    // accepting frined request by updating status PENDING to ACCEPTED
     return await fetch(`http://localhost:3000/api/getFriendship/${userId}/${friendId}`, {
         method: "PATCH"
     })
@@ -59,7 +59,7 @@ export async function patchRequest_allFriendRequests(userId, friendId){    // ac
 /*----------------------------------------------------------------------------------------------*/
 
 /*-------------TEST API CALLS----------------------------------------------------------------*/
-export async function postRequest_test(testID, points, date, grade, medal, userID, structure) {
+export async function POST_test(testID, points, date, grade, medal, userID, structure) {
     const x = await fetch(`http://localhost:3000/api/addTest`, {
         method: "POST",
         headers: {

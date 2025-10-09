@@ -186,7 +186,7 @@ app.patch("/api/getFriendship/:userId/:friendId", (request, response)=> {
         .then((result) => {
             console.log(result);
             response.status(200);
-            response.send("Friend request accepted\nStatus code: " + response.statusCode);
+            response.send(friendId);
         })
         .catch((error) => {
             response.status(500);
