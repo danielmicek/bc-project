@@ -82,10 +82,10 @@ export function Profile(){
                 sendFriendRequest(user.username, inputRef.current.value);
             }}
         >
-            <input
+            <input className = "userUidInput"
                 ref = {inputRef}
                 type = "text"
-                placeholder = "Enter user's id or URL"
+                placeholder = "Enter username or user's URL"
                 pattern = "^([a-zA-Z0-9\-_\s]{4,15}|https?:\/\/.+)$" //regex for either being string of length č-15 or url address which i validate in sendFriendRequest
                 onInvalid = {() => console.log("Invalid input")}
                 required // when present, it specifies that an input field must be filled out before submitting the form
