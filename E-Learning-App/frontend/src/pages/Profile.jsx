@@ -78,10 +78,6 @@ export function Profile(){
         </SignedIn>
 
         <button className = "customButton" onClick={() => {
-
-        }}>Accept FR</button>
-
-        <button className = "customButton" onClick={() => {
             GET_allFriendRequests(user.username).then(result => async function () {
                 // first ↑ we get all friend-requests from the database, then we add each FR to the list so we can display it on the page
                 if(result.status === 404){
@@ -95,7 +91,7 @@ export function Profile(){
                     })
                 }
             }())
-        }}>Reload</button>
+        }}>Reload FR</button>
 
         <form
             onSubmit = {(event) => {
@@ -137,8 +133,6 @@ export function Profile(){
                             userUsername = {user.username}
                 />
             </>
-
-
              :
             <>
                 <div className= "circle">
@@ -156,10 +150,5 @@ export function Profile(){
                     <div className="gridItem2 item-e">Get certificate</div>
                 </div></>
         }
-        {/*<Link to = {`/userPage/${user.id}`} className="buttonLink">*/}
-        {/*    <button className="customButton">user profile</button>*/}
-        {/*</Link>*/}
-
-
     </>
 }

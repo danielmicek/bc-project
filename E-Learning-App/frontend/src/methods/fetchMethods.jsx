@@ -1,5 +1,4 @@
 /*-------------USER API CALLS----------------------------------------------------------------*/
-
 export async function POST_user(clerk_id, email, first_name, last_name, username, imageUrl) {
 
     const x = await fetch(`http://localhost:3000/api/addUser`, {
@@ -24,7 +23,7 @@ export async function GET_user(username){
 }
 /*----------------------------------------------------------------------------------------------*/
 
-/*-------------FRIENDSHIP_REQUEST API CALLS----------------------------------------------------------------*/
+/*-------------FRIENDSHIP API CALLS----------------------------------------------------------------*/
 export async function POST_friendship(userUsername, friendUsername) {
 
     const x = await fetch(`http://localhost:3000/api/friendRequest`, {

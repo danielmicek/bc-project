@@ -21,7 +21,7 @@ export async function getUser_info(user){ // only find if a user exists
     }
 }
 
-export async function getUser_object(username){ //async funkcia vzdy vracia promise - return the actual user object
+export async function getUser_object(username){ //async function always returns promise -> this function returns the actual user object
     const responseObject = await GET_user(username);
     if(responseObject.status !== 200){
         return responseObject.status;
@@ -53,22 +53,19 @@ export async function sendFriendRequest(userUsername, friendUniqueIdentifier){
     }
 
     let responseObject = await GET_user(friendUsername);
-    console.log("GET status code: " + responseObject.status);
     if(responseObject.status === 404){
-        console.log("User " + friendUsername + " not found");
+        console.log("User " + friendUsername + " not found"); // todo add popup
         return;
     }
 
     responseObject = await GET_friendship(userUsername, friendUsername)
     if(responseObject.status === 200){
-        console.log("Friendship already exists. GET status code: " + responseObject.status);
+        console.log("Friendship already exists. GET status code: " + responseObject.status); // todo add popup
     }
     else{
         console.log(await responseObject.text() + "\nSending friend request ...");
         POST_friendship(userUsername, friendUsername);
     }
-
-    // todo: pridaj okno ktore povie ze sa odoslal FR / ze user sa user nenasiel v db
 }
 
 
@@ -78,8 +75,6 @@ export async function acceptFriendRequest(user_username, friend_username, setUse
     let friendshipResponseObject = await PATCH_acceptFriendRequest(user_username, friend_username); // update friendship status to "ACCEPTED"
 
     if(friendshipResponseObject.status === 200){
-        console.log("Friend request from " + friend_username + " accepted");
-
         setUserFriendsList(prevList => { // add friend to friendsList
             if(!prevList.includes(friend_username)){
                 return [...prevList, {friendName: friend_username, imgUrl: imgUrl}];
@@ -103,7 +98,6 @@ export async function deleteFriend(flag, user_username, friend_username, setUser
     let friendshipResponseObject = await DELETE_deleteFriend(user_username, friend_username);
 
     if(friendshipResponseObject.status === 200){
-        console.log(await friendshipResponseObject.text());
         if(flag === "FR"){
             setUserFriendRequestList((prevList) => prevList.filter((friend) => friend.friendName !== friend_username)); //creates a copy of the list and removes the accepted FR from it
         }
