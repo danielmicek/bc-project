@@ -1,4 +1,11 @@
-import {GET_friendship, GET_user, PATCH_acceptFriendRequest, POST_friendship, POST_user} from "./fetchMethods.jsx";
+import {
+    DELETE_deleteFriend,
+    GET_friendship,
+    GET_user,
+    PATCH_acceptFriendRequest,
+    POST_friendship,
+    POST_user
+} from "./fetchMethods.jsx";
 
 
 export async function getUser_info(user){ // only find if a user exists
@@ -22,7 +29,8 @@ export async function getUser_object(username){ //async funkcia vzdy vracia prom
     const responseJson = await responseObject.json();
     return({userId: responseJson.userId,
         userName: responseJson.userName,
-        userEmail: responseJson.userEmail
+        userEmail: responseJson.userEmail,
+        userImgUrl: responseJson.imageUrl
     });
 }
 
@@ -64,19 +72,51 @@ export async function sendFriendRequest(userUsername, friendUniqueIdentifier){
 }
 
 
-// we accpet the friend-request from friend_username user
-export async function acceptFriendRequest(user_username, friend_username, setUserFriendsArray){
+// accept the friend-request from friend_username user
+export async function acceptFriendRequest(user_username, friend_username, setUserFriendsList, setUserFriendRequestList, imgUrl){
 
-    let friendshipResponseObject = await PATCH_acceptFriendRequest(user_username, friend_username);
+    let friendshipResponseObject = await PATCH_acceptFriendRequest(user_username, friend_username); // update friendship status to "ACCEPTED"
 
     if(friendshipResponseObject.status === 200){
-        console.log("Friend requests from " + friend_username + " accepted");
-        setUserFriendsArray(prevArray => [...prevArray, friend_username])
+        console.log("Friend request from " + friend_username + " accepted");
+
+        setUserFriendsList(prevList => { // add friend to friendsList
+            if(!prevList.includes(friend_username)){
+                return [...prevList, {friendName: friend_username, imgUrl: imgUrl}];
+            }
+            else return prevList;
+        })
+        setUserFriendRequestList((prevList) => prevList.filter((friend) => friend.friendName !== friend_username)); // remove from the friend request list
         //return friendshipResponseObject;
     }
     else{
         console.log("Error during friend request acceptance. GET status code: " + friendshipResponseObject.status);
         //return null;
+    }
+}
+
+// decline the friend-request from friend_username user
+// flag: FR = "friend request" => delete friend request from db and update userFriendRequestList
+//       F = "friend" => delete friend from db and update userFriendList"
+export async function deleteFriend(flag, user_username, friend_username, setUserFriendList, setUserFriendRequestList){
+
+    let friendshipResponseObject = await DELETE_deleteFriend(user_username, friend_username);
+
+    if(friendshipResponseObject.status === 200){
+        console.log(await friendshipResponseObject.text());
+        if(flag === "FR"){
+            setUserFriendRequestList((prevList) => prevList.filter((friend) => friend.friendName !== friend_username)); //creates a copy of the list and removes the accepted FR from it
+        }
+        else if(flag === "F"){
+            setUserFriendList((prevList) => prevList.filter((friend) => friend.friendName !== friend_username));
+        }
+        else{
+            console.log("Error during friend deletion. Flag is not set to 'FR' or 'F'. Flag: " + flag);
+        }
+    }
+    else{
+        console.log("Error during friend deletion. GET status code: " + friendshipResponseObject.status);
+        return null;
     }
 }
 

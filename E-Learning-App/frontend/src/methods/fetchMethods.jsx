@@ -54,9 +54,21 @@ export async function GET_allFriendRequests(username){
     })
 }
 
+export async function GET_allFriends(username){
+    return await fetch(`http://localhost:3000/api/getAllFriends/${username}`, {
+        method: "GET"
+    })
+}
+
 export async function PATCH_acceptFriendRequest(userUsername, friendUsername){    // accepting frined request by updating status PENDING to ACCEPTED
     return await fetch(`http://localhost:3000/api/getFriendship/${userUsername}/${friendUsername}`, {
         method: "PATCH"
+    })
+}
+
+export async function DELETE_deleteFriend(userUsername, friendUsername){
+    return await fetch(`http://localhost:3000/api/deleteFriend/${userUsername}/${friendUsername}`, {
+        method: "DELETE"
     })
 }
 /*----------------------------------------------------------------------------------------------*/

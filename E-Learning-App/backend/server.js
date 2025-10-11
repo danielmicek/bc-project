@@ -169,10 +169,38 @@ app.get("/api/getAllFriendRequests/:username", (request, response)=> {
             }
             else{
                 response.status(200);
-                let foundFriends = result.rows.map(row => row.friend_username); // returns an array of user's friends
+                let foundFriends = result.rows.map(row => row.friend_username); // returns an array of user's friend requests
                 response.send(foundFriends);
             }
 
+        })
+        .catch((error) => {
+            response.status(500);
+            console.log(error);
+        })
+});
+
+// ------------------GET REQUEST - GET ALL USER'S FRIENDS---------------------------------------------------------------
+// get friend's name from friends table, then join users table and get friends image_url
+app.get("/api/getAllFriends/:username", (request, response)=> {
+    const username = request.params.username;
+
+    let getQuery = "SELECT fr.friend_username, us.image_url FROM public.friendship AS fr\n" +
+        "JOIN public.users AS us\n" +
+        "ON (fr.friend_username = us.username)\n" +
+        "WHERE fr.user_username = $1\n" +
+        "AND fr.status = 'ACCEPTED';";
+    pool.query(getQuery, [username])
+        .then((result) => {
+            console.log(result);
+            if (result.rows.length === 0) {
+                response.status(404);
+            }
+            else{
+                let foundFriends = result.rows.map(row => ({friendName: row.friend_username, imgUrl: row.image_url})); // returns an array of user's friends
+                response.status(200);
+                response.send(foundFriends);
+            }
         })
         .catch((error) => {
             response.status(500);
@@ -198,7 +226,22 @@ app.patch("/api/getFriendship/:userUsername/:friendUsername", (request, response
         })
 });
 
+// ------------------DELETE REQUEST - DELETE FRIEND AFTER DECLINING FRIEND REQUEST OR REMOVING FRIEND FROM THE LIST---------------------
+app.delete("/api/deleteFriend/:userUsername/:friendUsername", (request, response)=> {
+    const { userUsername, friendUsername } = request.params;
 
+    const getQuery = "DELETE FROM friendship WHERE (user_username = $1 AND friend_username = $2) OR (user_username = $2 AND friend_username = $1)";
+    pool.query(getQuery, [userUsername, friendUsername])
+        .then((result) => {
+            console.log(result);
+            response.status(200);
+            response.send("Deleted from the table\nStatus code: " + response.statusCode);
+        })
+        .catch((error) => {
+            response.status(500);
+            console.log(error);
+        })
+});
 
 // ------------------POST REQUEST - CALCULATION OF TEST SCORE---------------------------------------------------------------
 app.post("/api/calculateTestScore/testStructure", (request, response)=> {

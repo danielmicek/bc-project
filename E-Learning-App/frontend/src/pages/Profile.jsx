@@ -3,15 +3,35 @@ import TypingAnimatedText from "../components/TypingAnimatedText.jsx";
 import SignedInProfilePage from "../components/SignedInProfilePage.jsx";
 import '../styles/ProfileStyles/ProfileStyle.css';
 import React, {useEffect, useRef, useState} from "react";
+import {
+    acceptFriendRequest,
+    deleteFriend,
+    getUser_info,
+    getUser_object,
+    sendFriendRequest
+} from "../methods/methodsClass.jsx";
+import {GET_allFriendRequests, GET_allFriends} from "../methods/fetchMethods.jsx";
+import FriendList from "../components/FriendList.jsx";
 import CircularIndeterminate from "../components/Loader.jsx";
-import {acceptFriendRequest, getUser_info, sendFriendRequest} from "../methods/methodsClass.jsx";
-import {GET_allFriendRequests} from "../methods/fetchMethods.jsx";
 
+
+// initialize both friendList and list of FR by calling endpoints to get all friends and another one to get all FR
+async function listInitializer(username, setFriendList, setFriendRequestList){
+    let response = await GET_allFriends(username);
+    if(response.status === 200){
+        setFriendList((await response.json()));
+    }
+
+    response = await GET_allFriendRequests(username);
+    if(response.status === 200){
+        setFriendRequestList((await response.json()));
+    }
+}
 
 export function Profile(){
 
-    const [userFriendRequestsArray, setUserFriendRequestsArray] = useState([]);
-    const [userFriendsArray, setUserFriendsArray] = useState([]);
+    const [friendRequestsList, setFriendRequestList] = useState([]);
+    const [userFriendList, setUserFriendList] = useState([]);
     const inputRef = useRef(null);
 
     useEffect(() => { // Add the backgroundImage class to the body element so I can have different background image on each page
@@ -34,6 +54,10 @@ export function Profile(){
         }
     }, [isSignedIn, user]);
 
+    // only call this when user is signed, isLoaded changes and user already exists
+    useEffect(() => {
+        if(isSignedIn && user !== undefined) listInitializer(user.username, setUserFriendList, setFriendRequestList)
+    }, [isLoaded]);
 
     // Wait until the user state is fully loaded
     if (!isLoaded) {
@@ -41,44 +65,41 @@ export function Profile(){
         return <CircularIndeterminate/>;
     }
 
-
-    console.log("friends: " + userFriendsArray);
-    console.log("friend requests: " + userFriendRequestsArray);
-
     return <>
 
-            <SignedIn>
-                <UserButton className = "profileImg"
-                            appearance={{
-                                elements: {
-                                    rootBox: "userButtonRoot",            // wrapper box
-                                    userButtonAvatarBox: "profileImg",    // user avatar
-                                },
-                            }}/>
-            </SignedIn>
+        <SignedIn>
+            <UserButton className = "profileImg"
+                        appearance={{
+                            elements: {
+                                rootBox: "userButtonRoot",            // wrapper box
+                                userButtonAvatarBox: "profileImg",    // user avatar
+                            },
+                        }}/>
+        </SignedIn>
 
         <button className = "customButton" onClick={() => {
-            acceptFriendRequest(user.username, "sandor", setUserFriendsArray);
+
         }}>Accept FR</button>
 
         <button className = "customButton" onClick={() => {
             GET_allFriendRequests(user.username).then(result => async function () {
-                // first ↑ we get all friend-requests from the database, then we add each FR to array so we can display it on the page
+                // first ↑ we get all friend-requests from the database, then we add each FR to the list so we can display it on the page
                 if(result.status === 404){
-                    console.log(await result.text());
                     return;
                 }
                 const friendRequests = await result.json();
-                setUserFriendRequestsArray([]); // reset the array so everytime we get fresh FR from the db
-                for(let friendRequest of friendRequests){
-                    setUserFriendRequestsArray(prevArray => [...prevArray, friendRequest]);
+                setFriendRequestList([]); // reset the list so everytime we get fresh FR from the db
+                for(let friendName of friendRequests){
+                    getUser_object(friendName).then(result => {
+                        setFriendRequestList(prevList => [...prevList, {friendName: friendName, imgUrl: result.userImgUrl}]);
+                    })
                 }
             }())
-        }}>Show FR</button>
+        }}>Reload</button>
 
         <form
             onSubmit = {(event) => {
-                event.preventDefault();
+                event.preventDefault(); // prevent page reload
                 sendFriendRequest(user.username, inputRef.current.value);
             }}
         >
@@ -86,17 +107,37 @@ export function Profile(){
                 ref = {inputRef}
                 type = "text"
                 placeholder = "Enter username or user's URL"
-                pattern = "^([a-zA-Z0-9\-_\s]{4,15}|https?:\/\/.+)$" //regex for either being string of length č-15 or url address which i validate in sendFriendRequest
-                onInvalid = {() => console.log("Invalid input")}
-                required // when present, it specifies that an input field must be filled out before submitting the form
+                pattern = "^([a-zA-Z0-9\-_\s]{4,15}|https?:\/\/.+)$" // regex for either being string of length 4-15 or url address which is validated in sendFriendRequest
+                onInvalid = {() => console.log("Invalid input")} //todo create small popup instead of console.log
+                required  // when present, it specifies that the input field must be filled out before submitting the form
             />
             <button type="submit" className="customButton">Send FR</button>
         </form>
 
 
         {isSignedIn ?
+            <>
+                <SignedInProfilePage/>
 
-            <SignedInProfilePage/>
+                <FriendList classname = "friendRequestList"
+                            list = {friendRequestsList}
+                            setRequestList = {setFriendRequestList}
+                            setFriendsList = {setUserFriendList}
+                            accept = {acceptFriendRequest}
+                            deletee = {deleteFriend}
+                            userUsername = {user.username}
+                />
+
+                <FriendList classname = "friendList"
+                            list = {userFriendList}
+                            setRequestList = {setFriendRequestList}
+                            setFriendsList = {setUserFriendList}
+                            accept = {acceptFriendRequest}
+                            deletee = {deleteFriend}
+                            userUsername = {user.username}
+                />
+            </>
+
 
              :
             <>

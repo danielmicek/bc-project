@@ -282,3 +282,12 @@ html, body{
     width: 100%;
     border-radius: 20px;
 }
+
+.friendList, .friendRequestList{
+    position: relative;
+    border: solid red 5px;
+    width: 7cm;
+    background-color: white;
+    z-index: 999;
+
+}
