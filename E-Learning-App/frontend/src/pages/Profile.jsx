@@ -17,23 +17,35 @@ import {toast, Toaster} from "react-hot-toast";
 
 
 // initialize both friendList and list of FR by calling endpoints to get all friends and another one to get all FR
-async function listInitializer(username, setFriendList, setFriendRequestList){
+// Promise.all() is resolving both promises at the same time - parallel execution
+async function listInitializer(username,
+                               setFriendList,
+                               setFriendRequestList,
+                               setIsLoading){
+    await Promise.all([
+        friendRequestListLoader(username, setFriendRequestList, setIsLoading),
+        (async () => {
+            let response = await GET_allFriends(username, setIsLoading);
+            if(response.status === 200){
+                setFriendList((await response.json()));
+            }
+            else if(response.status === 404){
+                setIsLoading(false);
+            }
 
-    await friendRequestListLoader(username, setFriendRequestList)
-
-    let response = await GET_allFriends(username);
-    if(response.status === 200){
-        setFriendList((await response.json()));
-    }
+        })() //immediate execution
+    ]);
 }
 
 export function Profile(){
 
     const [friendRequestsList, setFriendRequestList] = useState([]);
     const [userFriendList, setUserFriendList] = useState([]);
+    const [isLoading, setIsLoading] = useState(false); // these two ↓ are for loader to be displayed during fetching data from db
+
     const inputRef = useRef(null);
 
-    useEffect(() => { // Add the backgroundImage class to the body element so I can have different background image on each page
+    useEffect(() => { // Add the backgroundImage class to the body element, so I can have different background image on each page
         document.body.classList.add("backgroundImage");
         return () => {
             document.body.classList.remove("backgroundImage");
@@ -53,9 +65,10 @@ export function Profile(){
         }
     }, [isSignedIn, user]);
 
-    // only call this when user is signed, isLoaded changes and user already exists
+    // only call this when the user is signed, isLoaded changes, and the user already exists
     useEffect(() => {
-        if(isSignedIn && user !== undefined) listInitializer(user.username, setUserFriendList, setFriendRequestList)
+        if(isSignedIn && user !== undefined) listInitializer(user.username, setUserFriendList, setFriendRequestList,
+                                                setIsLoading)
     }, [isLoaded]);
 
     // Wait until the user state is fully loaded
@@ -83,7 +96,7 @@ export function Profile(){
         />
         </div>
 
-        <button className = "customButton" onClick={() => friendRequestListLoader(user.username, setFriendRequestList)}>Refresh FR</button>
+        <button className = "customButton" onClick={() => friendRequestListLoader(user.username, setFriendRequestList, setIsLoading)}>Refresh FR</button>
 
         <form
             onSubmit = {(event) => {
@@ -117,6 +130,7 @@ export function Profile(){
                             accept = {acceptFriendRequest}
                             deletee = {deleteFriend}
                             userUsername = {user.username}
+                            isLoading = {isLoading}
                 />
 
                 <FriendList classname = "friendList"
@@ -126,6 +140,7 @@ export function Profile(){
                             accept = {acceptFriendRequest}
                             deletee = {deleteFriend}
                             userUsername = {user.username}
+                            isLoading = {isLoading}
                 />
             </>
              :

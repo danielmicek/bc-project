@@ -125,10 +125,11 @@ export async function deleteFriend(flag, user_username, friend_username, setUser
     }
 }
 
-export async function friendRequestListLoader(user_username, setFriendRequestList){
-    const result = await GET_allFriendRequests(user_username)
+export async function friendRequestListLoader(user_username, setFriendRequestList, setIsLoading){
+    const result = await GET_allFriendRequests(user_username, setIsLoading)
     // first ↑ we get all friend-requests from the database, then we add each FR to the list so we can display it on the page
     if(result.status === 404){
+        toast.success('No pending friend requests');
         return;
     }
     const friendRequests = await result.json();

@@ -7,6 +7,7 @@ import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CircularIndeterminate from "./Loader.jsx";
 
 
 function handleClick({
@@ -99,31 +100,38 @@ export default function FriendList({
                                        accept,
                                        userUsername,
                                        deletee,
-                                       setFriendsList
+                                       setFriendsList,
+                                       isLoading
                                    }) {
     const title = classname === "friendList" ? "Friends:" : "Friend requests:";
     return (
 
         <div className = {classname}>
             <h2>{title}</h2>
-
-            {classname === "friendList" && list.length === 0 && <p>No friends yet</p>}
-            {classname === "friendRequestList" && list.length === 0 && <p>No pending friend requests</p>}
-            {list.length !== 0 &&
-                <List dense={false}>
-                    {generateList(
-                        {
-                            classname,
-                            list,
-                            setRequestList,
-                            accept,
-                            deletee,
-                            userUsername,
-                            setFriendsList
-                        }
-                    )}
-                </List>
+            {isLoading ? <CircularIndeterminate/>
+                :
+            <>
+                {classname === "friendList" && list.length === 0 && <p>No friends yet</p>}
+                {classname === "friendRequestList" && list.length === 0 && <p>No friend requests</p>}
+                {list.length !== 0 &&
+                    <List dense={false}>
+                        {generateList(
+                            {
+                                classname,
+                                list,
+                                setRequestList,
+                                accept,
+                                deletee,
+                                userUsername,
+                                setFriendsList
+                            }
+                        )}
+                    </List>
+                }
+            </>
             }
+
+
 
         </div>
 

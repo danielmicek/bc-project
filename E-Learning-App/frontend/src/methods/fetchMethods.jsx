@@ -48,16 +48,22 @@ export async function GET_friendship(userUsername, friendUsername){         // c
     })
 }
 
-export async function GET_allFriendRequests(username){
-     return await fetch(`http://localhost:3000/api/getAllFriendRequests/${username}`, {
+export async function GET_allFriendRequests(username, setIsLoading){
+    setIsLoading(true);
+    const response = await fetch(`http://localhost:3000/api/getAllFriendRequests/${username}`, {
         method: "GET"
     })
+    setIsLoading(false);
+    return response;
 }
 
-export async function GET_allFriends(username){
-    return await fetch(`http://localhost:3000/api/getAllFriends/${username}`, {
+export async function GET_allFriends(username, setIsLoading){
+    setIsLoading(true);
+    const response = await fetch(`http://localhost:3000/api/getAllFriends/${username}`, {
         method: "GET"
     })
+    setIsLoading(false);
+    return response;
 }
 
 export async function PATCH_acceptFriendRequest(userUsername, friendUsername){    // accepting frined request by updating status PENDING to ACCEPTED
