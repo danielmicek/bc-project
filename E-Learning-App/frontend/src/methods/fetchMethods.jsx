@@ -26,7 +26,7 @@ export async function GET_user(username){
 /*-------------FRIENDSHIP API CALLS----------------------------------------------------------------*/
 export async function POST_friendship(userUsername, friendUsername) {
 
-    const x = await fetch(`http://localhost:3000/api/friendRequest`, {
+    const response = await fetch(`http://localhost:3000/api/friendRequest`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -38,7 +38,8 @@ export async function POST_friendship(userUsername, friendUsername) {
             from: userUsername
         })
     })
-    console.log(await x.text());
+    if(response.ok) return await response.text();
+    else throw new Error(await response.text());
 }
 
 export async function GET_friendship(userUsername, friendUsername){         // check if friendship with particular user exists (the state does not matter)
@@ -48,7 +49,7 @@ export async function GET_friendship(userUsername, friendUsername){         // c
 }
 
 export async function GET_allFriendRequests(username){
-    return await fetch(`http://localhost:3000/api/getAllFriendRequests/${username}`, {
+     return await fetch(`http://localhost:3000/api/getAllFriendRequests/${username}`, {
         method: "GET"
     })
 }

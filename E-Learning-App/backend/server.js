@@ -106,10 +106,11 @@ app.post("/api/friendRequest", async (request, response) => {
         .then((result) => {
             console.log(result);
             response.status(200);
-            response.send("Friend request send to: " + friendUsername + "  Status code: " + response.statusCode);
+            response.send("Friend request sent!");
         })
         .catch((error) => {
             response.status(500);
+            response.send("Error sending friend request")
             console.log(error);
         })
 
@@ -128,7 +129,6 @@ app.post("/api/friendRequest", async (request, response) => {
 
 
 // ------------------GET REQUEST - GET FRIENDSHIP---------------------------------------------------------------
-
 app.get("/api/getFriendship/:userUsername/:friendUsername", (request, response)=> {
     const { userUsername, friendUsername } = request.params;
 
@@ -235,7 +235,7 @@ app.delete("/api/deleteFriend/:userUsername/:friendUsername", (request, response
         .then((result) => {
             console.log(result);
             response.status(200);
-            response.send("Deleted from the table\nStatus code: " + response.statusCode);
+            response.send("User " + friendUsername + " removed from the list");
         })
         .catch((error) => {
             response.status(500);

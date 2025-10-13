@@ -6,25 +6,24 @@ import React, {useEffect, useRef, useState} from "react";
 import {
     acceptFriendRequest,
     deleteFriend,
+    friendRequestListLoader,
     getUser_info,
-    getUser_object,
     sendFriendRequest
 } from "../methods/methodsClass.jsx";
-import {GET_allFriendRequests, GET_allFriends} from "../methods/fetchMethods.jsx";
+import {GET_allFriends} from "../methods/fetchMethods.jsx";
 import FriendList from "../components/FriendList.jsx";
 import CircularIndeterminate from "../components/Loader.jsx";
+import {toast, Toaster} from "react-hot-toast";
 
 
 // initialize both friendList and list of FR by calling endpoints to get all friends and another one to get all FR
 async function listInitializer(username, setFriendList, setFriendRequestList){
+
+    await friendRequestListLoader(username, setFriendRequestList)
+
     let response = await GET_allFriends(username);
     if(response.status === 200){
         setFriendList((await response.json()));
-    }
-
-    response = await GET_allFriendRequests(username);
-    if(response.status === 200){
-        setFriendRequestList((await response.json()));
     }
 }
 
@@ -77,21 +76,14 @@ export function Profile(){
                         }}/>
         </SignedIn>
 
-        <button className = "customButton" onClick={() => {
-            GET_allFriendRequests(user.username).then(result => async function () {
-                // first ↑ we get all friend-requests from the database, then we add each FR to the list so we can display it on the page
-                if(result.status === 404){
-                    return;
-                }
-                const friendRequests = await result.json();
-                setFriendRequestList([]); // reset the list so everytime we get fresh FR from the db
-                for(let friendName of friendRequests){
-                    getUser_object(friendName).then(result => {
-                        setFriendRequestList(prevList => [...prevList, {friendName: friendName, imgUrl: result.userImgUrl}]);
-                    })
-                }
-            }())
-        }}>Reload FR</button>
+        <div>
+            <Toaster
+            position="bottom-center"
+            reverseOrder={false}
+        />
+        </div>
+
+        <button className = "customButton" onClick={() => friendRequestListLoader(user.username, setFriendRequestList)}>Refresh FR</button>
 
         <form
             onSubmit = {(event) => {
@@ -104,7 +96,10 @@ export function Profile(){
                 type = "text"
                 placeholder = "Enter username or user's URL"
                 pattern = "^([a-zA-Z0-9\-_\s]{4,15}|https?:\/\/.+)$" // regex for either being string of length 4-15 or url address which is validated in sendFriendRequest
-                onInvalid = {() => console.log("Invalid input")} //todo create small popup instead of console.log
+                onInvalid = {(event) => {
+                    event.preventDefault();
+                    toast.error("Invalid input\nMust be either name or user's URL")
+                }} // show error message when input is invalid
                 required  // when present, it specifies that the input field must be filled out before submitting the form
             />
             <button type="submit" className="customButton">Send FR</button>

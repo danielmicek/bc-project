@@ -1,11 +1,13 @@
 import {
     DELETE_deleteFriend,
+    GET_allFriendRequests,
     GET_friendship,
     GET_user,
     PATCH_acceptFriendRequest,
     POST_friendship,
     POST_user
 } from "./fetchMethods.jsx";
+import {toast} from "react-hot-toast";
 
 
 export async function getUser_info(user){ // only find if a user exists
@@ -54,17 +56,23 @@ export async function sendFriendRequest(userUsername, friendUniqueIdentifier){
 
     let responseObject = await GET_user(friendUsername);
     if(responseObject.status === 404){
-        console.log("User " + friendUsername + " not found"); // todo add popup
+        toast.error("User not found");
         return;
     }
 
     responseObject = await GET_friendship(userUsername, friendUsername)
     if(responseObject.status === 200){
-        console.log("Friendship already exists. GET status code: " + responseObject.status); // todo add popup
+        toast.success("Friendship already exists");
     }
     else{
-        console.log(await responseObject.text() + "\nSending friend request ...");
-        POST_friendship(userUsername, friendUsername);
+        await toast.promise(
+            POST_friendship(userUsername, friendUsername),
+            {
+                loading: 'Sending friend request...',
+                success: (responseText) => responseText,
+                error: (responseText) => responseText,
+            }
+        );
     }
 }
 
@@ -82,10 +90,10 @@ export async function acceptFriendRequest(user_username, friend_username, setUse
             else return prevList;
         })
         setUserFriendRequestList((prevList) => prevList.filter((friend) => friend.friendName !== friend_username)); // remove from the friend request list
-        //return friendshipResponseObject;
+        toast.success("Friend request accepted");
     }
     else{
-        console.log("Error during friend request acceptance. GET status code: " + friendshipResponseObject.status);
+        toast.error("Error during friend request acceptance");
         //return null;
     }
 }
@@ -107,11 +115,30 @@ export async function deleteFriend(flag, user_username, friend_username, setUser
         else{
             console.log("Error during friend deletion. Flag is not set to 'FR' or 'F'. Flag: " + flag);
         }
+        toast(await friendshipResponseObject.text(), {
+            icon: '🗑️',
+        });
     }
     else{
         console.log("Error during friend deletion. GET status code: " + friendshipResponseObject.status);
         return null;
     }
+}
+
+export async function friendRequestListLoader(user_username, setFriendRequestList){
+    const result = await GET_allFriendRequests(user_username)
+    // first ↑ we get all friend-requests from the database, then we add each FR to the list so we can display it on the page
+    if(result.status === 404){
+        return;
+    }
+    const friendRequests = await result.json();
+    setFriendRequestList([]); // reset the list so everytime we get fresh FR from the db
+    for(let friendName of friendRequests){
+        getUser_object(friendName).then(result => {
+            setFriendRequestList(prevList => [...prevList, {friendName: friendName, imgUrl: result.userImgUrl}]);
+        })
+    }
+    toast.success('Friend requests loaded!');
 }
 
 let RIGHT_ANSWER_POINTS;

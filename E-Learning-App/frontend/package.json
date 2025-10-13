@@ -29,6 +29,7 @@
     "react-clipboardjs-copy": "^2.1.0",
     "react-countdown-circle-timer": "^3.2.1",
     "react-dom": "^19.1.0",
+    "react-hot-toast": "^2.6.0",
     "react-router-dom": "^7.6.3",
     "swiper": "^12.0.2"
   },
