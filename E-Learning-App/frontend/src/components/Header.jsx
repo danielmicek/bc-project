@@ -33,7 +33,7 @@ export default function Header(){
 
     return !location.pathname.startsWith("/test") ? <div className = "header" >
 
-            <Link to = "/" className= "eleonoreText">
+            <Link to = "/" className= "text-color-black text-4xl">
                 <h1>eleonore</h1>
             </Link>
 

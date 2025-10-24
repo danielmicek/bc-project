@@ -5,7 +5,7 @@ import NotSignedInPopup from "./NotSignedInPopup.jsx";
 
 const liTextArray = {
     easy: ["Get bronze medal", "10 questions", "Single-select", "Easy and medium questions only"],
-    medium: ["Get silver medal", "20 questions", "Single or multi-select", "Easy, medium and few hard questions"],
+    medium: ["Get silver medal", "20 questions", "Single or multi-select (marked)", "Easy, medium and few hard questions"],
     hard: ["Get gold medal", "30 questions", "Single or multi-select", "Easy, medium and hard questions", "Only for he best ones"]
 };
 
@@ -64,8 +64,8 @@ export default function TestComponentVersion(   {testColumn,
                 <h2>{"Test yourself - " + testMedal + " test"}
                     <img className = "medal" src ={medalImgSrc} alt="Medal" width={40} height={40}/>
                 </h2>
-                <h3 style={{color: "grey"}}>{"Time: " + time}</h3>
-                <h4 style={{color: "grey"}}>{"Difficulty: " + difficulty}</h4>
+                <h3 className="text-gray-500">{"Time: " + time}</h3>
+                <h4 className="text-gray-500">{"Difficulty: " + difficulty}</h4>
                 <ul className ={ulClassName}>
                     <div className ={backgroundFillerClassName}></div>
 

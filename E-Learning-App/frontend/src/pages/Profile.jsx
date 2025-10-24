@@ -2,6 +2,7 @@ import {SignedIn, SignedOut, SignInButton, UserButton, useUser} from "@clerk/cle
 import TypingAnimatedText from "../components/TypingAnimatedText.jsx";
 import SignedInProfilePage from "../components/SignedInProfilePage.jsx";
 import '../styles/ProfileStyles/ProfileStyle.css';
+import '../styles/styles.css';
 import React, {useEffect, useRef, useState} from "react";
 import {
     acceptFriendRequest,
@@ -44,7 +45,6 @@ export function Profile(){
     const [isLoading, setIsLoading] = useState(false); // these two ↓ are for loader to be displayed during fetching data from db
 
     const inputRef = useRef(null);
-
     useEffect(() => { // Add the backgroundImage class to the body element, so I can have different background image on each page
         document.body.classList.add("backgroundImage");
         return () => {
@@ -78,9 +78,14 @@ export function Profile(){
     }
 
     return <>
+        <p className="text-sm text-red-500 md:text-lg lg:text-2xl">Responsive Text</p>
 
+        <button
+            className="">Click
+            me
+        </button>
         <SignedIn>
-            <UserButton className = "profileImg"
+            <UserButton className="profileImg"
                         appearance={{
                             elements: {
                                 rootBox: "userButtonRoot",            // wrapper box
@@ -91,29 +96,31 @@ export function Profile(){
 
         <div>
             <Toaster
-            position="bottom-center"
-            reverseOrder={false}
-        />
+                position="bottom-center"
+                reverseOrder={false}
+            />
         </div>
 
-        <button className = "customButton" onClick={() => friendRequestListLoader(user.username, setFriendRequestList, setIsLoading)}>Refresh FR</button>
+        <button className="customButton"
+                onClick={() => friendRequestListLoader(user.username, setFriendRequestList, setIsLoading)}>Refresh FR
+        </button>
 
         <form
-            onSubmit = {(event) => {
+            onSubmit={(event) => {
                 event.preventDefault(); // prevent page reload
                 sendFriendRequest(user.username, inputRef.current.value);
             }}
         >
-            <input className = "userUidInput"
-                ref = {inputRef}
-                type = "text"
-                placeholder = "Enter username or user's URL"
-                pattern = "^([a-zA-Z0-9\-_\s]{4,15}|https?:\/\/.+)$" // regex for either being string of length 4-15 or url address which is validated in sendFriendRequest
-                onInvalid = {(event) => {
-                    event.preventDefault();
-                    toast.error("Invalid input\nMust be either name or user's URL")
-                }} // show error message when input is invalid
-                required  // when present, it specifies that the input field must be filled out before submitting the form
+            <input className="userUidInput"
+                   ref={inputRef}
+                   type="text"
+                   placeholder="Enter username or user's URL"
+                   pattern="^([a-zA-Z0-9\-_\s]{4,15}|https?:\/\/.+)$" // regex for either being string of length 4-15 or url address which is validated in sendFriendRequest
+                   onInvalid={(event) => {
+                       event.preventDefault();
+                       toast.error("Invalid input\nMust be either name or user's URL")
+                   }} // show error message when input is invalid
+                   required  // when present, it specifies that the input field must be filled out before submitting the form
             />
             <button type="submit" className="customButton">Send FR</button>
         </form>
@@ -123,42 +130,43 @@ export function Profile(){
             <>
                 <SignedInProfilePage/>
 
-                <FriendList classname = "friendRequestList"
-                            list = {friendRequestsList}
-                            setRequestList = {setFriendRequestList}
-                            setFriendsList = {setUserFriendList}
-                            accept = {acceptFriendRequest}
-                            deletee = {deleteFriend}
-                            userUsername = {user.username}
-                            isLoading = {isLoading}
+                <FriendList classname="friendRequestList"
+                            list={friendRequestsList}
+                            setRequestList={setFriendRequestList}
+                            setFriendsList={setUserFriendList}
+                            accept={acceptFriendRequest}
+                            deletee={deleteFriend}
+                            userUsername={user.username}
+                            isLoading={isLoading}
                 />
 
-                <FriendList classname = "friendList"
-                            list = {userFriendList}
-                            setRequestList = {setFriendRequestList}
-                            setFriendsList = {setUserFriendList}
-                            accept = {acceptFriendRequest}
-                            deletee = {deleteFriend}
-                            userUsername = {user.username}
-                            isLoading = {isLoading}
+                <FriendList classname="friendList"
+                            list={userFriendList}
+                            setRequestList={setFriendRequestList}
+                            setFriendsList={setUserFriendList}
+                            accept={acceptFriendRequest}
+                            deletee={deleteFriend}
+                            userUsername={user.username}
+                            isLoading={isLoading}
                 />
             </>
-             :
+            :
             <>
-                <div className= "circle">
-                    <p className= "gridItem circleBigText">Not signed yet?</p>
-                    <p className= "gridItem doItNow">Do it now!</p>
+                <div className="circle">
+                    <p className="gridItem circleBigText">Not signed yet?</p>
+                    <p className="gridItem doItNow">Do it now!</p>
                     <SignedOut>
-                        <SignInButton className = "gridItem signInButton" mode={"modal"}/>
+                        <SignInButton className="gridItem signInButton" mode={"modal"}/>
                     </SignedOut>
                 </div>
-                <div className = "grid-container2">
-                    <div className="gridItem2 item-a"><TypingAnimatedText /></div>
+                <div className="grid-container2">
+                    <div className="gridItem2 item-a"><TypingAnimatedText/></div>
                     <div className="gridItem2 item-b">Study materials</div>
                     <div className="gridItem2 item-c">Test yourself</div>
                     <div className="gridItem2 item-d">See results</div>
                     <div className="gridItem2 item-e">Get certificate</div>
-                </div></>
+                </div>
+            </>
         }
     </>
 }
