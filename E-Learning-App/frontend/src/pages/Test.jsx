@@ -1,4 +1,3 @@
-import "../styles/CourseStyles/TestStyle.css"
 import React, {useRef, useState} from "react";
 import EndTestYesOrNo from "../components/EndTestYesOrNo.jsx";
 import {QUESTIONS} from "../questions.js";
@@ -86,17 +85,17 @@ export default function Test({showOrHidePopup}) {
 
     return <>
 
-        <div className = "flag" ref={ref}>eleonore test</div>
+        <div id = "FLAG" className = "bg-[var(--main-color-blue)] rounded-tr-[20px] rounded-br-[20px] w-[10cm] mt-[50px] pl-[10px] text-[3rem] font-bold text-white" ref={ref}>eleonore test</div>
         <Timer minutes = {2}/>
 
         {testStarted && !openedEndTestPopup &&
             <>
-                <div className = "buttonContainer">
-                    <button className = "submitTest_button customButton"
+                <div id = "BUTTON_CONTAINER" className = "flex mr-[30px] max-[750px]:justify-center">
+                    <button id = "SUBMIT_TEST_BUTTON" className = "relative w-[120px] mt-0 mr-[10px] mb-[20px] ml-[25px] z-[999] customButton"
                             onClick={() => POST_test(searchParams.get("testID"), 50, getCurrentDate(), "C", "Silver", user.username, testQuestions)}
                     >Submit test</button>
 
-                    <button className="quitTest_button customButton" ref = {refForEndButton}
+                    <button className="relative z-999 customButton" ref = {refForEndButton}
                             onClick={() => {
                                 showOrHidePopup(refForEnd, openedEndTestPopup, setOpenedEndTestPopup);
                             }}>Quit test</button>

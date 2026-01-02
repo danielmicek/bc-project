@@ -1,8 +1,5 @@
 import {Link} from "react-router-dom";
-import "../styles/CourseStyles/CourseInfoPageStyle.css"
 import TestComponentVersion from "../components/TestComponentVersion.jsx";
-
-
 
 export function CourseInfoPage({showOrHidePopup}){
     return(
@@ -10,9 +7,9 @@ export function CourseInfoPage({showOrHidePopup}){
             {/*TODO this learningColumn will be probably changed*/}
             <div className = "columnContainer">
                 <Link to = "/test" className = "learnColumn testColumnCommon">
-                    <h2>Learn for test!</h2>
+                    <h2 className="font-bold text-3xl pt-4 ">Learn for test!</h2>
                     <h4 style={{color: "grey"}}>Time: unlimited</h4>
-                    <ul className = "learnColumnList">
+                    <ul className = "learnColumnList pt-7">
                         <div className = "pinkBackgroundFiller"></div>
 
                         <li className = "learnColumnListEl liCommonStyle">Learn for test easily</li>

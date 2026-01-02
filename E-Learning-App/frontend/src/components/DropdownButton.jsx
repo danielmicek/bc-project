@@ -1,7 +1,7 @@
-import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@heroui/react";
+import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from "@heroui/react";
 import {Link} from "react-router-dom";
 import React from "react";
-import {SignedIn, SignedOut, SignInButton, UserButton, useUser} from "@clerk/clerk-react";
+import {SignedOut, SignInButton, useUser} from "@clerk/clerk-react";
 
 export default function DropdownButton() {
     const {isSignedIn, user, isLoaded } = useUser();
@@ -9,7 +9,7 @@ export default function DropdownButton() {
     return (
         <Dropdown className = "dropdown-container">
             <DropdownTrigger >
-                <Button className = "customButton v2" variant="solid" ></Button>
+                <Button className = "customButton w-[1cm] h-[1cm] text-white bg-[url('/dropdownMenu_icon.png')] bg-contain bg-no-repeat" variant="solid" ></Button>
             </DropdownTrigger>
 
 
@@ -17,7 +17,9 @@ export default function DropdownButton() {
                     <DropdownMenu className = "dropdown-menu" textValue = "aaa">
                         <DropdownItem className = "dropdownItem" textValue="Avatar" style = {{margin: "5px 0 15px 37px"}}>
                                 <Link to = "/profile" className="buttonLink">
-                                    <button className="avatarButton"> <img className="avatarButton" src = {user.imageUrl} alt = "user avatar"/> </button>
+                                    <button className="relative top-[3px] right-[5px] w-[1cm] h-[1cm] rounded-full border-0 hover:shadow-[rgba(45,35,66,0.4)_0_4px_8px,rgba(45,35,66,0.3)_0_7px_13px_-3px,#D6D6E7_0_-3px_0_inset] hover:-translate-y-[2px]">
+                                        <img className="relative top-[3px] right-[5px] w-[1cm] h-[1cm] rounded-full border-0 hover:shadow-[rgba(45,35,66,0.4)_0_4px_8px,rgba(45,35,66,0.3)_0_7px_13px_-3px,#D6D6E7_0_-3px_0_inset] hover:-translate-y-[2px]"
+                                             src = {user.imageUrl} alt = "user avatar"/> </button>
                                 </Link>
 
                         </DropdownItem>

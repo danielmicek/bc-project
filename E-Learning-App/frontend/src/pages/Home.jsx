@@ -1,5 +1,4 @@
-import React, { useEffect} from 'react';
-import '../styles/HomeStyles/HomeStyle.css';
+import React, {useEffect} from 'react';
 import {MainPageText} from "../components/MainPageText.jsx";
 
 

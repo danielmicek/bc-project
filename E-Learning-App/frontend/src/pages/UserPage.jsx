@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import {useSearchParams} from "react-router-dom";
 import CircularIndeterminate from "../components/Loader.jsx";
 import DividerVariants from "../components/DividerVariants.jsx";
-import '../styles/ProfileStyles/UserPage.css';
 import {getUser_object} from "../methods/methodsClass.jsx";
 
 

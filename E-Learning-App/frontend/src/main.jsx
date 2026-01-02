@@ -7,10 +7,11 @@ import {CourseInfoPage} from './pages/CourseInfoPage.jsx'
 import {Profile} from './pages/Profile.jsx'
 import {WhyUs} from './pages/WhyUs.jsx'
 import {ErrorNotFound} from "./pages/ErrorNotFound.jsx";
-import Header from "./components/Header.jsx";
 import {ClerkProvider} from "@clerk/clerk-react";
 import UserPage from "./pages/UserPage.jsx";
 import Test from "./pages/Test.jsx";
+import {HeroUIProvider} from "@heroui/react";
+import TheNavbar from "./components/TheNavbar.jsx";
 
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
@@ -27,7 +28,7 @@ const router = createBrowserRouter([
     {
         element: (
             <>
-                <Header/>
+                <TheNavbar/>
                 <Outlet />
             </>
 
@@ -76,7 +77,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')).render(
     <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
       <StrictMode>
-        <RouterProvider  router={router}/>
+          <HeroUIProvider>
+            <RouterProvider  router={router}/>
+          </HeroUIProvider>
       </StrictMode>
     </ClerkProvider>
 );

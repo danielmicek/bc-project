@@ -1,6 +1,5 @@
 import React from "react";
-import '../styles/CourseStyles/TestStyle.css';
-import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import {CountdownCircleTimer} from "react-countdown-circle-timer";
 
 
 const timerProps = {
@@ -22,7 +21,7 @@ const renderTime = (dimension, time) => {
 export default function Timer({minutes}) {
 
     return (
-        <div className="timer">
+        <div className="flex w-fit m-[20px] gap-[10px] max-[750px]:justify-self-center">
 
             <CountdownCircleTimer /*MINUTES*/
                 isPlaying={true}

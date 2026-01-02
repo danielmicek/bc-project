@@ -61,11 +61,11 @@ export default function TestComponentVersion(   {testColumn,
                     :
                     showOrHidePopup(refForSignedIntPopup, openedNotSignedInPopup, setOpenedNotSignedInPopup)
             }}>
-                <h2>{"Test yourself - " + testMedal + " test"}
+                <h2 className="font-bold text-2xl pt-3">{"Test yourself - " + testMedal + " test"}
                     <img className = "medal" src ={medalImgSrc} alt="Medal" width={40} height={40}/>
                 </h2>
-                <h3 className="text-gray-500">{"Time: " + time}</h3>
-                <h4 className="text-gray-500">{"Difficulty: " + difficulty}</h4>
+                <h3 className="text-gray-500 pt-10">{"Time: " + time}</h3>
+                <h4 className="text-gray-500 pb-6">{"Difficulty: " + difficulty}</h4>
                 <ul className ={ulClassName}>
                     <div className ={backgroundFillerClassName}></div>
 

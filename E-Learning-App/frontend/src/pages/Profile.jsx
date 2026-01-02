@@ -1,7 +1,6 @@
 import {SignedIn, SignedOut, SignInButton, UserButton, useUser} from "@clerk/clerk-react";
 import TypingAnimatedText from "../components/TypingAnimatedText.jsx";
 import SignedInProfilePage from "../components/SignedInProfilePage.jsx";
-import '../styles/ProfileStyles/ProfileStyle.css';
 import '../styles/styles.css';
 import React, {useEffect, useRef, useState} from "react";
 import {
@@ -78,14 +77,13 @@ export function Profile(){
     }
 
     return <>
-        <p className="text-sm text-red-500 md:text-lg lg:text-2xl">Responsive Text</p>
 
         <button
             className="">Click
             me
         </button>
         <SignedIn>
-            <UserButton className="profileImg"
+            <UserButton className="absolute rounded-full h-[40vh] w-[40vh] mt-[85vh] border-[5px] border-white"
                         appearance={{
                             elements: {
                                 rootBox: "userButtonRoot",            // wrapper box
@@ -152,19 +150,20 @@ export function Profile(){
             </>
             :
             <>
-                <div className="circle">
-                    <p className="gridItem circleBigText">Not signed yet?</p>
-                    <p className="gridItem doItNow">Do it now!</p>
+                <div ID = "CIRCLE" className="hover:left-0 relative z-10 grid grid-cols-2 grid-rows-4 [grid-template-areas:'._._''doItNow_circleBigText''signInButton_circleBigText''._._'] border-[15px] border-[#F7374F] border-l-0 rounded-tr-[1000%] rounded-br-[1000%]
+                                h-[calc(100vh-70px)] w-[100vh] left-[-60vh] bg-white transition-[left,background-color] duration-[800ms] ease-in-out max-[900px]:w-[80vh] max-[900px]:left-[-45vh]">
+                    <p id = "NOT_SIGNED_YET" className="flex items-center justify-center flex relative left-[20px] text-[2rem] font-medium [grid-area:circleBigText]">Not signed yet?</p>
+                    <p id = "DO_IT_NOW" className="flex items-center justify-center text-[2rem] font-[1000] [grid-area:doItNow]">Do it now!</p>
                     <SignedOut>
-                        <SignInButton className="gridItem signInButton" mode={"modal"}/>
+                        <SignInButton className="customButton flex items-center justify-center" mode={"modal"}/>
                     </SignedOut>
                 </div>
-                <div className="grid-container2">
-                    <div className="gridItem2 item-a"><TypingAnimatedText/></div>
-                    <div className="gridItem2 item-b">Study materials</div>
-                    <div className="gridItem2 item-c">Test yourself</div>
-                    <div className="gridItem2 item-d">See results</div>
-                    <div className="gridItem2 item-e">Get certificate</div>
+                <div id = "GRID_CONTAINER" className="absolute top-[40vh] left-[50vw] grid h-auto w-[13cm] gap-[5px] grid-cols-[50%_50%] grid-rows-[50px_50px_50px_50px] [grid-template-areas:'zero_zero''first-left_first-right''sec-left_sec-right''last-left_last-right'] justify-center">
+                    <div className="flex items-center justify-center text-white border border-[#F7374F] rounded-[16px] transition-transform duration-300 ease-hover hover:scale-[1.05] hover:bg-[#F7374F] [grid-area:zero]"><TypingAnimatedText/></div>
+                    <div className="flex items-center justify-center text-white border border-[#F7374F] rounded-[16px] transition-transform duration-300 ease-hover hover:scale-[1.05] hover:bg-[#F7374F] [grid-area:first-left]">Study materials</div>
+                    <div className="flex items-center justify-center text-white border border-[#F7374F] rounded-[16px] transition-transform duration-300 ease-hover hover:scale-[1.05] hover:bg-[#F7374F] [grid-area:first-right]">Test yourself</div>
+                    <div className="flex items-center justify-center text-white border border-[#F7374F] rounded-[16px] transition-transform duration-300 ease-hover hover:scale-[1.05] hover:bg-[#F7374F] [grid-area:sec-left]">See results</div>
+                    <div className="flex items-center justify-center text-white border border-[#F7374F] rounded-[16px] transition-transform duration-300 ease-hover hover:scale-[1.05] hover:bg-[#F7374F] [grid-area:sec-right]">Get certificate</div>
                 </div>
             </>
         }

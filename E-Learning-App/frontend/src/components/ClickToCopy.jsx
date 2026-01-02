@@ -1,9 +1,8 @@
 import {ClipboardWithIcon} from "flowbite-react";
-import '../styles/ProfileStyles/ProfileStyle.css';
 
 export default function ClickToCopy({username}) {
     return (
-        <div className="clickToCopy">
+        <div className="block fit-content">
             <input
                 type="text"
                 className="xx"

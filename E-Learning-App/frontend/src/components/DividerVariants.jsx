@@ -18,7 +18,7 @@ const style = {
 
 export default function DividerVariants({uid, name, email}) {
     return (
-        <div className = "userStats">
+        <div className = "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
             <List sx={style} >
                 <ListItem>
                     <ListItemText primary= {"User name: " + name} />
