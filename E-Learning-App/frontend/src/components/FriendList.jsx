@@ -106,7 +106,7 @@ export default function FriendList({
     const title = classname === "friendList" ? "Friends:" : "Friend requests:";
     return (
 
-        <div className = "relative border-[5px] border-red-500 w-[7cm] bg-white z-[999]">
+        <div className = "relative border-[5px] border-red-500 w-[7cm] bg-white">
             <h2>{title}</h2>
             {isLoading ? <CircularIndeterminate/>
                 :
