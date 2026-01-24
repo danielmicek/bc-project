@@ -37,9 +37,9 @@ function handleClick(selectedArray, setSelectedArray, index, difficulty, answers
 function styleSetter(selectedArray, index){
 
     return(selectedArray[index] === true ?
-            { backgroundColor: "var(--main-color-pink)", borderColor: "var(--main-color-blue)" }
+            { backgroundColor: "var(--main-color-red)", borderColor: "var(--main-color-blue)" }
             :
-            { backgroundColor: "var(--main-color-blue)", borderColor: "var(--main-color-pink)" }
+            { backgroundColor: "var(--main-color-blue)", borderColor: "var(--main-color-red)" }
     )
 }
 
@@ -59,7 +59,7 @@ export default function Question({activeIndex, question}) {
         <div className="grid text-black bg-white border-[5px] border-[var(--main-color-blue)] rounded-[20px_70px_20px_70px] w-[700px] h-[7cm] justify-self-center self-center grid-cols-[7%_repeat(3,1fr)_7%] grid-rows-[repeat(5,1fr)] gap-0 overflow-hidden max-[750px]:w-[70vw]">
             {<div className="grid place-items-center text-black rounded-inherit z-[1] bg-[var(--main-color-brown)] [grid-area:1_/_1_/_1_/_2] max-[580px]:text-[0.7rem]" title="SS - Single-select | MM - Multi-select">
                 {testDifficulty === "Medium" ? (getNumberOfCorrectAnswers(question.answers) > 1 ? "MS" : "SS") : "SS"}</div>}
-            <div id = "TITLE" className="grid place-items-center font-bold bg-[var(--main-color-pink)] rounded-inherit [grid-area:1_/_2_/_2_/_5] max-[750px]:rounded-tr-[30px]">{question.title}</div>
+            <div id = "TITLE" className="grid place-items-center font-bold bg-[var(--main-color-red)] rounded-inherit [grid-area:1_/_2_/_2_/_5] max-[750px]:rounded-tr-[30px]">{question.title}</div>
             <div id = "BODY" className="grid place-items-center [grid-area:2_/_1_/_6_/_5]">{question.body}</div>
             <div id = "POINTS" title = "points" className="grid place-items-center [grid-area:1_/_5_/_2_/_6] pt-[15px] pr-[8px] max-[580px]:relative max-[580px]:top-[5px] max-[580px]:text-sm">{question.points}</div>
             <div id = "SIDE_TEXT" className="grid place-items-center [grid-area:2_/_5_/_6_/_6] font-bold bg-[var(--main-color-brown)] rounded-inherit [writing-mode:vertical-rl] [text-orientation:mixed]">eleonore</div>

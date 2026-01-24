@@ -12,7 +12,7 @@ import CircularIndeterminate from "./Loader.jsx";
 
 function handleClick({
                      decision,
-                     classname,
+                     type,
                      setRequestList,
                      accept,
                      deletee,
@@ -24,12 +24,12 @@ function handleClick({
     if (decision === "accept") {
         accept(userUsername, friendName, setFriendsList, setRequestList, imgUrl);
     } else {
-        deletee(classname === "friendRequestList"? "FR" : "F", userUsername, friendName, setFriendsList, setRequestList);
+        deletee(type === "friendRequestList"? "FR" : "F", userUsername, friendName, setFriendsList, setRequestList);
     }
 }
 
 function generateList({
-                          classname,
+                          type,
                           list,
                           setRequestList,
                           accept,
@@ -44,11 +44,11 @@ function generateList({
             <ListItem
                 secondaryAction={
                     <>
-                        {classname === "friendRequestList" && //show only in the friend_requests table
+                        {type === "friendRequestList" && //show only in the friend_requests table
                             <IconButton edge="end" aria-label="accept"
                                         onClick={() => handleClick({
                                             decision: "accept",
-                                            classname,
+                                            type,
                                             setRequestList,
                                             accept,
                                             deletee,
@@ -94,7 +94,7 @@ function generateList({
 
 
 export default function FriendList({
-                                       classname,
+                                       type,
                                        list,
                                        setRequestList,
                                        accept,
@@ -103,21 +103,25 @@ export default function FriendList({
                                        setFriendsList,
                                        isLoading
                                    }) {
-    const title = classname === "friendList" ? "Friends:" : "Friend requests:";
+    const title = type === "friendList" ? "Friends" : "Friend requests";
     return (
 
-        <div className = "relative border-[5px] border-red-500 w-[7cm] bg-white">
-            <h2>{title}</h2>
+        <div className="flex relative flex-col min-h-[400px] max-[900px]:min-h-[200px] min-[900px]:w-[50%] w-full rounded-3xl bg-white flex shadow-xl relative pt-10">
+            <div className = "flex relative w-full gap-5">
+                <img className="ml-10 w-[40px] h-[40px] aspect-square" src ={type === "friendList" ? "/friends.png" : "/add-user.png"} alt = "friends"/>
+                <h1 className = "font-bold min-w-0 max-[500px]:text-3xl text-4xl justify-center">{title}</h1>
+            </div>
+
             {isLoading ? <CircularIndeterminate/>
                 :
             <>
-                {classname === "friendList" && list.length === 0 && <p>No friends yet</p>}
-                {classname === "friendRequestList" && list.length === 0 && <p>No friend requests</p>}
+                {type === "friendList" && list.length === 0 && <div className = "absolute flex h-full w-full items-center justify-center text-center text-gray-400 font-bold text-xl">No friends yet</div>}
+                {type === "friendRequestList" && list.length === 0 && <div className = "absolute flex h-full w-full items-center justify-center text-center text-gray-400 font-bold text-xl">No friend requests</div>}
                 {list.length !== 0 &&
                     <List dense={false}>
                         {generateList(
                             {
-                                classname,
+                                type,
                                 list,
                                 setRequestList,
                                 accept,

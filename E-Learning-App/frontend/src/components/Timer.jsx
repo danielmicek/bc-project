@@ -27,7 +27,7 @@ export default function Timer({minutes}) {
                 isPlaying={true}
                 size={120}
                 strokeWidth={6}
-                colors="var(--main-color-pink)"
+                colors="var(--main-color-red)"
                 duration={minutes*60}
                 initialRemainingTime={minutes*60-1}
                 onComplete={(totalElapsedTime) => {
