@@ -3,6 +3,7 @@
     --main-color-blue: #0b1957;
     --main-color-brown: #ffdbd1;
     --main-color-red: #F7374F;
+    --main-color-orange: #FC9328;
 }
 
 body {
@@ -288,5 +289,5 @@ h2{
 .cl-userAvatarBox {
     width: 170px;
     height: 170px;
-
+    border: solid var(--main-color-orange) 2px;
 }

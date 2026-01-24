@@ -106,10 +106,10 @@ export default function FriendList({
     const title = type === "friendList" ? "Friends" : "Friend requests";
     return (
 
-        <div className="flex relative flex-col min-h-[400px] max-[900px]:min-h-[200px] min-[900px]:w-[50%] w-full rounded-3xl bg-white flex shadow-xl relative pt-10">
-            <div className = "flex relative w-full gap-5">
-                <img className="ml-10 w-[40px] h-[40px] aspect-square" src ={type === "friendList" ? "/friends.png" : "/add-user.png"} alt = "friends"/>
-                <h1 className = "font-bold min-w-0 max-[500px]:text-3xl text-4xl justify-center">{title}</h1>
+        <div className="flex relative flex-col min-h-[400px] max-[900px]:min-h-[200px] min-[900px]:w-[50%] w-full rounded-lg bg-white flex relative pt-10 px-5 shadow-[5px_10px_30px_rgba(252,147,40,0.5)] bg-gradient-to-br from-[#2a2a2a] to-[#1f1f1f] border-2 border-[var(--main-color-orange)] relative">
+            <div className = "flex relative w-full gap-5 border-b-2 border-b-[var(--main-color-orange)] ">
+                <img className="ml-10 w-[40px] h-[40px] aspect-square" src ={type === "friendList" ? "/friends-white.png" : "/add-user-white.png"} alt = {title}/>
+                <h1 className = "font-bold min-w-0 max-[500px]:text-3xl text-4xl justify-center text-white mb-5">{title}</h1>
             </div>
 
             {isLoading ? <CircularIndeterminate/>

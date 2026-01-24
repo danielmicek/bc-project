@@ -68,8 +68,8 @@ export function Profile(){
         return <CircularIndeterminate/>;
     }
 
-    return <div id = "BLUE_BACKGROUND" className="flex flex-col w-full h-fit justify-center border-500-red border-2 shadow-xl relative"
-                style={{backgroundColor: "var(--main-color-blue)"}}>
+    return <div id = "BLACK_BACKGROUND" className="flex flex-col w-full h-fit justify-center border-2 shadow-xl relative"
+                style={{backgroundColor: "#050505"}}>
         <div>
             <Toaster
                 position="bottom-center"

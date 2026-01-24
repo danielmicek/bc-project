@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react';
-import {MainPageText} from "../components/MainPageText.jsx";
 
 
 function Home() {
@@ -15,9 +14,10 @@ function Home() {
     }, []);
 
     return (
-        <>
-            <MainPageText/>
-        </>
+        <div id = "BLACK_BACKGROUND" className="flex flex-col w-full h-screen justify-center border-2 shadow-xl relative"
+             style={{backgroundColor: "#050505"}}>
+
+        </div>
 
     );
 }

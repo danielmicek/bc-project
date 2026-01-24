@@ -26,6 +26,7 @@
     "flowbite-react": "^0.12.15",
     "framer-motion": "^12.23.11",
     "gsap": "^3.13.0",
+    "lucide-react": "^0.563.0",
     "randn": "^1.0.0",
     "react": "^19.1.0",
     "react-clipboardjs-copy": "^2.1.0",

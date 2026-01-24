@@ -3,8 +3,8 @@ import React from "react";
 
 export function CourseInfoPage({showOrHidePopup}){
     return(
-        <div id = "BLUE_BACKGROUND" className="flex flex-col p-5 w-full h-fit justify-center border-500-red border-2 shadow-xl relative"
-             style={{backgroundColor: "var(--main-color-blue)"}}>
+        <div id = "BLACK_BACKGROUND" className="flex flex-col p-5 w-full h-fit justify-center border-500-red border-2 shadow-xl relative"
+             style={{backgroundColor: "#050505"}}>
             {/*TODO this learningColumn will be probably changed*/}
             <div className = "columnContainer">
                 {/*<Link to = "/test" className = "learnColumn testColumnCommon">
