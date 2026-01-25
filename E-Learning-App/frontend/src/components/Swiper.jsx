@@ -22,22 +22,23 @@ export default function SwiperComponent({testQuestions}) {
             <Swiper
                 onSwiper={(swiper) => { refSwiper.current = swiper;}}
                 slidesPerView={1}
-                spaceBetween={500}
+                spaceBetween={24}
                 loop={false}
                 pagination={pagination}
                 navigation={true}
                 modules={[Pagination, Navigation]}
-                className="mySwiper"
+                className="swiper"
                 onSlideChange = {() => {
                     setActiveIndex(refSwiper.current.activeIndex);
                 }}
             >
                 {testQuestions.map((question, index) => {
 
-                    return <SwiperSlide><Question activeIndex = {activeIndex}
+                    return <SwiperSlide className="swiper">
+                        <Question activeIndex = {activeIndex}
                                                   question = {question}
                                                   key = {index}
-                    />
+                        />
                     </SwiperSlide>
 
                 })}

@@ -63,14 +63,20 @@ const router = createBrowserRouter([
                 path: '/userPage',
                 element: <UserPage/>,
                 errorElement: <ErrorNotFound/>
-            },
-            {
-                path: '/test',
-                element: <Test showOrHidePopup={showOrHidePopup}/>,
-                errorElement: <ErrorNotFound/>
             }
         ]
-    }
+    },
+    {
+        element: <Outlet />,
+        children: [
+            {
+                path: "/test",
+                element: <Test showOrHidePopup={showOrHidePopup} />,
+            },
+        ],
+    },
+
+    { path: "*", element: <ErrorNotFound /> }
 ]);
 
 

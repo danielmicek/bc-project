@@ -1,6 +1,7 @@
 import React from "react";
 import {Link, useLocation} from "react-router-dom";
 import {
+    Button,
     Navbar,
     NavbarBrand,
     NavbarContent,
@@ -29,7 +30,6 @@ export default function TheNavbar() {
         "Course",
         "Profile",
     ];
-console.log(location.pathname);
     return (
         <Navbar onMenuOpenChange={setIsMenuOpen} isMenuOpen={isMenuOpen}>
             <NavbarContent>
@@ -43,17 +43,17 @@ console.log(location.pathname);
             </NavbarContent>
 
             <NavbarContent className="hidden sm:flex gap-4" justify="center">
-                <NavbarItem className="data-[active=true]:text-[var(--main-color-orange)] data-[active=true]:font-bold text-xl" isActive={location.pathname === "/"}>
+                <NavbarItem className="data-[active=true]:text-(--main-color-orange) data-[active=true]:font-bold text-xl" isActive={location.pathname === "/"}>
                     <Link to="/" color="foreground">
                         Home
                     </Link>
                 </NavbarItem>
-                <NavbarItem className="data-[active=true]:text-[var(--main-color-orange)] data-[active=true]:font-bold text-xl" isActive={location.pathname === "/courseInfoPage"}>
+                <NavbarItem className="data-[active=true]:text-(--main-color-orange) data-[active=true]:font-bold text-xl" isActive={location.pathname === "/courseInfoPage"}>
                     <Link to ="/courseInfoPage">
                         Course
                     </Link>
                 </NavbarItem>
-                <NavbarItem className="data-[active=true]:text-[var(--main-color-orange)] data-[active=true]:font-bold text-xl" isActive={location.pathname === "/profile"}>
+                <NavbarItem className="data-[active=true]:text-(--main-color-orange) data-[active=true]:font-bold text-xl" isActive={location.pathname === "/profile"}>
                     <Link to = "/profile" color="foreground">
                         Profile
                     </Link>
@@ -65,7 +65,9 @@ console.log(location.pathname);
             <NavbarContent justify="end">
                 <NavbarItem>
                     <SignedOut>
-                        <SignInButton className = "customButton" mode={"modal"}/>
+                        <Button className = "bg-(--main-color-orange) font-bold">
+                            <SignInButton className = "w-full h-full" mode={"modal"}/>
+                        </Button>
                     </SignedOut>
                 </NavbarItem>
                 <NavbarItem>

@@ -6,6 +6,7 @@ import {useUser} from "@clerk/clerk-react";
 import {useSearchParams} from "react-router-dom";
 import {POST_test} from "../methods/fetchMethods.jsx";
 import SwiperComponent from "../components/Swiper.jsx";
+import {Button} from "@heroui/react";
 
 
 function getRandomElementsFromArray(array, numberOfElements, questionsForTest) {
@@ -84,29 +85,38 @@ export default function Test({showOrHidePopup}) {
     })
 
     return <>
+        <div id = "BLACK_BACKGROUND" className="flex flex-col min-h-screen justify-center shadow-xl relative"
+             style={{backgroundColor: "#050505"}}>
+            <EndTestYesOrNo refForEnd = {refForEnd} showOrHidePopup={showOrHidePopup} setTestStarted = {setTestStarted}
+                            openedEndPopup = {openedEndTestPopup} setOpenedEndPopup = {setOpenedEndTestPopup}/>
+            <div className = "container pb-20 h-full flex flex-col items-center">
+{/*
+                <div id = "ELEONORE_TEST_TEXT" className = "absolute w-[10cm] self-start pl-10 pt-10 text-[3rem] font-bold text-white" ref={ref}>eleonore test</div>
+*/}
+                <Timer minutes = {30}/>
 
-        <div id = "FLAG" className = "bg-[var(--main-color-blue)] rounded-tr-[20px] rounded-br-[20px] w-[10cm] mt-[50px] pl-[10px] text-[3rem] font-bold text-white" ref={ref}>eleonore test</div>
-        <Timer minutes = {2}/>
+                {testStarted && !openedEndTestPopup &&
+                    <>
+                        <div id = "BUTTON_CONTAINER" className = "flex max-[750px]:justify-center gap-10">
+                            <Button id = "SUBMIT_TEST_BUTTON" className="bg-(--main-color-orange) font-bold" onPress={() => POST_test(searchParams.get("testID"), 50, getCurrentDate(), "C", "Silver", user.username, testQuestions)}>
+                                Submit test
+                            </Button>
 
-        {testStarted && !openedEndTestPopup &&
-            <>
-                <div id = "BUTTON_CONTAINER" className = "flex mr-[30px] max-[750px]:justify-center">
-                    <button id = "SUBMIT_TEST_BUTTON" className = "relative w-[120px] mt-0 mr-[10px] mb-[20px] ml-[25px] z-[999] customButton"
-                            onClick={() => POST_test(searchParams.get("testID"), 50, getCurrentDate(), "C", "Silver", user.username, testQuestions)}
-                    >Submit test</button>
-
-                    <button className="relative z-999 customButton" ref = {refForEndButton}
-                            onClick={() => {
+                            <Button id = "QUIT_TEST_BUTTON" className="bg-gray-600 font-bold" onPress={() => {
                                 showOrHidePopup(refForEnd, openedEndTestPopup, setOpenedEndTestPopup);
-                            }}>Quit test</button>
-                </div>
+                            }}>
+                                Quit test
+                            </Button>
+                        </div>
 
+                    </>
+                }
 
                 <SwiperComponent testQuestions = {testQuestions}/>
-            </>
-        }
-        <EndTestYesOrNo refForEnd = {refForEnd} showOrHidePopup={showOrHidePopup} setTestStarted = {setTestStarted}
-                        openedEndPopup = {openedEndTestPopup} setOpenedEndPopup = {setOpenedEndTestPopup}/>
+            </div>
+        </div>
+
+
 
     </>
 }

@@ -37,9 +37,9 @@ function handleClick(selectedArray, setSelectedArray, index, difficulty, answers
 function styleSetter(selectedArray, index){
 
     return(selectedArray[index] === true ?
-            { backgroundColor: "var(--main-color-red)", borderColor: "var(--main-color-blue)" }
+            { backgroundColor: "var(--main-color-orange)", borderColor: "rgb(55 65 81)" }
             :
-            { backgroundColor: "var(--main-color-blue)", borderColor: "var(--main-color-red)" }
+            { backgroundColor: "rgb(55 65 81)", borderColor: "var(--main-color-orange)" }
     )
 }
 
@@ -56,14 +56,13 @@ export default function Question({activeIndex, question}) {
 
     console.log("xx: " + getNumberOfCorrectAnswers(question.answers))
     return <>
-        <div className="grid text-black bg-white border-[5px] border-[var(--main-color-blue)] rounded-[20px_70px_20px_70px] w-[700px] h-[7cm] justify-self-center self-center grid-cols-[7%_repeat(3,1fr)_7%] grid-rows-[repeat(5,1fr)] gap-0 overflow-hidden max-[750px]:w-[70vw]">
-            {<div className="grid place-items-center text-black rounded-inherit z-[1] bg-[var(--main-color-brown)] [grid-area:1_/_1_/_1_/_2] max-[580px]:text-[0.7rem]" title="SS - Single-select | MM - Multi-select">
-                {testDifficulty === "Medium" ? (getNumberOfCorrectAnswers(question.answers) > 1 ? "MS" : "SS") : "SS"}</div>}
-            <div id = "TITLE" className="grid place-items-center font-bold bg-[var(--main-color-red)] rounded-inherit [grid-area:1_/_2_/_2_/_5] max-[750px]:rounded-tr-[30px]">{question.title}</div>
-            <div id = "BODY" className="grid place-items-center [grid-area:2_/_1_/_6_/_5]">{question.body}</div>
-            <div id = "POINTS" title = "points" className="grid place-items-center [grid-area:1_/_5_/_2_/_6] pt-[15px] pr-[8px] max-[580px]:relative max-[580px]:top-[5px] max-[580px]:text-sm">{question.points}</div>
-            <div id = "SIDE_TEXT" className="grid place-items-center [grid-area:2_/_5_/_6_/_6] font-bold bg-[var(--main-color-brown)] rounded-inherit [writing-mode:vertical-rl] [text-orientation:mixed]">eleonore</div>
-            <div id = "QUESTION_NUMBER" className="grid place-items-center [grid-area:1_/_1_/_2_/_2]"></div>
+        <div className="pb-8 justify-self-center self-center flex flex-col gap-0 overflow-hidden max-[750px]:w-[70vw]  mb-5">
+
+            <div id = "BODY" className="flex items-center justify-center text-center text-white font-bold text-xl w-[600px] pb-3">{question.body}</div>
+            {<p className="text-sm font-light text-gray-500">{question.points} points {testDifficulty === "Medium" ? (getNumberOfCorrectAnswers(question.answers) > 1 ? "| Multi-select" : "| Single-select") : "| Single-select"}</p>}
+
+
+            {/*<div id = "QUESTION_NUMBER" className="grid place-items-center [grid-area:1_/_1_/_2_/_2]"></div>*/}
         </div>
         <ul id = "ANSWERS" className="relative flex flex-col gap-[20px] mb-[50px] justify-self-center self-center w-[550px] h-fit text-white max-[750px]:w-[60vw] mt-3 ml-20">
             <li className = "ans a" style = {styleSetter(selectedArray, 0)}

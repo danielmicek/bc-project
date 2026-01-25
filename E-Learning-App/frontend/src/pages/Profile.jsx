@@ -1,6 +1,6 @@
 import {SignedOut, SignInButton, useUser} from "@clerk/clerk-react";
 import TypingAnimatedText from "../components/TypingAnimatedText.jsx";
-import SignedInProfilePage from "../components/SignedInProfilePage.jsx";
+import SignedInProfilePage from "./SignedInProfilePage.jsx";
 import '../styles/styles.css';
 import React, {useEffect, useRef, useState} from "react";
 import {friendRequestListLoader, getUser_info} from "../methods/methodsClass.jsx";
@@ -86,7 +86,7 @@ export function Profile(){
                 <div id = "CIRCLE" className="hover:left-0 relative z-10 grid grid-cols-2 grid-rows-4 [grid-template-areas:'._._''doItNow_circleBigText''signInButton_circleBigText''._._']
                 border-[15px] border-[#F7374F] border-l-0 rounded-tr-[1000%] rounded-br-[1000%]
                 h-[calc(100vh-65px)] w-[100vh] left-[-50vh] md:left-[-60vh] bg-white transition-[left,background-color] duration-[800ms] ease-in-out max-[900px]:w-[80vh] ">
-                    <p id = "NOT_SIGNED_YET" className="flex items-center justify-center flex relative left-[20px] text-[2rem] font-medium [grid-area:circleBigText]">Not signed yet?</p>
+                    <p id = "NOT_SIGNED_YET" className="flex items-center justify-center relative left-[20px] text-[2rem] font-medium [grid-area:circleBigText]">Not signed yet?</p>
                     <p id = "DO_IT_NOW" className="flex items-center justify-center text-[2rem] font-[1000] [grid-area:doItNow]">Do it now!</p>
                     <SignedOut>
                         <SignInButton className="customButton flex items-center justify-center" mode={"modal"}/>
