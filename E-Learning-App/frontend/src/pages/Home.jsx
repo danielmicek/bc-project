@@ -41,7 +41,8 @@ function Home() {
 
                 <div className= "text-center mt-30 z-5">
                     <h1 className="font-[1000] text-7xl text-white pb-4">eleonore</h1>
-                    <h2 className = "text-gray-500">Lorem ipsum dolor sit amet, consectetur adipiscing elit, <br/> sed do eiusmod</h2>
+                    <h2 className = "text-gray-500 relative">“Any fool can know.<br/>The point is to understand.”
+                    </h2>
                 </div>
 
                 <div className="flex gap-10 items-end h-fit z-5">
@@ -69,11 +70,11 @@ function Home() {
                 <div id = "STAT_CARD_CONTAINER" className="flex flex-row gap-10 flex-wrap justify-center z-5">
                     <BigStatCard iconPath="/learning-icon.png"
                                  mainText="Practice what you learn"
-                                 secondText="Learn at your own depth, then test real understanding."
+                                 secondText="Learn at your own depth, then test real understanding. \nGet certificate and export it as PDF."
                     />
-                    <BigStatCard iconPath="/certificate.png"
-                                 mainText="Get certificate"
-                                 secondText="After successfully passing the test, you will receive a certificate you can export as PDF"
+                    <BigStatCard iconPath="/ai.png"
+                                 mainText="AI"
+                                 secondText="Implemented AI to make each test unique, interesting and more effective."
                     />
                     <BigStatCard iconPath="/stats.png"
                                  mainText="Statistics"
@@ -83,8 +84,17 @@ function Home() {
                                  mainText="Friends"
                                  secondText="Connect with friends, see their results and compare results to stay motivated"
                     />
+
                 </div>
-                <img src="/laptop.png" alt="laptop" className="lg:w-[800px] md:w-[700px] w-[450px] mt-40 z-5"/>
+                <div className="flex md:flex-row flex-col items-center justify-center z-5 mt-40 w-[100%] pr-10">
+                    <img src="/laptop.png" alt="laptop" className="md:w-[500px] min-[1300px]:w-[800px] lg:w-[700px] w-[450px]"/>
+                    <ul className="list-disc list-inside text-white mt-10 md:mt-0 md:ml-10">
+                        <li className="mb-8 font-extrabold text-gray-400 text-xl">Get medal after passing the test</li>
+                        <li className="mb-8 font-extrabold text-gray-400 text-xl">AI to rephrase the questions and answers</li>
+                        <li className="mb-8 font-extrabold text-gray-400 text-xl">Focus on understanding, not memorization</li>
+                        <li className="mb-8 font-extrabold text-gray-400 text-xl">A unique test every time</li>
+                    </ul>
+                </div>
             </div>
         </div>
 
