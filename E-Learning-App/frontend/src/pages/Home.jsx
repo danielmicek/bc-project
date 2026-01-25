@@ -1,4 +1,5 @@
 import React, {useEffect} from 'react';
+import '../styles/styles.css';
 
 
 function Home() {
@@ -12,11 +13,13 @@ function Home() {
             document.body.classList.remove("backgroundImageHomePage");
         };
     }, []);
-
+    docume
     return (
         <div id = "BLACK_BACKGROUND" className="flex flex-col w-full h-screen justify-center border-2 shadow-xl relative"
              style={{backgroundColor: "#050505"}}>
+            <div className = "container border-red-500 border-2">
 
+            </div>
         </div>
 
     );

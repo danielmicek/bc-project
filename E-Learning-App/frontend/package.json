@@ -19,7 +19,8 @@
     "@mui/icons-material": "^7.3.4",
     "@mui/material": "^7.3.2",
     "@radix-ui/react-icons": "^1.3.2",
-    "@tailwindcss/vite": "^4.1.16",
+    "@tailwindcss/vite": "^4.1.18",
+    "tailwindcss": "^4.1.18",
     "@uidotdev/usehooks": "^2.4.1",
     "@untitledui/icons": "^0.0.19",
     "carbon-components-svelte": "^0.89.7",
@@ -35,11 +36,11 @@
     "react-hot-toast": "^2.6.0",
     "react-router-dom": "^7.6.3",
     "styled-components": "^6.3.8",
-    "swiper": "^12.0.2",
-    "tailwindcss": "^4.1.16"
+    "swiper": "^12.0.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
+    "@tailwindcss/language-server": "^0.14.29",
     "@tiptap/cli": "^3.3.1",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
@@ -48,6 +49,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.2.0",
+    "tailwindcss": "^4.1.18",
     "vite": "^7.0.0"
   },
   "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules."
