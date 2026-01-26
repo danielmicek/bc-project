@@ -2,8 +2,7 @@ import {useUser} from "@clerk/clerk-react";
 import SignedInProfilePage from "./SignedInProfilePage.jsx";
 import '../styles/styles.css';
 import React, {useEffect, useRef, useState} from "react";
-import {friendRequestListLoader, getUser_info} from "../methods/methodsClass.jsx";
-import {GET_allFriends} from "../methods/fetchMethods.jsx";
+import {friendListLoader, friendRequestListLoader, getUser_info} from "../methods/methodsClass.jsx";
 import CircularIndeterminate from "../components/Loader.jsx";
 import {Toaster} from "react-hot-toast";
 import TypingAnimatedText from "../components/TypingAnimatedText.jsx";
@@ -18,15 +17,7 @@ async function listInitializer(username,
                                setIsLoading) {
     await Promise.all([
         friendRequestListLoader(username, setFriendRequestList, setIsLoading),
-        (async () => {
-            let response = await GET_allFriends(username, setIsLoading);
-            if (response.status === 200) {
-                setFriendList((await response.json()));
-            } else if (response.status === 404) {
-                setIsLoading(false);
-            }
-
-        })() //immediate execution
+        friendListLoader(username, setFriendList, setIsLoading)
     ]);
 }
 
@@ -79,7 +70,11 @@ export function Profile() {
 
         {isSignedIn ?
             <>
-                <SignedInProfilePage/>
+                <SignedInProfilePage userFriendList = {userFriendList}
+                                     friendRequestsList = {friendRequestsList}
+                                     setUserFriendList = {setUserFriendList}
+                                     setFriendRequestList = {setFriendRequestList}
+                />
             </>
             :
             <>{/*left-[-50vh] md:left-[-60vh]*/}

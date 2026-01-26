@@ -63,7 +63,7 @@ function Home() {
                     </div>
 
                     <div id = "WHAT_IS_ELEONORE" className = "shadow-[5px_10px_30px_rgba(255,255,255,0.5)] z-5 flex flex-col items-center border-2 my-50 mx-20 text-white rounded-lg p-10">
-                        <div className=" flex flex-row sm:gap-8 gap-3 w-full justify-center items-center">
+                        <div className=" flex sm:gap-8 gap-3 w-full justify-center items-center">
                             <img src = "/question.png" className= "w-[45px] h-[45px]" alt = "question mark"/>
                             <h1 className="font-extrabold sm:text-4xl text-3xl w-fit sm:pr-0 pr-8">What is eleonore</h1>
                         </div>

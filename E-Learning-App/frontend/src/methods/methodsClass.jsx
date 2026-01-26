@@ -1,6 +1,7 @@
 import {
     DELETE_deleteFriend,
     GET_allFriendRequests,
+    GET_allFriends,
     GET_friendship,
     GET_user,
     PATCH_acceptFriendRequest,
@@ -98,11 +99,11 @@ export async function acceptFriendRequest(user_username, friend_username, setUse
     }
 }
 
-// decline the friend-request from friend_username user
+// reject the friend-request from friend_username user
 // flag: FR = "friend request" => delete friend request from db and update userFriendRequestList
 //       F = "friend" => delete friend from db and update userFriendList"
 export async function deleteFriend(flag, user_username, friend_username, setUserFriendList, setUserFriendRequestList){
-
+    console.log("flag: " + flag);
     let friendshipResponseObject = await DELETE_deleteFriend(user_username, friend_username);
 
     if(friendshipResponseObject.status === 200){
@@ -129,7 +130,7 @@ export async function friendRequestListLoader(user_username, setFriendRequestLis
     const result = await GET_allFriendRequests(user_username, setIsLoading)
     // first ↑ we get all friend-requests from the database, then we add each FR to the list so we can display it on the page
     if(result.status === 404){
-        toast.success('No pending friend requests');
+        setFriendRequestList([]);
         return;
     }
     const friendRequests = await result.json();
@@ -139,7 +140,19 @@ export async function friendRequestListLoader(user_username, setFriendRequestLis
             setFriendRequestList(prevList => [...prevList, {friendName: friendName, imgUrl: result.userImgUrl}]);
         })
     }
-    toast.success('Friend requests loaded!');
+    //toast.success('Friend requests loaded!');
+}
+
+export async function friendListLoader(user_username, setFriendList, setIsLoading){
+    const result = await GET_allFriends(user_username, setIsLoading)
+    // first ↑ we get all friends from the database, then we add each FRIEND to the list so we can display it on the page
+    if(result.status === 404){
+        setFriendList([])
+        //toast.error('No friends');
+        return;
+    }
+    setFriendList([])
+    setFriendList(await result.json()); // different than method friendRequestListLoader, because this endpoint returns an object of users, the friendRequestListLoader returns an array of usernames
 }
 
 let RIGHT_ANSWER_POINTS;

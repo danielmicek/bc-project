@@ -77,11 +77,11 @@ app.post("/api/addTest", async (request, response) => {
     const date = request.body["date"];
     const grade = request.body["grade"];
     const medal = request.body["medal"];
-    const fk_username = request.body["fk_username"];
+    const fk_user_id = request.body["fk_user_id"];
     const structure = request.body["structure"];
 
-    const insertQuery = "INSERT INTO tests (test_id, points, date, grade, medal, fk_username, structure) VALUES ($1, $2, $3, $4, $5, $6, $7)";
-    pool.query(insertQuery, [test_id, points, date, grade, medal, fk_username, JSON.stringify(structure)])
+    const insertQuery = "INSERT INTO tests (test_id, points, date, grade, medal, fk_user_id, structure) VALUES ($1, $2, $3, $4, $5, $6, $7)";
+    pool.query(insertQuery, [test_id, points, date, grade, medal, fk_user_id, JSON.stringify(structure)])
         .then((result) => {
             console.log(result);
             response.status(200);
@@ -165,7 +165,7 @@ app.get("/api/getAllFriendRequests/:username", (request, response)=> {
             console.log(result);
             if (result.rows.length === 0) {
                 response.status(404);
-                response.send("No pending friend requests.");
+                response.send({}); // just sending empty body, because only .status doesnt send anything, so the response.status is then undefined
             }
             else{
                 response.status(200);
@@ -185,16 +185,20 @@ app.get("/api/getAllFriendRequests/:username", (request, response)=> {
 app.get("/api/getAllFriends/:username", (request, response)=> {
     const username = request.params.username;
 
-    let getQuery = "SELECT fr.friend_username, us.image_url FROM public.friendship AS fr\n" +
-        "JOIN public.users AS us\n" +
-        "ON (fr.friend_username = us.username)\n" +
-        "WHERE fr.user_username = $1\n" +
-        "AND fr.status = 'ACCEPTED';";
+    const getQuery = `
+      SELECT fr.friend_username, us.image_url
+      FROM public.friendship AS fr
+      JOIN public.users AS us
+        ON fr.friend_username = us.username
+      WHERE fr.user_username = $1
+        AND fr.status = 'ACCEPTED';
+    `;
     pool.query(getQuery, [username])
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
                 response.status(404);
+                response.send({});
             }
             else{
                 let foundFriends = result.rows.map(row => ({friendName: row.friend_username, imgUrl: row.image_url})); // returns an array of user's friends

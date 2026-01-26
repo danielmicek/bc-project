@@ -1,21 +1,17 @@
 import React, {useRef, useState} from "react";
 import {SignedIn, UserAvatar, useUser} from "@clerk/clerk-react";
 import '../styles/index.css';
-import {
-    acceptFriendRequest,
-    deleteFriend,
-    friendRequestListLoader,
-    sendFriendRequest
-} from "../methods/methodsClass.jsx";
+import {friendListLoader, friendRequestListLoader, sendFriendRequest} from "../methods/methodsClass.jsx";
 import FriendList from "../components/FriendList.jsx";
 import StatCard from "../components/StatCard.jsx";
 import ClickToCopy from "../components/ClickToCopy.jsx";
 import {Button} from "@heroui/react";
 
 
-export default function SignedInProfilePage(){
-    const [friendRequestsList, setFriendRequestList] = useState([]);
-    const [userFriendList, setUserFriendList] = useState([]);
+export default function SignedInProfilePage({   userFriendList,
+                                                friendRequestsList,
+                                                setUserFriendList,
+                                                setFriendRequestList}){
     const [isLoading, setIsLoading] = useState(false);
     const inputRef = useRef(null);
 
@@ -72,13 +68,11 @@ export default function SignedInProfilePage(){
                     </form>
                 </div>
 
-                <div className="flex min-[900px]:flex-row flex-col items-center h-fit w-[90%] mt-20 relative min-[900px]:gap-30 gap-10">
+                <div className="flex min-[900px]:flex-row flex-col items-center h-fit w-[90%] mt-20 relative min-[900px]:gap-30 gap-10 pb-18 ">
                     <FriendList type="friendList"
                                 list={userFriendList}
                                 setRequestList={setFriendRequestList}
                                 setFriendsList={setUserFriendList}
-                                accept={acceptFriendRequest}
-                                deletee={deleteFriend}
                                 userUsername={user.username}
                                 isLoading={isLoading}
                     />
@@ -87,16 +81,19 @@ export default function SignedInProfilePage(){
                                 list={friendRequestsList}
                                 setRequestList={setFriendRequestList}
                                 setFriendsList={setUserFriendList}
-                                accept={acceptFriendRequest}
-                                deletee={deleteFriend}
                                 userUsername={user.username}
                                 isLoading={isLoading}
                     />
+
+                    <Button className = "bg-(--main-color-orange) font-bold absolute bottom-0 right-0" onPress={async() => {
+                        await Promise.all([
+                            friendRequestListLoader(user.username, setFriendRequestList, setIsLoading),
+                            friendListLoader(user.username, setUserFriendList, setIsLoading)
+                        ]);
+                    }}>Refresh tables ⟳</Button>
                 </div>
 
-                <button className="customButton mt-50"
-                        onClick={() => friendRequestListLoader(user.username, setFriendRequestList, setIsLoading)}>Refresh FR
-                </button>
+
             </div>
         </div>
 

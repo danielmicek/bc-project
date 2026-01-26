@@ -8,23 +8,23 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CircularIndeterminate from "./Loader.jsx";
+import {acceptFriendRequest, deleteFriend} from "../methods/methodsClass.jsx";
 
 
 function handleClick({
                      decision,
                      type,
                      setRequestList,
-                     accept,
-                     deletee,
                      userUsername,
                      friendName,
                      setFriendsList,
                      imgUrl}) {
 
     if (decision === "accept") {
-        accept(userUsername, friendName, setFriendsList, setRequestList, imgUrl);
+        console.log("accept");
+        acceptFriendRequest(userUsername, friendName, setFriendsList, setRequestList, imgUrl);
     } else {
-        deletee(type === "friendRequestList"? "FR" : "F", userUsername, friendName, setFriendsList, setRequestList);
+        deleteFriend(type === "friendRequestList"? "FR" : "F", userUsername, friendName, setFriendsList, setRequestList);
     }
 }
 
@@ -32,9 +32,7 @@ function generateList({
                           type,
                           list,
                           setRequestList,
-                          accept,
                           userUsername,
-                          deletee,
                           setFriendsList
                       }) {
 
@@ -55,8 +53,6 @@ function generateList({
                                             decision: "accept",
                                             type,
                                             setRequestList,
-                                            accept,
-                                            deletee,
                                             userUsername,
                                             friendName: friend.friendName,
                                             setFriendsList,
@@ -69,11 +65,9 @@ function generateList({
 
                         <IconButton edge="end" aria-label="delete" color = "warning"
                                     onClick={() => handleClick({
-                                        decision: "decline",
-                                        classname,
+                                        decision: "reject_or_delete",
+                                        type: type === "friendRequestList" ? "friendRequestList" : "friendList",
                                         setRequestList,
-                                        accept,
-                                        deletee,
                                         userUsername,
                                         friendName: friend.friendName,
                                         setFriendsList,
@@ -102,20 +96,18 @@ export default function FriendList({
                                        type,
                                        list,
                                        setRequestList,
-                                       accept,
-                                       userUsername,
-                                       deletee,
                                        setFriendsList,
+                                       userUsername,
                                        isLoading
                                    }) {
     const title = type === "friendList" ? "Friends" : "Friend requests";
-    console.log(list);
+
     return (
 
         <div className="flex relative flex-col min-h-[400px] max-[900px]:min-h-[200px] min-[900px]:w-[50%] w-full rounded-lg bg-gradient-to-br from-[#2a2a2a] to-[#1f1f1f] pt-10 px-5 shadow-[5px_10px_30px_rgba(252,147,40,0.5)] border-2 border-(--main-color-orange)">
-            <div className = "flex relative w-full gap-5 border-b-2 border-b-(--main-color-orange) ">
-                <img className="ml-10 w-[40px] h-[40px] aspect-square" src ={type === "friendList" ? "/friends-white.png" : "/add-user-white.png"} alt = {title}/>
-                <h1 className = "font-bold min-w-0 max-[500px]:text-3xl text-4xl justify-center text-white mb-5">{title}</h1>
+            <div className = "flex relative w-full gap-5 border-b-2 border-b-(--main-color-orange) items-center mb-3 pb-3">
+                <img className="shrink-0 w-[40px] h-[40px] aspect-square relative" src ={type === "friendList" ? "/friends-white.png" : "/add-user-white.png"} alt = {title}/>
+                <h1 className = "font-bold min-w-0 max-[500px]:text-3xl text-4xl text-white">{title}</h1>
             </div>
 
             {isLoading ? <CircularIndeterminate/>
@@ -130,8 +122,6 @@ export default function FriendList({
                                 type,
                                 list,
                                 setRequestList,
-                                accept,
-                                deletee,
                                 userUsername,
                                 setFriendsList
                             }

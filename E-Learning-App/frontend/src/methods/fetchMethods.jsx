@@ -51,7 +51,8 @@ export async function GET_friendship(userUsername, friendUsername){         // c
 export async function GET_allFriendRequests(username, setIsLoading){
     setIsLoading(true);
     const response = await fetch(`http://localhost:3000/api/getAllFriendRequests/${username}`, {
-        method: "GET"
+        method: "GET",
+        cache: "no-store"
     })
     setIsLoading(false);
     return response;
@@ -60,7 +61,8 @@ export async function GET_allFriendRequests(username, setIsLoading){
 export async function GET_allFriends(username, setIsLoading){
     setIsLoading(true);
     const response = await fetch(`http://localhost:3000/api/getAllFriends/${username}`, {
-        method: "GET"
+        method: "GET",
+        cache: "no-store"
     })
     setIsLoading(false);
     return response;
