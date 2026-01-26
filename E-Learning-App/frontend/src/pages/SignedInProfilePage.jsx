@@ -14,8 +14,8 @@ export default function SignedInProfilePage({   userFriendList,
                                                 setFriendRequestList}){
     const [isLoading, setIsLoading] = useState(false);
     const inputRef = useRef(null);
-
     const {user} = useUser();
+    
     return(<>
         <div id = "BLACK_BACKGROUND" className="flex flex-col w-full h-fit justify-center shadow-xl relative"
              style={{backgroundColor: "#050505"}}>
@@ -31,7 +31,7 @@ export default function SignedInProfilePage({   userFriendList,
                         <div id = "MEMBER_SICNE" className = "relative sm:text-lg text-mf text-[#BFBBBB] max-[900px]:text-center">Member since: 15.06.2025</div>
 
                         <div id = "SQUARES" className="flex min-[700px]:flex-row flex-col items-center min-[700px]:flex-wrap min-[700px]:items-start justify-start mt-[25px] gap-3 sm:gap-5 min-[1000px]:pr-5 pt-10">
-                            <StatCard text="Friends" imgPath="/friends.png" number={2}/>
+                            <StatCard text="Friends" imgPath="/friends.png" number={userFriendList.length}/>
                             <StatCard text="Finished tests" imgPath="/test.png" number={4}/>
                             <StatCard text="Best score %" imgPath="/score.png" number={92}/>
                         </div>
