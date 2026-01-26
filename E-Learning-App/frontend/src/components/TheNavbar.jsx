@@ -65,9 +65,9 @@ export default function TheNavbar() {
             <NavbarContent justify="end">
                 <NavbarItem>
                     <SignedOut>
-                        <Button className = "bg-(--main-color-orange) font-bold">
-                            <SignInButton className = "w-full h-full" mode={"modal"}/>
-                        </Button>
+                        <SignInButton className = "bg-(--main-color-orange) font-bold" mode={"modal"}>
+                            <Button className = "w-full h-full">Sign in</Button>
+                        </SignInButton>
                     </SignedOut>
                 </NavbarItem>
                 <NavbarItem>
