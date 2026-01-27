@@ -15,7 +15,7 @@ export async function getUser_info(user){ // only find if a user exists
     const responseObject = await GET_user(user.username);
     if(responseObject.status === 200){
         console.log("User already exists in the database. GET status code: " + responseObject.status);
-        console.log(await responseObject.json());
+        //console.log(await responseObject.json());
     }
     else{
         console.log("User does not exist in the database, GET status code: " + responseObject.status + ". Creating POST request... " );
@@ -66,14 +66,16 @@ export async function sendFriendRequest(userUsername, friendUniqueIdentifier){
         toast.success("Friendship already exists");
     }
     else{
-        await toast.promise(
-            POST_friendship(userUsername, friendUsername),
-            {
-                loading: 'Sending friend request...',
-                success: (responseText) => responseText,
-                error: (responseText) => responseText,
-            }
-        );
+        try {
+            await toast.promise(
+                POST_friendship(userUsername, friendUsername),
+                {
+                    loading: "Sending friend request...",
+                    success: (responseText) => responseText,
+                    error: (responseErrorText) => responseErrorText.message,
+                }
+            );
+        } catch (e) {}
     }
 }
 
@@ -103,7 +105,6 @@ export async function acceptFriendRequest(user_username, friend_username, setUse
 // flag: FR = "friend request" => delete friend request from db and update userFriendRequestList
 //       F = "friend" => delete friend from db and update userFriendList"
 export async function deleteFriend(flag, user_username, friend_username, setUserFriendList, setUserFriendRequestList){
-    console.log("flag: " + flag);
     let friendshipResponseObject = await DELETE_deleteFriend(user_username, friend_username);
 
     if(friendshipResponseObject.status === 200){

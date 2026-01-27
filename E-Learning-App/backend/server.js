@@ -3,9 +3,12 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cors from "cors";
 import pool from "./database.js";
+import {GoogleGenAI} from "@google/genai";
 
 dotenv.config(); // Load environment variables from .env file
 const PORT = process.env.BACKEND_PORT || 3000;
+const AI_KEY = process.env.GEMINI_API_KEY
+const ai = new GoogleGenAI({apiKey: AI_KEY});
 const app = express();
 app.use(express.json());
 
@@ -100,6 +103,8 @@ app.post("/api/friendRequest", async (request, response) => {
     const friendUsername = request.body["friend_username"];
     const status = request.body["status"];
     const from = request.body["from"];
+    
+    if(userUsername === friendUsername) return response.status(400).send("Cannot send friend request to yourself!")
 
     const insertQuery_user_to_friend = "INSERT INTO friendship (user_username, friend_username, status, from_user) VALUES ($1, $2, $3, $4)";
     pool.query(insertQuery_user_to_friend, [userUsername, friendUsername, status, from])
@@ -250,6 +255,23 @@ app.delete("/api/deleteFriend/:userUsername/:friendUsername", (request, response
 // ------------------POST REQUEST - CALCULATION OF TEST SCORE---------------------------------------------------------------
 app.post("/api/calculateTestScore/testStructure", (request, response)=> {
     // TODO
+});
+
+// ------------------GET RESPONSE FROM GEMINI-API---------------------------------------------------------------
+app.post("/api/ai", async (request, response) => {
+    const prompt = request.body["prompt"];
+    try {
+        const ai_result = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: prompt
+        });
+        const aiAnswer = ai_result.candidates[0].content.parts[0].text; // all the way to the actual response we need in the RESPONSE object (check JSON parser to understand)
+        return response.status(200).send({ result: aiAnswer });
+    }
+    catch (error) {
+        console.error(error);
+        return response.status(500).send({ error: "AI request failed" });
+    }
 });
 
 

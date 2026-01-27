@@ -113,8 +113,8 @@ export default function FriendList({
             {isLoading ? <CircularIndeterminate/>
                 :
             <>
-                {type === "friendList" && list.length === 0 && <div className = "absolute flex h-full w-full items-center justify-center text-center text-gray-400 font-bold text-xl">No friends yet</div>}
-                {type === "friendRequestList" && list.length === 0 && <div className = "absolute flex h-full w-full items-center justify-center text-center text-gray-400 font-bold text-xl">No friend requests</div>}
+                {type === "friendList" && list.length === 0 && <div className = "absolute inset-0 mt-10 flex h-full w-full items-center justify-center text-center text-gray-400 font-bold text-xl">No friends yet</div>}
+                {type === "friendRequestList" && list.length === 0 && <div className = "absolute inset-0 mt-10 flex h-full w-full items-center justify-center text-center text-gray-400 font-bold text-xl">No friend requests</div>}
                 {list.length !== 0 &&
                     <List dense={false}>
                         {generateList(

@@ -25,7 +25,6 @@ export async function GET_user(username){
 
 /*-------------FRIENDSHIP API CALLS----------------------------------------------------------------*/
 export async function POST_friendship(userUsername, friendUsername) {
-
     const response = await fetch(`http://localhost:3000/api/friendRequest`, {
         method: "POST",
         headers: {
@@ -38,8 +37,12 @@ export async function POST_friendship(userUsername, friendUsername) {
             from: userUsername
         })
     })
-    if(response.ok) return await response.text();
-    else throw new Error(await response.text());
+
+    if (!response.ok) {
+        throw new Error(await response.text());
+    }
+
+    return await response.text();
 }
 
 export async function GET_friendship(userUsername, friendUsername){         // check if friendship with particular user exists (the state does not matter)
@@ -96,6 +99,21 @@ export async function POST_test(testID, points, date, grade, medal, username, st
             medal: medal,
             fk_username: username,
             structure: structure
+        })
+    })
+    console.log(await x.text());
+}
+/*----------------------------------------------------------------------------------------------*/
+
+/*-------------AI API CALLS----------------------------------------------------------------*/
+export async function GET_ai_response(veta) {
+    const x = await fetch(`http://localhost:3000/api/ai`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            prompt: `Preformuluj vetu, zachovaj význam. Vráť iba jednu vetu.\n${veta}`,
         })
     })
     console.log(await x.text());

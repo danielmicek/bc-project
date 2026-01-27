@@ -6,6 +6,8 @@ import FriendList from "../components/FriendList.jsx";
 import StatCard from "../components/StatCard.jsx";
 import ClickToCopy from "../components/ClickToCopy.jsx";
 import {Button} from "@heroui/react";
+import {GET_ai_response} from "../methods/fetchMethods.jsx";
+import {toast, Toaster} from "react-hot-toast";
 
 
 export default function SignedInProfilePage({   userFriendList,
@@ -15,8 +17,12 @@ export default function SignedInProfilePage({   userFriendList,
     const [isLoading, setIsLoading] = useState(false);
     const inputRef = useRef(null);
     const {user} = useUser();
-    
+
     return(<>
+        <Toaster
+            position="bottom-center"
+            reverseOrder={false}
+        />
         <div id = "BLACK_BACKGROUND" className="flex flex-col w-full h-fit justify-center shadow-xl relative"
              style={{backgroundColor: "#050505"}}>
             <div className = "container pb-20 h-full flex flex-col items-center mt-20">
@@ -49,6 +55,7 @@ export default function SignedInProfilePage({   userFriendList,
                           onSubmit={(event) => {
                               event.preventDefault(); // prevent page reload
                               sendFriendRequest(user.username, inputRef.current.value);
+                              inputRef.current.value = "";
                           }}
                     >
                         <input className="col-span-6 flex w-full rounded-lg border border-gray-300 bg-gray-50 px-2.5 py-4 text-sm text-gray-500 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -58,7 +65,7 @@ export default function SignedInProfilePage({   userFriendList,
                                pattern="^([a-zA-Z0-9\-_\s]{4,15}|https?:\/\/.+)$" // regex for either being string of length 4-15 or url address which is validated in sendFriendRequest
                                onInvalid={(event) => {
                                    event.preventDefault();
-                                   toast.error("Invalid input\nMust be either name or user's URL")
+                                   toast.error("Must be either name or user's URL")
                                }} // show error message when input is invalid
                                required  // when present, it specifies that the input field must be filled out before submitting the form
                         />
@@ -93,6 +100,9 @@ export default function SignedInProfilePage({   userFriendList,
                     }}>Refresh tables ⟳</Button>
                 </div>
 
+                {/*docasny buttonn s ktorym som skusal gemini api*/}
+                <Button className = "bg-(--main-color-orange) font-bold absolute bottom-0 right-0"
+                        onPress={() => GET_ai_response("Používateľ musí pred začatím testu odpovedať na všetky povinné otázky, inak nebude môcť pokračovať.")}>GET GEMINI RESPONSE</Button>
 
             </div>
         </div>
