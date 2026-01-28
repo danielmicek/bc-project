@@ -7,6 +7,7 @@ import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import EqualizerOutlinedIcon from '@mui/icons-material/EqualizerOutlined';
 import CircularIndeterminate from "./Loader.jsx";
 import {acceptFriendRequest, deleteFriend} from "../methods/methodsClass.jsx";
 
@@ -16,15 +17,16 @@ function handleClick({
                      type,
                      setRequestList,
                      userUsername,
+                     userId,
                      friendName,
+                     friendId,
                      setFriendsList,
                      imgUrl}) {
 
     if (decision === "accept") {
-        console.log("accept");
-        acceptFriendRequest(userUsername, friendName, setFriendsList, setRequestList, imgUrl);
+        acceptFriendRequest(userUsername, friendName, userId, friendId, setFriendsList, setRequestList, imgUrl);
     } else {
-        deleteFriend(type === "friendRequestList"? "FR" : "F", userUsername, friendName, setFriendsList, setRequestList);
+        deleteFriend(type === "friendRequestList"? "FR" : "F", userUsername, friendName, userId, friendId, setFriendsList, setRequestList);
     }
 }
 
@@ -33,12 +35,13 @@ function generateList({
                           list,
                           setRequestList,
                           userUsername,
+                          userId,
                           setFriendsList
                       }) {
 
     return list.map((friend) =>
-        React.cloneElement(
 
+        React.cloneElement(
             <ListItem
                 sx={{
                     backgroundColor: "white",
@@ -47,19 +50,25 @@ function generateList({
                 }}
                 secondaryAction={
                     <>
-                        {type === "friendRequestList" && //show only in the friend_requests table
+                        {type === "friendRequestList" ? //show only in the friend_requests table
                             <IconButton edge="end" aria-label="accept"
                                         onClick={() => handleClick({
                                             decision: "accept",
                                             type,
                                             setRequestList,
                                             userUsername,
+                                            userId,
                                             friendName: friend.friendName,
+                                            friendId: friend.friendId,
                                             setFriendsList,
                                             imgUrl: friend.imgUrl
                                         })
                                         }>
                                 <CheckCircleIcon/>
+                            </IconButton>
+                            :
+                            <IconButton edge="end" aria-label="accept">
+                                <EqualizerOutlinedIcon/>
                             </IconButton>
                         }
 
@@ -69,7 +78,9 @@ function generateList({
                                         type: type === "friendRequestList" ? "friendRequestList" : "friendList",
                                         setRequestList,
                                         userUsername,
+                                        userId,
                                         friendName: friend.friendName,
+                                        friendId: friend.friendId,
                                         setFriendsList,
                                         imgUrl: friend.imgUrl
                                     })
@@ -98,6 +109,7 @@ export default function FriendList({
                                        setRequestList,
                                        setFriendsList,
                                        userUsername,
+                                       userId,
                                        isLoading
                                    }) {
     const title = type === "friendList" ? "Friends" : "Friend requests";
@@ -123,6 +135,7 @@ export default function FriendList({
                                 list,
                                 setRequestList,
                                 userUsername,
+                                userId,
                                 setFriendsList
                             }
                         )}
@@ -131,6 +144,5 @@ export default function FriendList({
             </>
             }
         </div>
-
     );
 }

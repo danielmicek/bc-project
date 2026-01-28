@@ -1,5 +1,5 @@
 /*-------------USER API CALLS----------------------------------------------------------------*/
-export async function POST_user(clerk_id, email, first_name, last_name, username, imageUrl) {
+export async function POST_user(clerk_id, email, username, imageUrl) {
 
     const x = await fetch(`http://localhost:3000/api/addUser`, {
         method: "POST",
@@ -21,10 +21,31 @@ export async function GET_user(username){
         method: "GET"
     })
 }
+
+export async function PUT_user(username, email, imageUrl, userId){
+    const response = await fetch(`http://localhost:3000/api/putUser`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            user_username: username,
+            user_email: email,
+            user_imageUrl: imageUrl,
+            clerk_user_id: userId
+        })
+    })
+
+    if (!response.ok) {
+        throw new Error(await response.text());
+    }
+
+    return await response.text();
+}
 /*----------------------------------------------------------------------------------------------*/
 
 /*-------------FRIENDSHIP API CALLS----------------------------------------------------------------*/
-export async function POST_friendship(userUsername, friendUsername) {
+export async function POST_friendship(userUsername, friendUsername, userId, friendId) {
     const response = await fetch(`http://localhost:3000/api/friendRequest`, {
         method: "POST",
         headers: {
@@ -34,7 +55,9 @@ export async function POST_friendship(userUsername, friendUsername) {
             user_username: userUsername,
             friend_username: friendUsername,
             status: "PENDING",
-            from: userUsername
+            from: userId,
+            user_id: userId,
+            friend_id: friendId
         })
     })
 
@@ -45,15 +68,15 @@ export async function POST_friendship(userUsername, friendUsername) {
     return await response.text();
 }
 
-export async function GET_friendship(userUsername, friendUsername){         // check if friendship with particular user exists (the state does not matter)
-    return await fetch(`http://localhost:3000/api/getFriendship/${userUsername}/${friendUsername}`, {
+export async function GET_friendship(user_id, friend_id){         // check if friendship with particular user exists (the state does not matter)
+    return await fetch(`http://localhost:3000/api/getFriendship/${user_id}/${friend_id}`, {
         method: "GET"
     })
 }
 
-export async function GET_allFriendRequests(username, setIsLoading){
+export async function GET_allFriendRequests(userId, setIsLoading){
     setIsLoading(true);
-    const response = await fetch(`http://localhost:3000/api/getAllFriendRequests/${username}`, {
+    const response = await fetch(`http://localhost:3000/api/getAllFriendRequests/${userId}`, {
         method: "GET",
         cache: "no-store"
     })
@@ -61,9 +84,9 @@ export async function GET_allFriendRequests(username, setIsLoading){
     return response;
 }
 
-export async function GET_allFriends(username, setIsLoading){
+export async function GET_allFriends(userId, setIsLoading){
     setIsLoading(true);
-    const response = await fetch(`http://localhost:3000/api/getAllFriends/${username}`, {
+    const response = await fetch(`http://localhost:3000/api/getAllFriends/${userId}`, {
         method: "GET",
         cache: "no-store"
     })
@@ -71,14 +94,14 @@ export async function GET_allFriends(username, setIsLoading){
     return response;
 }
 
-export async function PATCH_acceptFriendRequest(userUsername, friendUsername){    // accepting frined request by updating status PENDING to ACCEPTED
-    return await fetch(`http://localhost:3000/api/getFriendship/${userUsername}/${friendUsername}`, {
+export async function PATCH_acceptFriendRequest(userId, friendId){    // accepting frined request by updating status PENDING to ACCEPTED
+    return await fetch(`http://localhost:3000/api/getFriendship/${userId}/${friendId}`, {
         method: "PATCH"
     })
 }
 
-export async function DELETE_deleteFriend(userUsername, friendUsername){
-    return await fetch(`http://localhost:3000/api/deleteFriend/${userUsername}/${friendUsername}`, {
+export async function DELETE_deleteFriend(userId, friendId){
+    return await fetch(`http://localhost:3000/api/deleteFriend/${userId}/${friendId}`, {
         method: "DELETE"
     })
 }

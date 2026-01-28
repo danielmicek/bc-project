@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {SignedIn, UserAvatar, useUser} from "@clerk/clerk-react";
 import '../styles/index.css';
 import {friendListLoader, friendRequestListLoader, sendFriendRequest} from "../methods/methodsClass.jsx";
@@ -6,7 +6,7 @@ import FriendList from "../components/FriendList.jsx";
 import StatCard from "../components/StatCard.jsx";
 import ClickToCopy from "../components/ClickToCopy.jsx";
 import {Button} from "@heroui/react";
-import {GET_ai_response} from "../methods/fetchMethods.jsx";
+import {GET_ai_response, PUT_user} from "../methods/fetchMethods.jsx";
 import {toast, Toaster} from "react-hot-toast";
 
 
@@ -17,6 +17,24 @@ export default function SignedInProfilePage({   userFriendList,
     const [isLoading, setIsLoading] = useState(false);
     const inputRef = useRef(null);
     const {user} = useUser();
+
+    useEffect(() => {
+
+        async function run(){
+            try {
+                await toast.promise(
+                    PUT_user(user.username, user.emailAddresses[0].emailAddress, user.imageUrl, user.id),
+                    {
+                        loading: "Updating profile...",
+                        success: (responseText) => responseText,
+                        error: (responseErrorText) => responseErrorText.message,
+                    }
+                );
+            } catch (e) {}
+        }
+        run()
+
+    }, [user.username, user.emailAddresses[0].emailAddress, user.imageUrl])
 
     return(<>
         <Toaster
@@ -54,7 +72,7 @@ export default function SignedInProfilePage({   userFriendList,
                     <form className="flex h-[55px] min-[1100px]:w-[50%] w-full"
                           onSubmit={(event) => {
                               event.preventDefault(); // prevent page reload
-                              sendFriendRequest(user.username, inputRef.current.value);
+                              sendFriendRequest(user.username, user.id, inputRef.current.value);
                               inputRef.current.value = "";
                           }}
                     >
@@ -81,6 +99,7 @@ export default function SignedInProfilePage({   userFriendList,
                                 setRequestList={setFriendRequestList}
                                 setFriendsList={setUserFriendList}
                                 userUsername={user.username}
+                                userId={user.id}
                                 isLoading={isLoading}
                     />
 
@@ -89,13 +108,14 @@ export default function SignedInProfilePage({   userFriendList,
                                 setRequestList={setFriendRequestList}
                                 setFriendsList={setUserFriendList}
                                 userUsername={user.username}
+                                userId={user.id}
                                 isLoading={isLoading}
                     />
 
                     <Button className = "bg-(--main-color-orange) font-bold absolute bottom-0 right-0" onPress={async() => {
                         await Promise.all([
-                            friendRequestListLoader(user.username, setFriendRequestList, setIsLoading),
-                            friendListLoader(user.username, setUserFriendList, setIsLoading)
+                            friendRequestListLoader(user.id, setFriendRequestList, setIsLoading),
+                            friendListLoader(user.id, setUserFriendList, setIsLoading)
                         ]);
                     }}>Refresh tables ⟳</Button>
                 </div>

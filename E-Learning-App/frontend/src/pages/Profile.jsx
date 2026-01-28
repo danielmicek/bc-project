@@ -11,13 +11,13 @@ import SlidingCircle from "../components/SlidingCircle.jsx";
 
 // initialize both friendList and list of FR by calling endpoints to get all friends and another one to get all FR
 // Promise.all() is resolving both promises at the same time - parallel execution
-async function listInitializer(username,
+async function listInitializer(userId,
                                setFriendList,
                                setFriendRequestList,
                                setIsLoading) {
     await Promise.all([
-        friendRequestListLoader(username, setFriendRequestList, setIsLoading),
-        friendListLoader(username, setFriendList, setIsLoading)
+        friendRequestListLoader(userId, setFriendRequestList, setIsLoading),
+        friendListLoader(userId, setFriendList, setIsLoading)
     ]);
 }
 
@@ -49,7 +49,7 @@ export function Profile() {
 
     // only call this when the user is signed, isLoaded changes, and the user already exists
     useEffect(() => {
-        if (isSignedIn && user !== undefined) listInitializer(user.username, setUserFriendList, setFriendRequestList,
+        if (isSignedIn && user !== undefined) listInitializer(user.id, setUserFriendList, setFriendRequestList,
             setIsLoading)
     }, [isLoaded]);
 

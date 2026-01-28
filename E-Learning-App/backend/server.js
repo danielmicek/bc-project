@@ -103,11 +103,13 @@ app.post("/api/friendRequest", async (request, response) => {
     const friendUsername = request.body["friend_username"];
     const status = request.body["status"];
     const from = request.body["from"];
-    
+    const userId = request.body["user_id"];
+    const friendId = request.body["friend_id"];
+
     if(userUsername === friendUsername) return response.status(400).send("Cannot send friend request to yourself!")
 
-    const insertQuery_user_to_friend = "INSERT INTO friendship (user_username, friend_username, status, from_user) VALUES ($1, $2, $3, $4)";
-    pool.query(insertQuery_user_to_friend, [userUsername, friendUsername, status, from])
+    const insertQuery_user_to_friend = "INSERT INTO friendship (user_username, friend_username, status, from_user_id, user_id, friend_id) VALUES ($1, $2, $3, $4, $5, $6)";
+    pool.query(insertQuery_user_to_friend, [userUsername, friendUsername, status, from, userId, friendId])
         .then((result) => {
             console.log(result);
             response.status(200);
@@ -119,8 +121,8 @@ app.post("/api/friendRequest", async (request, response) => {
             console.log(error);
         })
 
-    const insertQuery_friend_to_user = "INSERT INTO friendship (friend_username, user_username, status, from_user) VALUES ($1, $2, $3, $4)";
-    pool.query(insertQuery_friend_to_user, [userUsername, friendUsername, status, from])
+    const insertQuery_friend_to_user = "INSERT INTO friendship (friend_username, user_username, status, from_user_id, friend_id, user_id) VALUES ($1, $2, $3, $4, $5, $6)";
+    pool.query(insertQuery_friend_to_user, [userUsername, friendUsername, status, from, userId, friendId])
         .then((result) => {
             console.log(result);
             response.status(200);
@@ -134,16 +136,16 @@ app.post("/api/friendRequest", async (request, response) => {
 
 
 // ------------------GET REQUEST - GET FRIENDSHIP---------------------------------------------------------------
-app.get("/api/getFriendship/:userUsername/:friendUsername", (request, response)=> {
-    const { userUsername, friendUsername } = request.params;
+app.get("/api/getFriendship/:userId/:friendId", (request, response)=> {
+    const { userId, friendId } = request.params;
 
-    const getQuery = "SELECT status FROM friendship WHERE user_username = $1 AND friend_username = $2";
-    pool.query(getQuery, [userUsername, friendUsername])
+    const getQuery = "SELECT status FROM friendship WHERE user_id = $1 AND friend_id = $2";
+    pool.query(getQuery, [userId, friendId])
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
                 response.status(404);
-                response.send("Friendship among users: " + userUsername + " and " + friendUsername + " does not exist.  Status code: " + response.statusCode);
+                response.send("Friendship among users: " + userId + " and " + friendId + " does not exist.  Status code: " + response.statusCode);
             }
             else{
                 response.status(200);
@@ -162,10 +164,10 @@ app.get("/api/getFriendship/:userUsername/:friendUsername", (request, response)=
 
 
 // ------------------GET REQUEST - GET ALL USER'S FRIEND REQUESTS---------------------------------------------------------------
-app.get("/api/getAllFriendRequests/:username", (request, response)=> {
-    const username = request.params.username;
-    const getQuery = "SELECT friend_username FROM friendship WHERE user_username = $1 AND from_user != $1 AND status = 'PENDING'";
-    pool.query(getQuery, [username])
+app.get("/api/getAllFriendRequests/:userId", (request, response)=> {
+    const userId = request.params.userId;
+    const getQuery = "SELECT friend_username FROM friendship WHERE user_id = $1 AND from_user_id != $1 AND status = 'PENDING'";
+    pool.query(getQuery, [userId])
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
@@ -187,18 +189,18 @@ app.get("/api/getAllFriendRequests/:username", (request, response)=> {
 
 // ------------------GET REQUEST - GET ALL USER'S FRIENDS---------------------------------------------------------------
 // get friend's name from friends table, then join users table and get friends image_url
-app.get("/api/getAllFriends/:username", (request, response)=> {
-    const username = request.params.username;
+app.get("/api/getAllFriends/:userId", (request, response)=> {
+    const userId = request.params.userId;
 
     const getQuery = `
-      SELECT fr.friend_username, us.image_url
-      FROM public.friendship AS fr
-      JOIN public.users AS us
-        ON fr.friend_username = us.username
-      WHERE fr.user_username = $1
+      SELECT fr.friend_username, us.image_url, fr.friend_id
+      FROM friendship AS fr
+      JOIN users AS us
+        ON fr.friend_id = us.user_id
+      WHERE fr.user_id = $1
         AND fr.status = 'ACCEPTED';
     `;
-    pool.query(getQuery, [username])
+    pool.query(getQuery, [userId])
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
@@ -206,7 +208,8 @@ app.get("/api/getAllFriends/:username", (request, response)=> {
                 response.send({});
             }
             else{
-                let foundFriends = result.rows.map(row => ({friendName: row.friend_username, imgUrl: row.image_url})); // returns an array of user's friends
+                console.log("bbbb");
+                let foundFriends = result.rows.map(row => ({friendName: row.friend_username, friendId: row.friend_id, imgUrl: row.image_url})); // returns an array of user's friends
                 response.status(200);
                 response.send(foundFriends);
             }
@@ -219,15 +222,15 @@ app.get("/api/getAllFriends/:username", (request, response)=> {
 
 
 // ------------------PATCH REQUEST - UPDATE STATUS PENDING TO ACCEPTED---------------------------------------------------------------
-app.patch("/api/getFriendship/:userUsername/:friendUsername", (request, response)=> {
-    const { userUsername, friendUsername } = request.params;
+app.patch("/api/getFriendship/:userId/:friendId", (request, response)=> {
+    const { userId, friendId } = request.params;
 
-    const getQuery = "UPDATE friendship SET status = 'ACCEPTED' WHERE (user_username = $1 OR user_username = $2) AND (friend_username = $2 OR friend_username = $1) AND status = 'PENDING'";
-    pool.query(getQuery, [userUsername, friendUsername])
+    const getQuery = "UPDATE friendship SET status = 'ACCEPTED' WHERE (user_id = $1 OR user_id = $2) AND (friend_id = $2 OR friend_id = $1) AND status = 'PENDING'";
+    pool.query(getQuery, [userId, friendId])
         .then((result) => {
             console.log(result);
             response.status(200);
-            response.send(friendUsername);
+            response.send(friendId);
         })
         .catch((error) => {
             response.status(500);
@@ -235,16 +238,33 @@ app.patch("/api/getFriendship/:userUsername/:friendUsername", (request, response
         })
 });
 
-// ------------------DELETE REQUEST - DELETE FRIEND AFTER DECLINING FRIEND REQUEST OR REMOVING FRIEND FROM THE LIST---------------------
-app.delete("/api/deleteFriend/:userUsername/:friendUsername", (request, response)=> {
-    const { userUsername, friendUsername } = request.params;
+app.put("/api/putUser", (request, response)=> {
+    const { user_username, user_email, user_imageUrl, clerk_user_id } = request.body;
+    console.log("aaaaaaaaaaaaaaaaaaa")
+    console.log(request.body)
 
-    const getQuery = "DELETE FROM friendship WHERE (user_username = $1 AND friend_username = $2) OR (user_username = $2 AND friend_username = $1)";
-    pool.query(getQuery, [userUsername, friendUsername])
+    const putQuery = "UPDATE users SET username = $1, email = $2, image_url = $3 WHERE user_id = $4";
+    pool.query(putQuery, [user_username, user_email, user_imageUrl, clerk_user_id])
+        .then((result) => {
+            response.status(200).send("Update successful");
+            console.log(result);
+        })
+        .catch((error) => {
+            response.status(500).send("Update failed");
+            console.log(error);
+        })
+});
+
+// ------------------DELETE REQUEST - DELETE FRIEND AFTER DECLINING FRIEND REQUEST OR REMOVING FRIEND FROM THE LIST---------------------
+app.delete("/api/deleteFriend/:userId/:friendId", (request, response)=> {
+    const { userId, friendId } = request.params;
+
+    const getQuery = "DELETE FROM friendship WHERE (user_id = $1 AND friend_id = $2) OR (user_id = $2 AND friend_id = $1)";
+    pool.query(getQuery, [userId, friendId])
         .then((result) => {
             console.log(result);
             response.status(200);
-            response.send("User " + friendUsername + " removed from the list");
+            response.send("User " + friendId + " removed from the list");
         })
         .catch((error) => {
             response.status(500);
