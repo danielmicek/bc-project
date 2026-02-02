@@ -142,7 +142,7 @@ body {
 
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    gap: 20px;
+    gap: 40px;
 
     margin: 20px;
 
@@ -168,7 +168,6 @@ body {
 
 
 .testColumnCommon{
-    border-radius: 20px;
     padding-left: 10px;
 
     color: black;
@@ -186,67 +185,22 @@ body {
     font-weight: 600;
 }
 
-.learnColumn,
-.easyTestColumn,
-.mediumTestColumn,
-.hardTestColumn{
-    padding-top: 20px;
-    border-radius: 20px;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
-}
-
-/*--------------------LEARN COLUMN-------------------------------------------------------*/
 .learnColumn{
-    background-color: white;
-    color: black;
-
     grid-area: learnColumn;
-
-    transition: 0.3s ease;
 }
 
-.learnColumn:hover{
-    transform: scale(1.02);
-}
-/*---------------------------------------------------------------------------------------------*/
-
-/*--------------------EASY-BRONZE-TEST COLUMN--------------------------------------------------*/
 .easyTestColumn{
-    background-color: white;
     grid-area: easyTestColumn;
-    transition: background-color 0.5s ease, transform 0.3s ease;
 }
 
-.easyTestColumn:hover{
-    transform: scale(1.02);
-}
-/*----------------------------------------------------------------------------------------------------*/
 
-/*--------------------MEDIUM-SILVER-TEST COLUMN-------------------------------------------------------*/
 .mediumTestColumn{
-    background-color: white;
     grid-area: mediumTestColumn;
-    transition: background-color 0.5s ease, transform 0.3s ease;
 }
 
-.mediumTestColumn:hover{
-    transform: scale(1.02);
-}
-/*---------------------------------------------------------------------------------------------*/
-
-/*--------------------HARD-BRONZE-TEST COLUMN--------------------------------------------------*/
 .hardTestColumn{
-    background-color: white;
-    position: relative;
     grid-area: hardTestColumn;
-    transition: background-color 0.5s ease, transform 0.3s ease;
 }
-
-.hardTestColumn:hover{
-    transform: scale(1.02);
-}
-/*---------------------------------------------------------------------------------------------*/
-
 
 @media(max-width: 700px) {
     .testColumnCommon{
@@ -255,10 +209,6 @@ body {
         justify-content: center;
         align-items: center;
         font-size: smaller;
-    }
-
-    .learnColumn{
-        font-size: larger;
     }
 }
 

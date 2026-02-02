@@ -1,8 +1,9 @@
 import React from "react";
 import {SignedOut, SignInButton} from "@clerk/clerk-react";
 import '../styles/styles.css';
+import {showOrHidePopup} from "../methods/methodsClass.jsx";
 
-export default function NotSignedInPopup({refForSignedIntPopup, showOrHidePopup, openedNotSignedInPopup, setOpenedNotSignedInPopup}) {
+export default function NotSignedInPopup({refForSignedIntPopup, openedNotSignedInPopup, setOpenedNotSignedInPopup}) {
     return <>
         <div className = "bg-white text-xl border-3 w-[350px] h-[200px] fixed m-0 p-3 top-1/2 left-1/2 -translate-x-1/2 transition-transform -translate-y-1/2 rounded-[20px] overflow-hidden z-1004 justify-center flex flex-col"
              ref = {refForSignedIntPopup}

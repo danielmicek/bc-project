@@ -49,8 +49,7 @@ export function Profile() {
 
     // only call this when the user is signed, isLoaded changes, and the user already exists
     useEffect(() => {
-        if (isSignedIn && user !== undefined) listInitializer(user.id, setUserFriendList, setFriendRequestList,
-            setIsLoading)
+        if (isSignedIn && user !== undefined) listInitializer(user.id, setUserFriendList, setFriendRequestList, setIsLoading)
     }, [isLoaded]);
 
     // Wait until the user state is fully loaded

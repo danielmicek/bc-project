@@ -7,6 +7,7 @@ import {useSearchParams} from "react-router-dom";
 import {POST_test} from "../methods/fetchMethods.jsx";
 import SwiperComponent from "../components/Swiper.jsx";
 import {Button} from "@heroui/react";
+import {showOrHidePopup} from "../methods/methodsClass.jsx";
 
 
 function getRandomElementsFromArray(array, numberOfElements, questionsForTest) {
@@ -64,7 +65,7 @@ function getCurrentDate(){
     return new Date().toJSON().slice(0, 10);
 }
 
-export default function Test({showOrHidePopup}) {
+export default function Test() {
     const {user} = useUser();
     const [searchParams] = useSearchParams();
     const [testStarted, setTestStarted] = useState(true);

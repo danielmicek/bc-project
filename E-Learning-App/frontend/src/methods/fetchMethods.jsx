@@ -142,3 +142,23 @@ export async function GET_ai_response(veta) {
     console.log(await x.text());
 }
 /*----------------------------------------------------------------------------------------------*/
+
+/*-------------GET NOTION ID CALL----------------------------------------------------------------*/
+export async function GET_notionId(chapter) {
+    const response = await fetch(`http://localhost:3000/api/getNotionId/${chapter}`, {
+        method: "GET",
+        cache: "no-store"
+    })
+    return await response.json();
+}
+/*----------------------------------------------------------------------------------------------*/
+
+/*-------------GET ALL CHAPTERS----------------------------------------------------------------*/
+export async function GET_allChapters() {
+    const response = await fetch(`http://localhost:3000/api/getAllChapters`, {
+        method: "GET",
+        cache: "no-store"
+    })
+    return await response.json();
+}
+/*----------------------------------------------------------------------------------------------*/

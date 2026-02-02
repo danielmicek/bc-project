@@ -159,6 +159,11 @@ export async function friendListLoader(userId, setFriendList, setIsLoading){
     setFriendList(await result.json()); // different than method friendRequestListLoader, because this endpoint returns an object of users, the friendRequestListLoader returns an array of usernames
 }
 
+export function showOrHidePopup(ref, openedPopup, setOpenedPopup) {
+    openedPopup === true ? ref.current.style.display = "none" : ref.current.style.display = "grid";
+    setOpenedPopup((boolean_value) => !boolean_value);
+}
+
 let RIGHT_ANSWER_POINTS;
 let WRONG_ANSWER_POINTS;
 let DONT_ANSWER_POINTS

@@ -1,5 +1,6 @@
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import React, {useState} from "react";
+import {showOrHidePopup} from "../methods/methodsClass.jsx";
 
 function getUniqueTestID() {
     return "EL-" + crypto.randomUUID();
@@ -9,7 +10,7 @@ function setParams(testID, testDifficulty){
     return "?" + new URLSearchParams({testID, testDifficulty }).toString()
 }
 
-export default function StartTestPopup({difficulty, refForStartPopup, showOrHidePopup, openedStartPopup, setOpenedStartPopup}) {
+export default function StartTestPopup({difficulty, refForStartPopup, openedStartPopup, setOpenedStartPopup}) {
     const navigate = useNavigate();
     const [testStarted, setTestStarted] = useState(false);
 

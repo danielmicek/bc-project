@@ -7,9 +7,11 @@
   },
   "dependencies": {
     "@google/genai": "^1.38.0",
+    "@notionhq/client": "^5.9.0",
     "cors": "^2.8.5",
     "dotenv": "^17.0.1",
     "express": "^5.1.0",
+    "notion-client": "^7.7.3",
     "pg": "^8.16.3",
     "redis": "^5.5.6"
   },

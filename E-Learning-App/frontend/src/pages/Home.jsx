@@ -92,7 +92,7 @@ function Home() {
                     </div>
                     <div className="flex md:flex-row flex-col items-center justify-center z-5 mt-40 w-[100%] pr-10">
                         <img src="/laptop.png" alt="laptop" className="md:w-[500px] min-[1300px]:w-[800px] lg:w-[700px] w-[450px]"/>
-                        <ul className="list-disc flex flex-col list-inside text-white mt-10 md:mt-0  pl-10">
+                        <ul className="list-disc flex flex-col list-inside text-white mt-10 md:mt-0 pl-10">
                             <li className="mb-8 font-extrabold text-gray-400 text-xl">Get medal after passing the test</li>
                             <li className="mb-8 font-extrabold text-gray-400 text-xl">AI to rephrase the questions and answers</li>
                             <li className="mb-8 font-extrabold text-gray-400 text-xl">Focus on understanding, not memorization</li>

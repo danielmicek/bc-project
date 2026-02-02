@@ -1,7 +1,7 @@
-import CardComponent from "../components/CardComponent.jsx";
 import React from "react";
+import CardComponent from "../components/CardComponent.jsx";
 
-export function CourseInfoPage({showOrHidePopup}){
+export function CourseInfoPage(){
     return(
         <div id = "BLACK_BACKGROUND" className="flex flex-col p-5 w-full h-fit justify-center border-500-red border-2 shadow-xl relative"
              style={{backgroundColor: "#050505"}}>
@@ -18,68 +18,46 @@ export function CourseInfoPage({showOrHidePopup}){
                         <li className = "learnColumnListEl liCommonStyle">Take your time, there is no rush</li>
                     </ul>
                 </Link>*/}
-                    <CardComponent type = "Learning"
+                    <CardComponent title = "Študovanie"
+                                   notionNotesId = "33601a1e5b5e4612a2c36f6f03d9308e"
+                                   imgPath = "/book.png"
                                    description = "Learn the theory before putting your skills to the test."
-                                   difficulty = "None"
-                                   questions ={0}
-                                   time = {0}
-                                   imgSrc = "/book.png"
+                                   type = "Learning"
                                    testColumn = "learnColumn"
-                                   showOrHidePopup={showOrHidePopup}
-                    />
-                    <CardComponent type = "Bronze"
-                                   description = "Warm-up quiz to test your fundamentals."
-                                   difficulty = "Easy"
-                                   questions ={10}
-                                   time = {20}
-                                   imgSrc = "/bronze_medal.png"
-                                   testColumn = "easyTestColumn"
-                                   showOrHidePopup={showOrHidePopup}
                     />
 
-                    <CardComponent type = "Silver"
+                    <CardComponent title = "Bronze test"
+                                   notionNotesId = ""
+                                   imgPath = "/bronze_medal.png"
+                                   description = "Warm-up quiz to test your fundamentals."
+                                   type = "Test"
+                                   testColumn = "easyTestColumn"
+                                   difficulty = "Ľahký"
+                                   questions = {10}
+                                   time = {20}
+                    />
+
+                    <CardComponent title = "Silver test"
+                                   notionNotesId = ""
+                                   imgPath = "/silver_medal.png"
                                    description = "Intermediate challenge to deepen your understanding."
-                                   difficulty = "Medium"
+                                   type = "Test"
+                                   testColumn = "mediumTestColumn"
+                                   difficulty = "Stredný"
                                    questions ={20}
                                    time = {40}
-                                   imgSrc = "/silver_medal.png"
-                                   testColumn = "mediumTestColumn"
-                                   showOrHidePopup={showOrHidePopup}
                     />
 
-                    <CardComponent type = "Gold"
+                    <CardComponent title = "Gold test"
+                                   notionNotesId = ""
+                                   imgPath = "/gold_medal.png"
                                    description = "Advanced test to push your limits and mastery."
-                                   difficulty = "Hard"
+                                   type = "Test"
+                                   testColumn = "hardTestColumn"
+                                   difficulty = "Ťažký"
                                    questions ={30}
                                    time = {60}
-                                   imgSrc = "/gold_medal.png"
-                                   testColumn = "hardTestColumn"
-                                   showOrHidePopup={showOrHidePopup}
                     />
-                    {/*
-                <TestComponentVersion   testColumn = "easyTestColumn"
-                                        testMedal = "Bronze"
-                                        medalImgSrc = "/bronze_medal.png"
-                                        time = "20min"
-                                        difficulty = "Easy"
-                                        showOrHidePopup={showOrHidePopup}
-                />
-
-                <TestComponentVersion testColumn = "mediumTestColumn"
-                                      testMedal = "Silver"
-                                      medalImgSrc = "/silver_medal.png"
-                                      time = "40min"
-                                      difficulty = "Medium"
-                                      showOrHidePopup={showOrHidePopup}
-                />
-
-                <TestComponentVersion testColumn = "hardTestColumn"
-                                      testMedal = "Gold"
-                                      medalImgSrc = "/gold_medal.png"
-                                      time = "60min"
-                                      difficulty = "Hard"
-                                      showOrHidePopup={showOrHidePopup}
-                />*/}
                 </div>
             </div>
         </div>
