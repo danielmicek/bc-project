@@ -43,7 +43,7 @@ export default function CardComponent({
                                         title,
                                         imgPath,
                                         description,
-                                        difficulty = "Neuvedený",
+                                        difficulty = "N/A",
                                         questions = 0,
                                         time = 0,
                                         onDetails,
@@ -57,7 +57,7 @@ export default function CardComponent({
     const refForSignedIntPopup = useRef(null);
 
     const difficultyStyles = {
-        Neuvedený: "bg-white text-black border-gray-300",
+        "N/A": "bg-white text-black border-gray-300",
         Ľahký: "bg-green-100 text-green-700 border-green-300",
         Stredný: "bg-yellow-100 text-yellow-800 border-yellow-300",
         Ťažký: "bg-red-100 text-red-700 border-red-300",
@@ -125,7 +125,7 @@ export default function CardComponent({
                         {   // orange button
                             switchRender(
                                 type,
-                                "1",
+                                title.split(" ")[1],  // chapter number
                                 isSignedIn,
                                 refForStartPopup,
                                 openedStartTestPopup,

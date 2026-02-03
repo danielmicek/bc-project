@@ -6,7 +6,6 @@ import BigStatCard from "../components/BigStatCard.jsx";
 import {Link} from "react-router-dom";
 import LightRays from "../components/LightRays.jsx";
 
-
 function Home() {
 
     /*window.addEventListener("popstate", () => {  kliknutie na backbutton v browseri
@@ -51,9 +50,7 @@ function Home() {
 
                     <div className="flex gap-10 items-end h-fit z-5">
                         <Link to="/courseInfoPage">
-                            <Button variant="light" className="bg-(--main-color-orange) font-bold w-fit mt-15">
-                                See the course
-                            </Button>
+
                         </Link>
                         <SignedOut>
                             <SignInButton className = "bg-(--main-color-orange) font-bold" mode={"modal"}>

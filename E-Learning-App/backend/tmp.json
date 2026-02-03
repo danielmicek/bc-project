@@ -1,0 +1,2802 @@
+[
+  {
+    "id": 1,
+    "body": "Akým spôsobom (metódou) sa testuje v XP?",
+    "multiselect": false,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "TDD – písanie testov pred samotným kódom",
+        "correct": true
+      },
+      {
+        "text": "Testovanie po dokončení implementácie",
+        "correct": false
+      },
+      {
+        "text": "Formálna verifikácia pomocou modelov",
+        "correct": false
+      },
+      {
+        "text": "Manuálne regresné testovanie na konci iterácie",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "body": "Požiadavky na bezpečnosť aplikácie sú",
+    "multiselect": false,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "funkcionálne",
+        "correct": true
+      },
+      {
+        "text": "nefunkcionálne",
+        "correct": false
+      },
+      {
+        "text": "doménové",
+        "correct": false
+      },
+      {
+        "text": "Nedá sa jednoznačne určiť",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "body": "Ktorým UML diagramom sa dá zakresliť architektúra systému.",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Diagram tried",
+        "correct": true
+      },
+      {
+        "text": "Sekvenčný diagram",
+        "correct": false
+      },
+      {
+        "text": "Use-case spolu so stavovým",
+        "correct": false
+      },
+      {
+        "text": "Stavový spolu so sekvenčným",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "body": "K UML stavovému diagramu sa prikladajú 2 typy popisov – 2 tabuľky. Čo popisujú?",
+    "multiselect": true,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Popis stavov",
+        "correct": true
+      },
+      {
+        "text": "Popis prechodov",
+        "correct": true
+      },
+      {
+        "text": "Popis aktérov systému",
+        "correct": false
+      },
+      {
+        "text": "Popis dátových tokov medzi komponentmi",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "body": "Uveďte možné spôsoby riadenia subsystémov pri riadení prostredníctvom udalostí.",
+    "multiselect": true,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Vysielacie modely",
+        "correct": true
+      },
+      {
+        "text": "Modely riadené prerušením",
+        "correct": true
+      },
+      {
+        "text": "Model odovzdania a vrátenia riadenia",
+        "correct": false
+      },
+      {
+        "text": "Manažérsky model",
+        "correct": true
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "body": "SIT je prostredie pre",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Testerov",
+        "correct": true
+      },
+      {
+        "text": "Vývojárov",
+        "correct": false
+      },
+      {
+        "text": "Softvérových analytikov",
+        "correct": false
+      },
+      {
+        "text": "Testerov a vývojárov",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "body": "DEV je prostredie pre",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Testerov",
+        "correct": false
+      },
+      {
+        "text": "Vývojárov",
+        "correct": true
+      },
+      {
+        "text": "Softvérových analytikov",
+        "correct": false
+      },
+      {
+        "text": "Testerov a vývojárov",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "body": "Kto vykonáva testovaciu fázu SIT?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Testovací tím",
+        "correct": true
+      },
+      {
+        "text": "Vývojári",
+        "correct": false
+      },
+      {
+        "text": "Používatelia a zákazníci",
+        "correct": false
+      },
+      {
+        "text": "Ani jedno z uvedených",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "body": "Kto vykonáva testovaciu fázu UIT?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Testovací tím",
+        "correct": false
+      },
+      {
+        "text": "Vývojári",
+        "correct": true
+      },
+      {
+        "text": "Používatelia a zákazníci",
+        "correct": false
+      },
+      {
+        "text": "Ani jedno z uvedených",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "body": "Ktoré z nasledujúcich činností NEPATRIA medzi hlavné aktivity vývoja softvérového systému?",
+    "multiselect": true,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Marketing softvérového produktu",
+        "correct": true
+      },
+      {
+        "text": "Prevádzkový monitoring po nasadení",
+        "correct": true
+      },
+      {
+        "text": "Definovanie požiadaviek",
+        "correct": false
+      },
+      {
+        "text": "Definovanie požiadaviek (Špecifikácia)",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "body": "Ktoré z nasledujúcich činností PATRIA medzi hlavné aktivity vývoja softvérového systému?",
+    "multiselect": true,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Definovanie požiadaviek",
+        "correct": true
+      },
+      {
+        "text": "Návrh a implementácia",
+        "correct": true
+      },
+      {
+        "text": "Distribúcia softvéru",
+        "correct": false
+      },
+      {
+        "text": "Prevádzkové školenie koncových používateľov",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "body": "Čo je to refaktorizácia?",
+    "multiselect": true,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Zlepšovanie štruktúry kódu bez zmeny jeho správania",
+        "correct": true
+      },
+      {
+        "text": "Odstraňovanie duplicít a zjednodušovanie návrhu",
+        "correct": true
+      },
+      {
+        "text": "Zvýšenie čitateľnosti",
+        "correct": true
+      },
+      {
+        "text": "Pridávanie novej funkcionality do systému",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "body": "Aký je rozdiel medzi testovacími metódami structural testing a path testing?",
+    "multiselect": false,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Structural testing overuje funkčné požiadavky systému, zatiaľ čo path testing overuje nefunkčné požiadavky",
+        "correct": false
+      },
+      {
+        "text": "Structural testing sa zameriava na používateľské rozhranie, zatiaľ čo path testing na databázové operácie",
+        "correct": false
+      },
+      {
+        "text": "Structural testing sa zameriava na vykonanie všetkých príkazov kódu, zatiaľ čo path testing sa zameriava na vykonanie všetkých možných ciest programom",
+        "correct": true
+      },
+      {
+        "text": "S tructural testing sa vykonáva len manuálne, zatiaľ čo path testing sa vykonáva automatizovane",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "body": "Vymenujte tri základné modely softvérového procesu.",
+    "multiselect": true,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "vodopádový",
+        "correct": true
+      },
+      {
+        "text": "postupný vývoj",
+        "correct": true
+      },
+      {
+        "text": "integrácia a konfigurácia",
+        "correct": true
+      },
+      {
+        "text": "Špirálový model",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "body": "Aké sú hlavné výhody test-first programovania/vývoja - TDD?",
+    "multiselect": true,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "zlepšená kvalita kódu",
+        "correct": true
+      },
+      {
+        "text": "skoré odhalenie chýb",
+        "correct": true
+      },
+      {
+        "text": "Eliminácia potreby manuálneho testovania",
+        "correct": false
+      },
+      {
+        "text": "Zníženie potreby dokumentácie",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "body": "Čo je model?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Súbor objektov reprezentovaných PC systémom spolu s ich vlastnosťami a vzťahmi",
+        "correct": true
+      },
+      {
+        "text": "Podrobný zdrojový kód systému",
+        "correct": false
+      },
+      {
+        "text": "Fyzická implementácia softvéru",
+        "correct": false
+      },
+      {
+        "text": "Konkrétna softvérová aplikácia",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "body": "Čo je model softvérového procesu?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Zjednodušená verzia procesu softvéru z určitej perspektívy",
+        "correct": true
+      },
+      {
+        "text": "Presný algoritmus riadenia projektu",
+        "correct": false
+      },
+      {
+        "text": "Hotový softvérový produkt",
+        "correct": false
+      },
+      {
+        "text": "Programovací jazyk používaný pri vývoji",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "body": "Základné atribúty, ktoré by mal spĺňať dobrý softvér",
+    "multiselect": true,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Spoľahlivosť",
+        "correct": true
+      },
+      {
+        "text": "Bezpečnosť",
+        "correct": true
+      },
+      {
+        "text": "Dostupnosť",
+        "correct": true
+      },
+      {
+        "text": "Udržiavateľnosť",
+        "correct": true
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "body": "Aké tri hlavné oblasti rizík sa analyzujú v rámci manažmentu rizík v projektovom manažmente?",
+    "multiselect": true,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Projektové",
+        "correct": true
+      },
+      {
+        "text": "Podnikové",
+        "correct": true
+      },
+      {
+        "text": "Produktové",
+        "correct": true
+      },
+      {
+        "text": "Legislatívne riziká",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "body": "Ktorý problém sa môže vyskytnúť pri použití prirodzeného jazyka v špecifikácii požiadaviek?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Nízka výkonnosť systému",
+        "correct": false
+      },
+      {
+        "text": "Zvýšená spotreba hardvérových zdrojov",
+        "correct": false
+      },
+      {
+        "text": "Problémy s kompatibilitou softvéru",
+        "correct": false
+      },
+      {
+        "text": "Zmätok v požiadavkách",
+        "correct": true
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "body": "Akú vec NEMUSÍ obsahovať projektový plán?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Náklady",
+        "correct": true
+      },
+      {
+        "text": "Časový plán",
+        "correct": false
+      },
+      {
+        "text": "Rozdelenie úloh",
+        "correct": false
+      },
+      {
+        "text": "Zdroje",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "body": "Čo je to plánovanie vydania (release planning)?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Rozhodovanie o funkciách niekoľko mesiacov vpred",
+        "correct": true
+      },
+      {
+        "text": "Detailné rozpisovanie denných úloh vývojárov",
+        "correct": false
+      },
+      {
+        "text": "Testovanie hotovej verzie systému",
+        "correct": false
+      },
+      {
+        "text": "Riadenie nasadenia systému do produkcie",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "body": "Čo je to iteračné plánovanie (iteration planning)?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Plánovanie krátkodobých prírastkov do systému",
+        "correct": true
+      },
+      {
+        "text": "Dlhodobé plánovanie na niekoľko rokov",
+        "correct": false
+      },
+      {
+        "text": "Návrh celkovej architektúry systému",
+        "correct": false
+      },
+      {
+        "text": "Uzatváranie zmlúv so zákazníkom",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "body": "Čo platí o používateľských požiadavkách?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Sú písané v prirodzenom jazyku",
+        "correct": true
+      },
+      {
+        "text": "Sú zapisované matematickým jazykom",
+        "correct": false
+      },
+      {
+        "text": "Sú určené výhradne pre vývojárov",
+        "correct": false
+      },
+      {
+        "text": "Obsahujú detailné algoritmy implementácie",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 25,
+    "body": "Čo platí o systémových požiadavkách?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "v štruktúrovanom jazyku definujú, čo má byť implementované",
+        "correct": true
+      },
+      {
+        "text": "Sú písané neformálne pre koncových používateľov",
+        "correct": false
+      },
+      {
+        "text": "Obsahujú len všeobecné ciele bez detailov",
+        "correct": false
+      },
+      {
+        "text": "Nezohľadňujú zmluvné vzťahy so zákazníkom",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "body": "Aká je najčastejšia príčina zlyhania systémov?",
+    "multiselect": false,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Chyba obsluhy",
+        "correct": true
+      },
+      {
+        "text": "Chyba v hardvéri",
+        "correct": false
+      },
+      {
+        "text": "Chyba v softvéri",
+        "correct": false
+      },
+      {
+        "text": "Nedá sa jednoznačne určiť",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "body": "Aké príčiny zlyhania systémov poznáme?",
+    "multiselect": true,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Chyba obsluhy",
+        "correct": true
+      },
+      {
+        "text": "Chyba v hardvéri",
+        "correct": true
+      },
+      {
+        "text": "Chyba v softvéri",
+        "correct": true
+      },
+      {
+        "text": "Porucha vplyvom meteorologických faktorov",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 28,
+    "body": "Ktoré principiálne typy kritických systémov poznáme?",
+    "multiselect": true,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "z hľadiska bezpečnosti (safety-critical)",
+        "correct": true
+      },
+      {
+        "text": "vzhľadom na úlohu (mission-critical)",
+        "correct": true
+      },
+      {
+        "text": "vzhľadom na podnik (business-critical)",
+        "correct": true
+      },
+      {
+        "text": "vzhľadom na používateľské rozhranie (interface-critical)",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 29,
+    "body": "Čo je to proces?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "inštancia programu vrátane všetkých hodnôt premenných a stavu",
+        "correct": true
+      },
+      {
+        "text": "Zdrojový kód programu",
+        "correct": false
+      },
+      {
+        "text": "Algoritmus zapísaný v pseudokóde",
+        "correct": false
+      },
+      {
+        "text": "Softvérová knižnica",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 30,
+    "body": "Čo je to softvérový proces?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "súbor činností, ktorých cieľom je rozvoj alebo vývoj softvéru",
+        "correct": true
+      },
+      {
+        "text": "Programovací jazyk používaný pri vývoji",
+        "correct": false
+      },
+      {
+        "text": "Hotový softvérový produkt",
+        "correct": false
+      },
+      {
+        "text": "Výsledný binárny súbor aplikácie",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 31,
+    "body": "Aké 3 typy modelov sa používajú na popis dynamickej stránky systému?",
+    "multiselect": true,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Sekvenčné diagramy",
+        "correct": true
+      },
+      {
+        "text": "Stavové diagramy",
+        "correct": true
+      },
+      {
+        "text": "Diagramy aktivít",
+        "correct": true
+      },
+      {
+        "text": "Diagram tried",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 32,
+    "body": "Ktorý typ modelu sa používa na popis statickej stránky systému?",
+    "multiselect": false,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Procesný model",
+        "correct": false
+      },
+      {
+        "text": "Stavový diagram",
+        "correct": false
+      },
+      {
+        "text": "Štrukturálny model",
+        "correct": true
+      },
+      {
+        "text": "Akýkoľvek behaviorálny model",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 33,
+    "body": "Aké organizačné štýly poznáme?",
+    "multiselect": true,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Štýl zdieľaného úložiska údajov",
+        "correct": true
+      },
+      {
+        "text": "Abstraktný strojový alebo vrstvený štýl.",
+        "correct": true
+      },
+      {
+        "text": "Klient–serverový štýl riadenia",
+        "correct": false
+      },
+      {
+        "text": "Udalosťami riadený štýl",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 34,
+    "body": "Ktorý z nasledujúcich produktov je prispôsobený na zákazku?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Vytvorený podľa potrieb konkrétneho zákazníka",
+        "correct": true
+      },
+      {
+        "text": "Samostatný systém určený pre širokú verejnosť",
+        "correct": false
+      },
+      {
+        "text": "Softvér s pevne danými funkciami bez možnosti zmien",
+        "correct": false
+      },
+      {
+        "text": "Produkt, ktorého zmeny riadi výhradne dodávateľ",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 35,
+    "body": "Ktorý atribút softvéru sa najviac týka využívania pamäte, času spracovania a odozvy?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Efektívnosť",
+        "correct": true
+      },
+      {
+        "text": "Prenosnosť",
+        "correct": false
+      },
+      {
+        "text": "Zrozumiteľnosť",
+        "correct": false
+      },
+      {
+        "text": "Modularita",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 36,
+    "body": "Ktorá činnosť patrí medzi dizajnérske činnosti v rámci „Návrhu a implementácie“?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Návrh databázy",
+        "correct": true
+      },
+      {
+        "text": "Zákaznícke testovanie",
+        "correct": false
+      },
+      {
+        "text": "Monitorovanie rizík",
+        "correct": false
+      },
+      {
+        "text": "Validácia požiadaviek",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 37,
+    "body": "Ktoré tvrdenie najlepšie vystihuje rozdiel medzi verifikáciou a validáciou?",
+    "multiselect": false,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Verifikácia hľadá chyby, validácia demonštruje splnenie požiadaviek",
+        "correct": true
+      },
+      {
+        "text": "Verifikácia testuje iba používateľské rozhranie, validácia iba databázu",
+        "correct": false
+      },
+      {
+        "text": "Verifikácia sa robí len po nasadení, validácia len počas vývoja",
+        "correct": false
+      },
+      {
+        "text": "Verifikácia je to isté ako regresné testovanie",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 38,
+    "body": "Ktoré z nasledujúcich patria medzi typy nefunkcionálnych požiadaviek?",
+    "multiselect": true,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Požiadavky na produkt",
+        "correct": true
+      },
+      {
+        "text": "Organizačné požiadavky",
+        "correct": true
+      },
+      {
+        "text": "Externé požiadavky",
+        "correct": true
+      },
+      {
+        "text": "Doménové požiadavky",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 39,
+    "body": "Ktoré tvrdenie je pravdivé pre nefunkcionálne požiadavky?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Musia byť merateľné a overiteľné",
+        "correct": true
+      },
+      {
+        "text": "Vždy sa vzťahujú iba na jednu funkciu systému",
+        "correct": false
+      },
+      {
+        "text": "Sú určené výhradne pre koncových používateľov",
+        "correct": false
+      },
+      {
+        "text": "Nedajú sa použiť ako kritérium pokroku",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 40,
+    "body": "Ktorá kontrola požiadaviek sa pýta na pôvod požiadavky a jej väzby?",
+    "multiselect": false,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Vysledovateľnosť",
+        "correct": true
+      },
+      {
+        "text": "Overiteľnosť",
+        "correct": false
+      },
+      {
+        "text": "Zrozumiteľnosť",
+        "correct": false
+      },
+      {
+        "text": "Prispôsobivosť",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 41,
+    "body": "Ktoré kroky patria do riadenia zmeny požiadaviek?",
+    "multiselect": true,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Analýza problému a špecifikácia zmeny",
+        "correct": true
+      },
+      {
+        "text": "Analýza zmien a kalkulácia účinku",
+        "correct": true
+      },
+      {
+        "text": "Implementácia zmeny do systému a dokumentácie",
+        "correct": true
+      },
+      {
+        "text": "Výber architektonického štýlu systému",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 42,
+    "body": "Ktorý model zobrazuje čo je mimo hraníc systému a čo patrí do systému?",
+    "multiselect": false,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Kontextový model",
+        "correct": true
+      },
+      {
+        "text": "Sekvenčný diagram",
+        "correct": false
+      },
+      {
+        "text": "Diagram aktivít",
+        "correct": false
+      },
+      {
+        "text": "Testovací plán",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 43,
+    "body": "Ktorá perspektíva systémového modelovania sa zameriava na interakcie medzi systémom a prostredím alebo komponentmi?",
+    "multiselect": false,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Interakčná perspektíva",
+        "correct": true
+      },
+      {
+        "text": "Štrukturálna perspektíva",
+        "correct": false
+      },
+      {
+        "text": "Externá perspektíva",
+        "correct": false
+      },
+      {
+        "text": "Procesná perspektíva",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 44,
+    "body": "Ktoré UML diagramy sa typicky používajú pre modely správania (behaviorálne)?",
+    "multiselect": true,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Sekvenčný diagram",
+        "correct": true
+      },
+      {
+        "text": "Stavový diagram",
+        "correct": true
+      },
+      {
+        "text": "Diagram tried",
+        "correct": false
+      },
+      {
+        "text": "Box-and-line diagram",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 45,
+    "body": "Čo je hlavnou myšlienkou modelom riadeného inžinierstva (MDE)?",
+    "multiselect": false,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Modely sú hlavné výstupy a z nich sa môže generovať kód",
+        "correct": true
+      },
+      {
+        "text": "Kód sa píše bez návrhu a bez modelov",
+        "correct": false
+      },
+      {
+        "text": "MDE je synonymum pre Scrum",
+        "correct": false
+      },
+      {
+        "text": "MDE znamená manuálne prepisovanie modelov do kódu",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 46,
+    "body": "Ktorá z možností patrí medzi výhody explicitnej architektúry?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Uľahčuje komunikáciu so zainteresovanými stranami",
+        "correct": true
+      },
+      {
+        "text": "Zaručuje nulové náklady na údržbu",
+        "correct": false
+      },
+      {
+        "text": "Odstraňuje potrebu testovania",
+        "correct": false
+      },
+      {
+        "text": "Zabraňuje všetkým zmenám požiadaviek",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 47,
+    "body": "Ktorá systémová perspektíva poukazuje na používanie systému v jeho prevádzkovom prostredí?",
+    "multiselect": false,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Procesná perspektíva",
+        "correct": true
+      },
+      {
+        "text": "Externá perspektíva",
+        "correct": false
+      },
+      {
+        "text": "Interakčná perspektíva",
+        "correct": false
+      },
+      {
+        "text": "Perspektíva správania",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 48,
+    "body": "Ktorý štýl rozkladu popisuje systém ako dávkový sekvenčný model z funkčných modulov?",
+    "multiselect": false,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Model potrubia a filtra",
+        "correct": true
+      },
+      {
+        "text": "Objektový model",
+        "correct": false
+      },
+      {
+        "text": "Vrstvený štýl",
+        "correct": false
+      },
+      {
+        "text": "Zdieľané úložisko údajov",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 49,
+    "body": "Kedy prebieha konfigurácia produktovej rady „v čase nasadenia“?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Systém je hotový a prispôsobuje sa až po dodaní",
+        "correct": true
+      },
+      {
+        "text": "Systém sa prispôsobuje výhradne počas implementácie",
+        "correct": false
+      },
+      {
+        "text": "Konfigurácia sa robí iba počas zberu požiadaviek",
+        "correct": false
+      },
+      {
+        "text": "Konfiguráciu vykonáva vždy dodávateľ bez zákazníka",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 50,
+    "body": "Ktoré z nasledujúcich patria medzi nevýhody opätovného použitia softvéru?",
+    "multiselect": true,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Nutnosť prispôsobiť požiadavky existujúcemu systému",
+        "correct": true
+      },
+      {
+        "text": "Závislosť od dodávateľa",
+        "correct": true
+      },
+      {
+        "text": "Rýchle nasadenie overeného systému",
+        "correct": false
+      },
+      {
+        "text": "Nižšie náklady a menšie vývojové rizik",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 51,
+    "body": "Ktoré tvrdenie najlepšie vystihuje agilný vývoj v porovnaní s plánom riadeným vývojom?",
+    "multiselect": false,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Požiadavky sa môžu meniť počas vývoja a zmeny sú očakávané",
+        "correct": true
+      },
+      {
+        "text": "Vývoj prebieha len v striktne oddelených fázach bez návratu",
+        "correct": false
+      },
+      {
+        "text": "Dôraz je hlavne na rozsiahlu dokumentáciu namiesto funkčného softvéru",
+        "correct": false
+      },
+      {
+        "text": "Zákazník sa do vývoja nezapája",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 52,
+    "body": "Ktorá možnosť zodpovedá správnemu významu „výroba“ ako typu hrozby?",
+    "multiselect": false,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Útočník vloží do systému nepravé informácie",
+        "correct": true
+      },
+      {
+        "text": "Útočník získa prístup k informáciám zachytením",
+        "correct": false
+      },
+      {
+        "text": "Útočník zneprístupní časť systému prerušením",
+        "correct": false
+      },
+      {
+        "text": "Útočník opraví chyby v systéme",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 53,
+    "body": "Ktorá systémová perspektíva sa zameriava na určenie hraníc systému a rozlíšenie, čo patrí do systému a čo je mimo neho?",
+    "multiselect": false,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Externá perspektíva",
+        "correct": true
+      },
+      {
+        "text": "Procesná perspektíva",
+        "correct": false
+      },
+      {
+        "text": "Interakčná perspektíva",
+        "correct": false
+      },
+      {
+        "text": "Štrukturálna perspektíva",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 54,
+    "body": "Ktorá systémová perspektíva popisuje organizáciu častí systému a jeho vnútornú štruktúru?",
+    "multiselect": false,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Štrukturálna perspektíva",
+        "correct": true
+      },
+      {
+        "text": "Interakčná perspektíva",
+        "correct": false
+      },
+      {
+        "text": "Procesná perspektíva",
+        "correct": false
+      },
+      {
+        "text": "Perspektíva správania",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 55,
+    "body": "Aký je to všeobecný produkt?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Samostatný systém prístupný každému záujemcovi",
+        "correct": true
+      },
+      {
+        "text": "Softvér vytvorený na zákazku pre jedného zákazníka",
+        "correct": false
+      },
+      {
+        "text": "Systém, o ktorého zmenách rozhoduje výhradne zákazník",
+        "correct": false
+      },
+      {
+        "text": "Produkt prispôsobovaný až po nasadení",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 56,
+    "body": "Aký je to prispôsobený produkt?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Softvér vytvorený na zákazku podľa potrieb zákazníka",
+        "correct": true
+      },
+      {
+        "text": "Samostatný systém dostupný širokej verejnosti",
+        "correct": false
+      },
+      {
+        "text": "Produkt s pevne danými funkciami bez možnosti zmien",
+        "correct": false
+      },
+      {
+        "text": "Systém určený pre anonymných používateľov",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 57,
+    "body": "So zvyšovaním úrovne spoľahlivosti narastajú aj náklady na vývoj spoľahlivého softvérového systému. Aké sú hlavné príčiny týchto zvýšených nákladov?",
+    "multiselect": true,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Použitie drahších vývojových techník a nástrojov",
+        "correct": true
+      },
+      {
+        "text": "Zvýšené testovanie, overovanie a validácia systému",
+        "correct": true
+      },
+      {
+        "text": "Skrátenie času vývoja systému",
+        "correct": false
+      },
+      {
+        "text": "Zníženie požiadaviek na dokumentáciu",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 58,
+    "body": "Pri inkrementálnom vývoji je menšie riziko zlyhania celého projektu. Aké sú hlavné dôvody tohto zníženia rizika?",
+    "multiselect": true,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Najžiadanejšia funkcionalita je dodaná ako prvá a zákazník ju používa od začiatku",
+        "correct": true
+      },
+      {
+        "text": "Najdôležitejšia funkcionalita je testovaná najintenzívnejšie už v počiatočných inkrementoch",
+        "correct": true
+      },
+      {
+        "text": "Požiadavky sú úplne pevné a počas vývoja sa nemenia",
+        "correct": false
+      },
+      {
+        "text": "Inkrementálny vývoj nevyžaduje spätnú väzbu od zákazníka",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 59,
+    "body": "Ktoré základné položky musí obsahovať projektový plán?",
+    "multiselect": true,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Časový plán projektu (kedy)",
+        "correct": true
+      },
+      {
+        "text": "Rozdelenie úloh a prác (čo)",
+        "correct": true
+      },
+      {
+        "text": "Zdroje projektu (kto)",
+        "correct": true
+      },
+      {
+        "text": "Analýza rizík",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 60,
+    "body": "Aké sú dve hlavné plánovacie aktivity pri agilnom vývoji z pohľadu projektového plánovania?",
+    "multiselect": false,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Iteration planning & Release planning",
+        "correct": true
+      },
+      {
+        "text": "Risk planning & Quality planning",
+        "correct": false
+      },
+      {
+        "text": "Architecture planning & Deployment planning",
+        "correct": false
+      },
+      {
+        "text": "ani jedno z uvedených",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 61,
+    "body": "Aký typ kritického systému predstavuje systém správy účtov v banke?",
+    "multiselect": false,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Business-critical system",
+        "correct": true
+      },
+      {
+        "text": "Mission-critical system",
+        "correct": false
+      },
+      {
+        "text": "Safety-critical system",
+        "correct": false
+      },
+      {
+        "text": "Performance-critical system",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 62,
+    "body": "Aký typ kritického systému predstavuje navigačný systém vesmírnej lode?",
+    "multiselect": false,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Mission-critical system",
+        "correct": true
+      },
+      {
+        "text": "Business-critical system",
+        "correct": false
+      },
+      {
+        "text": "Safety-critical system",
+        "correct": false
+      },
+      {
+        "text": "User-critical system",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 63,
+    "body": "Aký typ kritického systému predstavuje riadiaci systém v jadrovej elektrárni?",
+    "multiselect": false,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Safety-critical system",
+        "correct": true
+      },
+      {
+        "text": "Mission-critical system",
+        "correct": false
+      },
+      {
+        "text": "Business-critical system",
+        "correct": false
+      },
+      {
+        "text": "Cost-critical system",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 64,
+    "body": "Ktorá z nasledujúcich možností NEPATRÍ medzi alternatívy k prirodzenému jazyku pri špecifikácii požiadaviek?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Programovací jazyk",
+        "correct": true
+      },
+      {
+        "text": "Štruktúrovaný prirodzený jazyk",
+        "correct": false
+      },
+      {
+        "text": "Grafický zápis",
+        "correct": false
+      },
+      {
+        "text": "Matematická špecifikácia",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 65,
+    "body": "Ktorá z nasledujúcich možností predstavuje nemateriálnu požiadavku?",
+    "multiselect": false,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Systém musí byť nasadený na serveri s minimálne 32 GB RAM",
+        "correct": false
+      },
+      {
+        "text": "Aplikácia musí podporovať SSD úložisko typu NVMe",
+        "correct": false
+      },
+      {
+        "text": "Prevádzka systému vyžaduje redundantné sieťové prvky",
+        "correct": false
+      },
+      {
+        "text": "Ani jedna z uvedených",
+        "correct": true
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 66,
+    "body": "Aká je hlavná úloha softvérového inžinierstva?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Optimalizácia nákladov pri vývoji softvéru",
+        "correct": true
+      },
+      {
+        "text": "Programovanie softvéru bez potreby návrhu a plánovania",
+        "correct": false
+      },
+      {
+        "text": "Vývoj softvéru výhradne pre jedného zákazníka",
+        "correct": false
+      },
+      {
+        "text": "Ani jedno z uvedených",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 67,
+    "body": "Ktoré tvrdenia platia pre deployment-time configuration?",
+    "multiselect": true,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Konfiguráciu vykonáva konzultant",
+        "correct": true
+      },
+      {
+        "text": "Softvér je určený pre konkrétneho zákazníka",
+        "correct": true
+      },
+      {
+        "text": "Konfigurácia prebieha výhradne počas návrhu systému",
+        "correct": false
+      },
+      {
+        "text": "Softvér je rovnaký pre viacerých zákazníkov bez úprav",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 68,
+    "body": "Ktoré tvrdenia platia pre design-time configuration?",
+    "multiselect": true,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Konfiguráciu vykonáva návrhár",
+        "correct": true
+      },
+      {
+        "text": "Softvér je určený pre viacerých zákazníkov",
+        "correct": true
+      },
+      {
+        "text": "Konfigurácia sa vykonáva až po dodaní systému",
+        "correct": false
+      },
+      {
+        "text": "Softvér je prispôsobený jednému konkrétnemu zákazníkovi",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 69,
+    "body": "Ktoré architektonické vzory sa používajú na dekompozíciu systému?",
+    "multiselect": false,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "objektovo-orientované & data-flow",
+        "correct": true
+      },
+      {
+        "text": "centrálne & paralelné",
+        "correct": false
+      },
+      {
+        "text": "peer-to-peer & zdieľané",
+        "correct": false
+      },
+      {
+        "text": "sériové & nezdieľané",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 70,
+    "body": "Aký je princíp prístupu legacy system wrapping pri integrácii starého systému do nového riešenia?",
+    "multiselect": false,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Definovanie rozhraní (interface-ov), prostredníctvom ktorých nový systém pristupuje k funkcionalite starého systému",
+        "correct": true
+      },
+      {
+        "text": "Kompletné preprogramovanie starého systému do nového programovacieho jazyka",
+        "correct": false
+      },
+      {
+        "text": "Nahradenie starého systému novým bez zachovania pôvodnej funkcionality",
+        "correct": false
+      },
+      {
+        "text": "Priame prepojenie databáz starého a nového systému bez sprostredkovania",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 71,
+    "body": "Uveďte architektonické vzory na centrálne riadenie sub-systémov",
+    "multiselect": true,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Vysielacie modely",
+        "correct": false
+      },
+      {
+        "text": "Modely riadené prerušením",
+        "correct": false
+      },
+      {
+        "text": "Model odovzdania a vrátenia riadenia",
+        "correct": true
+      },
+      {
+        "text": "Manažérsky model",
+        "correct": true
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 72,
+    "body": "Kto vykonáva testovaciu fázu UAT?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Testovací tím",
+        "correct": false
+      },
+      {
+        "text": "Vývojári",
+        "correct": false
+      },
+      {
+        "text": "Používatelia a zákazníci",
+        "correct": true
+      },
+      {
+        "text": "Ani jedno z uvedených",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 73,
+    "body": "Ktorá základná aktivita vývoja softvéru sa zameriava na úpravy systému po jeho nasadení?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Evolúcia softvéru",
+        "correct": true
+      },
+      {
+        "text": "Validácia softvéru",
+        "correct": false
+      },
+      {
+        "text": "Špecifikácia softvéru",
+        "correct": false
+      },
+      {
+        "text": "Architektonický návrh",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 74,
+    "body": "Ktorý z nasledujúcich atribútov softvéru vyjadruje schopnosť systému prispôsobiť sa meniacim sa požiadavkám?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Udržiavateľnosť",
+        "correct": true
+      },
+      {
+        "text": "Efektívnosť",
+        "correct": false
+      },
+      {
+        "text": "Spoľahlivosť",
+        "correct": false
+      },
+      {
+        "text": "Prenosnosť",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 75,
+    "body": "Ktorý typ požiadaviek opisuje, čo má systém robiť a ako sa má správať?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Funkcionálne požiadavky",
+        "correct": true
+      },
+      {
+        "text": "Nefunkcionálne požiadavky",
+        "correct": false
+      },
+      {
+        "text": "Organizačné požiadavky",
+        "correct": false
+      },
+      {
+        "text": "Externé požiadavky",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 76,
+    "body": "Ktorý UML diagram zobrazuje postup činností v procese?",
+    "multiselect": false,
+    "difficulty": "easy",
+    "answers": [
+      {
+        "text": "Diagram aktivít",
+        "correct": true
+      },
+      {
+        "text": "Diagram tried",
+        "correct": false
+      },
+      {
+        "text": "Sekvenčný diagram",
+        "correct": false
+      },
+      {
+        "text": "Stavový diagram",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 77,
+    "body": "Náklady na prepracovanie sa znižujú pomocou",
+    "multiselect": true,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Predvídania zmien",
+        "correct": true
+      },
+      {
+        "text": "Tolerancie zmien",
+        "correct": true
+      },
+      {
+        "text": "Ignorovania zmien",
+        "correct": false
+      },
+      {
+        "text": "Ani jedno z uvedených",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 78,
+    "body": "Medzi vlastnosti vodopádového modelu patrí",
+    "multiselect": true,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "obtiažnosť prispôsobiť sa zmenám počas priebehu",
+        "correct": true
+      },
+      {
+        "text": "model riadený plánom",
+        "correct": true
+      },
+      {
+        "text": "špecifikácia, vývoj a validácia sú navzájom prepojené",
+        "correct": false
+      },
+      {
+        "text": "systém je zostavený z existujúcich konfiguračných komponentov",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 79,
+    "body": "Medzi vlastnosti modelu postupného vývoju patrí",
+    "multiselect": true,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "špecifikácia, vývoj a validácia sú navzájom prepojené",
+        "correct": true
+      },
+      {
+        "text": "jednoduchšia spätná väzba, rýchlejšie dodanie",
+        "correct": true
+      },
+      {
+        "text": "strata plnej kontroly nad vývojom opätovne použitých prvkov",
+        "correct": false
+      },
+      {
+        "text": "Oddelené a odlišné fázy špecifikácie a vývoja, vhodný pre veľké projekty",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 80,
+    "body": "Medzi vlastnosti modelu integrácie a konfigurácie patrí",
+    "multiselect": true,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "strata plnej kontroly nad vývojom opätovne použitých prvkov",
+        "correct": true
+      },
+      {
+        "text": "znížené náklady a riziká, pretože menej SW sa vyvíja od nuly",
+        "correct": true
+      },
+      {
+        "text": "proces nie je viditeľný, štruktúra systému má tendenciu degradovať",
+        "correct": false
+      },
+      {
+        "text": "špecifikácia, vývoj a validácia sú navzájom prepojené",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 81,
+    "body": "Ktorá etapa/etapy nepatrí medzi etapy plánovania?",
+    "multiselect": false,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "fáza obnovy zdrojov",
+        "correct": true
+      },
+      {
+        "text": "fáza návrhu",
+        "correct": false
+      },
+      {
+        "text": "fáza spustenia projektu",
+        "correct": false
+      },
+      {
+        "text": "úpravy počas celého priebehu projektu",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 82,
+    "body": "Medzi stratégie plánovania rizika patrí/patria",
+    "multiselect": true,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "stratégia vyhýbania sa",
+        "correct": true
+      },
+      {
+        "text": "stratégia minimalizácie",
+        "correct": false
+      },
+      {
+        "text": "stratégia monitorovania",
+        "correct": false
+      },
+      {
+        "text": "ani jedno z uvedených",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 83,
+    "body": "Načo slúži stratégia minimalizácie pri plánovaní rizika?",
+    "multiselect": false,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "na zníženie pravdepodobnosti vzniku rizika",
+        "correct": true
+      },
+      {
+        "text": "zníženie vplyvu rizika na produkt/projekt",
+        "correct": false
+      },
+      {
+        "text": "na zabezpečenie minimálneho úniku dát",
+        "correct": false
+      },
+      {
+        "text": "na zníženie dĺžky dokumentácie na minimum podľa normy",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 84,
+    "body": "Aké sú funkcie požiadavky?",
+    "multiselect": false,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "základ pre ponuku aj samotnú zmluvu",
+        "correct": true
+      },
+      {
+        "text": "základ pre ponuku ale nie ale nie pre samotnú zmluvu",
+        "correct": false
+      },
+      {
+        "text": "základ samotnú zmluvu ale nie pre ponuku",
+        "correct": false
+      },
+      {
+        "text": "slúži výhradne ako technická dokumentácia pre vývojárov",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 85,
+    "body": "Ktorá vlastnosť softvéru najviac súvisí so schopnosťou systému fungovať bez porúch počas dlhšieho času?",
+    "multiselect": false,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Spoľahlivosť",
+        "correct": true
+      },
+      {
+        "text": "Prenosnosť",
+        "correct": false
+      },
+      {
+        "text": "Použiteľnosť",
+        "correct": false
+      },
+      {
+        "text": "Zrozumiteľnosť",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 86,
+    "body": "Ktorá fáza softvérového procesu sa primárne zameriava na overenie, či systém spĺňa potreby používateľa?",
+    "multiselect": false,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Validácia",
+        "correct": true
+      },
+      {
+        "text": "Implementácia",
+        "correct": false
+      },
+      {
+        "text": "Návrh architektúry",
+        "correct": false
+      },
+      {
+        "text": "Refaktorizácia",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 87,
+    "body": "Ktorý typ testovania sa zameriava na overenie spolupráce viacerých komponentov systému?",
+    "multiselect": false,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Integračné testovanie",
+        "correct": true
+      },
+      {
+        "text": "Unit testing",
+        "correct": false
+      },
+      {
+        "text": "Akceptačné testovanie",
+        "correct": false
+      },
+      {
+        "text": "Testovanie použiteľnosti",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 88,
+    "body": "Ktoré tvrdenia platia pre nefunkcionálne požiadavky?",
+    "multiselect": true,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Ovplyvňujú celkovú architektúru systému",
+        "correct": true
+      },
+      {
+        "text": "Môžu sa týkať výkonu, bezpečnosti alebo dostupnosti",
+        "correct": true
+      },
+      {
+        "text": "Popisujú konkrétne algoritmy systému",
+        "correct": false
+      },
+      {
+        "text": "Slúžia na meranie progresu",
+        "correct": true
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 89,
+    "body": "Ktoré faktory prispievajú k zníženiu rizika pri vývoji softvéru?",
+    "multiselect": true,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Priebežná spätná väzba od zákazníka",
+        "correct": true
+      },
+      {
+        "text": "Postupné dodávanie funkcionality",
+        "correct": true
+      },
+      {
+        "text": "Odklad testovania na koniec projektu",
+        "correct": false
+      },
+      {
+        "text": "Pevne nemenné požiadavky",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 90,
+    "body": "Ktorý model procesu najlepšie podporuje časté zmeny požiadaviek počas vývoja?",
+    "multiselect": false,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Postupný (inkrementálny) vývoj",
+        "correct": true
+      },
+      {
+        "text": "Vodopádový model",
+        "correct": false
+      },
+      {
+        "text": "Model riadený plánom",
+        "correct": false
+      },
+      {
+        "text": "Čisto sekvenčný model",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 91,
+    "body": "Ktoré z nasledujúcich patria medzi výhody použitia modelov pri vývoji softvéru?",
+    "multiselect": true,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Lepšie porozumenie systému ešte pred implementáciou",
+        "correct": true
+      },
+      {
+        "text": "Jednoduchšia komunikácia medzi zainteresovanými stranami",
+        "correct": true
+      },
+      {
+        "text": "Automatické odstránenie všetkých chýb",
+        "correct": false
+      },
+      {
+        "text": "Eliminácia potreby testovania",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 92,
+    "body": "Ktorý pojem označuje schopnosť systému fungovať v rôznych prostrediach bez výrazných úprav?",
+    "multiselect": false,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Prenosnosť",
+        "correct": true
+      },
+      {
+        "text": "Spoľahlivosť",
+        "correct": false
+      },
+      {
+        "text": "Bezpečnosť",
+        "correct": false
+      },
+      {
+        "text": "Modularita",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 93,
+    "body": "Ktoré tvrdenia vystihujú agilné princípy vývoja softvéru?",
+    "multiselect": true,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Uprednostňovanie funkčného softvéru pred rozsiahlu dokumentáciu",
+        "correct": true
+      },
+      {
+        "text": "Pravidelná spolupráca so zákazníkom",
+        "correct": true
+      },
+      {
+        "text": "Dôraz na striktne pevný plán bez zmien",
+        "correct": false
+      },
+      {
+        "text": "Minimalizácia spätnej väzby",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 94,
+    "body": "Ktoré tvrdenia platia pre modelom riadené inžinierstvo (MDE) v porovnaní s tradičným vývojom?",
+    "multiselect": true,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Modely sú hlavnými artefaktmi vývoja",
+        "correct": true
+      },
+      {
+        "text": "Generovanie kódu je založené na modeloch",
+        "correct": true
+      },
+      {
+        "text": "MDE je plne kompatibilné so všetkými agilnými metódami",
+        "correct": false
+      },
+      {
+        "text": "MDE nevyžaduje špecializované nástroje",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 95,
+    "body": "Ktorý aspekt systémového modelovania je najviac ohrozený, ak sa ignoruje procesná perspektíva?",
+    "multiselect": false,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Pochopenie používania systému v širších obchodných procesoch",
+        "correct": true
+      },
+      {
+        "text": "Identifikácia tried a objektov",
+        "correct": false
+      },
+      {
+        "text": "Definovanie hraníc systému",
+        "correct": false
+      },
+      {
+        "text": "Návrh dátových štruktúr",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 96,
+    "body": "Ktoré z nasledujúcich patria medzi úrovne zabezpečenia systému?",
+    "multiselect": true,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Bezpečnosť infraštruktúry",
+        "correct": true
+      },
+      {
+        "text": "Aplikačná úroveň",
+        "correct": true
+      },
+      {
+        "text": "Vývojová úroveň (development security)",
+        "correct": false
+      },
+      {
+        "text": "Dizajnová úroveň (design security)",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 97,
+    "body": "Ktorá stratégia plánovania rizika sa používa ako plán „čo urobíme, keď riziko nastane“?",
+    "multiselect": false,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Pohotovostné plány",
+        "correct": true
+      },
+      {
+        "text": "Stratégie vyhýbania sa",
+        "correct": false
+      },
+      {
+        "text": "Stratégie minimalizácie",
+        "correct": false
+      },
+      {
+        "text": "Monitorovanie rizík",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 98,
+    "body": "Ktoré prístupy sa uvádzajú ako spôsoby zlepšenia činnosti softvérových procesov?",
+    "multiselect": true,
+    "difficulty": "hard",
+    "answers": [
+      {
+        "text": "Procesné meranie",
+        "correct": true
+      },
+      {
+        "text": "Procesná analýza",
+        "correct": true
+      },
+      {
+        "text": "Zmeny procesov",
+        "correct": true
+      },
+      {
+        "text": "Eliminácia validácie na urýchlenie vývoja",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 99,
+    "body": "Ktorá z nasledujúcich možností predstavuje nevýhodu opätovného použitia softvéru?",
+    "multiselect": false,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Nutnosť prispôsobiť požiadavky existujúcemu systému",
+        "correct": true
+      },
+      {
+        "text": "Rýchle nasadenie overeného systému",
+        "correct": false
+      },
+      {
+        "text": "Zníženie vývojových rizík",
+        "correct": false
+      },
+      {
+        "text": "Efektívne využitie špecialistov",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  },
+  {
+    "id": 100,
+    "body": "Ktoré z nasledujúcich tvrdení NIE JE typickým znakom metodiky SCRUM?",
+    "multiselect": false,
+    "difficulty": "medium",
+    "answers": [
+      {
+        "text": "Požiadavky sú pevne stanovené na začiatku projektu a počas vývoja sa nemenia",
+        "correct": true
+      },
+      {
+        "text": "Práca sa realizuje v krátkych iteráciách nazývaných šprinty",
+        "correct": false
+      },
+      {
+        "text": "Po každom šprinte vzniká funkčný prírastok produktu",
+        "correct": false
+      },
+      {
+        "text": "Práca sa vyberá z produktového backlogu",
+        "correct": false
+      },
+      {
+        "text": "Neodpovedať",
+        "correct": null
+      }
+    ]
+  }
+]

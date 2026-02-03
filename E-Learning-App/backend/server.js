@@ -239,8 +239,6 @@ app.patch("/api/getFriendship/:userId/:friendId", (request, response)=> {
 
 app.put("/api/putUser", (request, response)=> {
     const { user_username, user_email, user_imageUrl, clerk_user_id } = request.body;
-    console.log("aaaaaaaaaaaaaaaaaaa")
-    console.log(request.body)
 
     const putQuery = "UPDATE users SET username = $1, email = $2, image_url = $3 WHERE user_id = $4";
     pool.query(putQuery, [user_username, user_email, user_imageUrl, clerk_user_id])
@@ -321,7 +319,7 @@ app.get("/api/getNotionId/:chapter_number", (request, response)=> {
 
 // ------------------GET REQUEST - GET ALL CHAPTERS---------------------------------------------------------------
 app.get("/api/getAllChapters", (request, response)=> {
-    const getQuery = 'SELECT * FROM chapters';
+    const getQuery = 'SELECT * FROM chapters ORDER BY chapter';
     pool.query(getQuery)
         .then((result) => {
             console.log(result);

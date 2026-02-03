@@ -5,6 +5,8 @@ import DividerVariants from "../components/DividerVariants.jsx";
 import {getUser_object} from "../methods/methodsClass.jsx";
 
 
+// a page with statistics of a particular user
+// can be seen by other users by sharing the profile url or by adding them as friends
 export default function UserPage() {
     const [searchParams] = useSearchParams();
     const username = searchParams.get("username")
@@ -21,7 +23,6 @@ export default function UserPage() {
             setFoundUser(data);
         }
         outterGetUser();
-        console.log(foundUser);
     }, [tempValue]);
 
     setTimeout(function() {

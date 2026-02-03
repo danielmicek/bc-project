@@ -10,6 +10,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EqualizerOutlinedIcon from '@mui/icons-material/EqualizerOutlined';
 import CircularIndeterminate from "./Loader.jsx";
 import {acceptFriendRequest, deleteFriend} from "../methods/methodsClass.jsx";
+import {Link} from "react-router-dom";
 
 
 function handleClick({
@@ -67,9 +68,11 @@ function generateList({
                                 <CheckCircleIcon/>
                             </IconButton>
                             :
-                            <IconButton edge="end" aria-label="accept">
-                                <EqualizerOutlinedIcon/>
-                            </IconButton>
+                            <Link to = {`/userPage/?username=${friend.friendName}`}>
+                                <IconButton edge="end" aria-label="accept">
+                                    <EqualizerOutlinedIcon/>
+                                </IconButton>
+                            </Link>
                         }
 
                         <IconButton edge="end" aria-label="delete" color = "warning"
@@ -112,7 +115,7 @@ export default function FriendList({
                                        userId,
                                        isLoading
                                    }) {
-    const title = type === "friendList" ? "Friends" : "Friend requests";
+    const title = type === "friendList" ? "Priatelia" : "Žiadosti o priateľtvo";
 
     return (
 

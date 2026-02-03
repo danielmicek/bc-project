@@ -4,12 +4,12 @@ import {Button} from "@heroui/react";
 import {Link} from "react-router-dom";
 
 export default function Chapter() {
-    const [notionPage, setNotionPage] = useState([]);
+    const [notionPageId, setNotionPageId] = useState([]);
     const chapter = location.pathname.split('/')[2]
     useEffect(() => {
         async function loadChapter() {
             const data = await GET_notionId(chapter);
-            setNotionPage(data.notionId);
+            setNotionPageId(data.notionId);
         }
         loadChapter();
     }, [])
@@ -21,7 +21,7 @@ export default function Chapter() {
                 <Button variant="light" className="bg-(--main-color-orange) font-bold absolute left-3 top-3">Späť na rozpis kapitol</Button>
             </Link>
             <div className="container pb-20 h-full flex flex-col items-center mt-20 relative">
-                <iframe src={`https://brash-sweatpants-9cd.notion.site/ebd//${notionPage}`}
+                <iframe src={`https://brash-sweatpants-9cd.notion.site/ebd//${notionPageId}`}
                         width="100%" height="800px" allowFullScreen/>
             </div>
         </div>
