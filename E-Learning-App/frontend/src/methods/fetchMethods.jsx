@@ -129,17 +129,22 @@ export async function POST_test(testID, points, date, grade, medal, username, st
 /*----------------------------------------------------------------------------------------------*/
 
 /*-------------AI API CALLS----------------------------------------------------------------*/
-export async function GET_ai_response(veta) {
-    const x = await fetch(`http://localhost:3000/api/ai`, {
+export async function GET_ai_response(prompt) {
+    const response = await fetch(`http://localhost:3000/api/ai`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            prompt: `Preformuluj vetu, zachovaj význam. Vráť iba jednu vetu.\n${veta}`,
+            prompt: prompt
         })
     })
-    console.log(await x.text());
+
+    if (!response.ok) {
+        throw new Error("AI request failed");
+    }
+
+    return await response.json()
 }
 /*----------------------------------------------------------------------------------------------*/
 
@@ -156,6 +161,16 @@ export async function GET_notionId(chapter) {
 /*-------------GET ALL CHAPTERS----------------------------------------------------------------*/
 export async function GET_allChapters() {
     const response = await fetch(`http://localhost:3000/api/getAllChapters`, {
+        method: "GET",
+        cache: "no-store"
+    })
+    return await response.json();
+}
+/*----------------------------------------------------------------------------------------------*/
+
+/*-------------GET ALL QUESTIONS OF SPECIFIC DIFFICULTY----------------------------------------------------------------*/
+export async function GET_Questions(difficulty, multiselect) {
+    const response = await fetch(`http://localhost:3000/api/getQuestionsBasedOnDifficulty/${difficulty}/${multiselect}`, {
         method: "GET",
         cache: "no-store"
     })

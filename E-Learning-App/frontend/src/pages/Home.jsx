@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import '../styles/styles.css';
 import {Button} from "@heroui/react";
 import {SignedOut, SignInButton} from "@clerk/clerk-react";
@@ -11,12 +11,6 @@ function Home() {
     /*window.addEventListener("popstate", () => {  kliknutie na backbutton v browseri
         console.log("popstate");
     });*/
-    useEffect(() => { // Add the backgroundImage class to the body element so I can have different background image on each page
-        document.body.classList.add("backgroundImageHomePage");
-        return () => {
-            document.body.classList.remove("backgroundImageHomePage");
-        };
-    }, []);
 
     return (
         <>

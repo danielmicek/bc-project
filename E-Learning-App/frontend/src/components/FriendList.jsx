@@ -8,9 +8,9 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EqualizerOutlinedIcon from '@mui/icons-material/EqualizerOutlined';
-import CircularIndeterminate from "./Loader.jsx";
 import {acceptFriendRequest, deleteFriend} from "../methods/methodsClass.jsx";
 import {Link} from "react-router-dom";
+import Loader from "./Loader.jsx";
 
 
 function handleClick({
@@ -125,7 +125,7 @@ export default function FriendList({
                 <h1 className = "font-bold min-w-0 max-[500px]:text-3xl text-4xl text-white">{title}</h1>
             </div>
 
-            {isLoading ? <CircularIndeterminate/>
+            {isLoading ? <Loader/>
                 :
             <>
                 {type === "friendList" && list.length === 0 && <div className = "absolute inset-0 mt-10 flex h-full w-full items-center justify-center text-center text-gray-400 font-bold text-xl">No friends yet</div>}

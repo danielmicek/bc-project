@@ -36,8 +36,8 @@ export default function SwiperComponent({testQuestions}) {
 
                     return <SwiperSlide className="swiper">
                         <Question activeIndex = {activeIndex}
-                                                  question = {question}
-                                                  key = {index}
+                                  question = {question}
+                                  key = {index}
                         />
                     </SwiperSlide>
 

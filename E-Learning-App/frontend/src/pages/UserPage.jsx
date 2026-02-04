@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {useSearchParams} from "react-router-dom";
-import CircularIndeterminate from "../components/Loader.jsx";
 import DividerVariants from "../components/DividerVariants.jsx";
 import {getUser_object} from "../methods/methodsClass.jsx";
+import Loader from "../components/Loader.jsx";
 
 
 // a page with statistics of a particular user
@@ -31,7 +31,7 @@ export default function UserPage() {
     return( foundUser
         ? <>
             <DividerVariants name ={foundUser.userName} email = {foundUser.userEmail} uid = {foundUser.userId}/>
-        </> : <CircularIndeterminate/>)
+        </> : <Loader/>)
 
 
 }

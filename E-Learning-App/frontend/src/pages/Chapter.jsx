@@ -6,6 +6,7 @@ import {Link} from "react-router-dom";
 export default function Chapter() {
     const [notionPageId, setNotionPageId] = useState([]);
     const chapter = location.pathname.split('/')[2]
+
     useEffect(() => {
         async function loadChapter() {
             const data = await GET_notionId(chapter);

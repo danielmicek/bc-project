@@ -14,42 +14,45 @@ function switchRender(type,
                       setOpenedStartTestPopup,
                       refForSignedIntPopup,
                       openedNotSignedInPopup,
-                      setOpenedNotSignedInPopup){
-    switch (type){
-        case "Learning": return (
-            <Link to = "/learning">
-                <Button variant="light" className="bg-(--main-color-orange) font-bold">Zobraziť kapitoly</Button>
-            </Link>
-        )
-        case "Test": return (
-            <Button variant="light" className="bg-(--main-color-orange) font-bold" onPress={() => {
-                isSignedIn ?
-                    showOrHidePopup(refForStartPopup, openedStartTestPopup, setOpenedStartTestPopup)
-                    :
-                    showOrHidePopup(refForSignedIntPopup, openedNotSignedInPopup, setOpenedNotSignedInPopup)
-            }}>
-                Začať test
-            </Button>
-        )
-        default: return(
-            <Link to ={`/learning/${chapter}`}>
-                <Button variant="light" className="bg-(--main-color-orange) font-bold">Začať kapitolu</Button>
-            </Link>
-        )
+                      setOpenedNotSignedInPopup) {
+    switch (type) {
+        case "Learning":
+            return (
+                <Link to="/learning">
+                    <Button variant="light" className="bg-(--main-color-orange) font-bold">Zobraziť kapitoly</Button>
+                </Link>
+            )
+        case "Test":
+            return (
+                <Button variant="light" className="bg-(--main-color-orange) font-bold" onPress={() => {
+                    isSignedIn ?
+                        showOrHidePopup(refForStartPopup, openedStartTestPopup, setOpenedStartTestPopup)
+                        :
+                        showOrHidePopup(refForSignedIntPopup, openedNotSignedInPopup, setOpenedNotSignedInPopup)
+                }}>
+                    Začať test
+                </Button>
+            )
+        default:
+            return (
+                <Link to={`/learning/${chapter}`}>
+                    <Button variant="light" className="bg-(--main-color-orange) font-bold">Začať kapitolu</Button>
+                </Link>
+            )
     }
 }
 
 export default function CardComponent({
-                                        title,
-                                        imgPath,
-                                        description,
-                                        difficulty = "N/A",
-                                        questions = 0,
-                                        time = 0,
-                                        onDetails,
-                                        type,
-                                        testColumn = null
-                                    }) {
+                                          title,
+                                          imgPath,
+                                          description,
+                                          difficulty = "N/A",
+                                          questions = 0,
+                                          time = 0,
+                                          onDetails,
+                                          type,
+                                          testColumn = null
+                                      }) {
     const {isSignedIn} = useUser();
     const [openedNotSignedInPopup, setOpenedNotSignedInPopup] = useState(false);
     const [openedStartTestPopup, setOpenedStartTestPopup] = useState(false);
@@ -66,21 +69,22 @@ export default function CardComponent({
     return (
         <>
             {isSignedIn ?
-                <StartTestPopup difficulty = {difficulty}
-                                refForStartPopup = {refForStartPopup}
+                <StartTestPopup difficulty={difficulty}
+                                refForStartPopup={refForStartPopup}
                                 showOrHidePopup={showOrHidePopup}
-                                openedStartPopup = {openedStartTestPopup}
-                                setOpenedStartPopup = {setOpenedStartTestPopup}
+                                openedStartPopup={openedStartTestPopup}
+                                setOpenedStartPopup={setOpenedStartTestPopup}
                 />
                 :
-                <NotSignedInPopup refForSignedIntPopup = {refForSignedIntPopup}
+                <NotSignedInPopup refForSignedIntPopup={refForSignedIntPopup}
                                   showOrHidePopup={showOrHidePopup}
-                                  openedNotSignedInPopup = {openedNotSignedInPopup}
-                                  setOpenedNotSignedInPopup = {setOpenedNotSignedInPopup}
+                                  openedNotSignedInPopup={openedNotSignedInPopup}
+                                  setOpenedNotSignedInPopup={setOpenedNotSignedInPopup}
                 />
             }
 
-            <Card className= {`${testColumn} w-max-[400px] h-[230px] pt-3 px-3 rounded-lg shadow-[5px_10px_30px_rgba(252,147,40,0.5)] bg-gradient-to-br from-[#2a2a2a] to-[#1f1f1f] border-2 border-(--main-color-orange)`}>
+            <Card
+                className={`${testColumn} w-max-[400px] h-[230px] pt-3 px-3 rounded-lg shadow-[5px_10px_30px_rgba(252,147,40,0.5)] bg-gradient-to-br from-[#2a2a2a] to-[#1f1f1f] border-2 border-(--main-color-orange)`}>
                 <CardHeader className="flex gap-3">
                     <Image
                         alt="heroui logo"
@@ -98,10 +102,12 @@ export default function CardComponent({
                       </span>
                             <span>
                             {type === "Chapter" && <b className="text-gray-400">Odhadovaný čas: {time}</b>}
-                                {type !== "Chapter" && <b className="text-gray-400">{time === 0 ? "Neobmedzený čas" : `${time} min`}</b>}
+                                {type !== "Chapter" &&
+                                    <b className="text-gray-400">{time === 0 ? "Neobmedzený čas" : `${time} min`}</b>}
                         </span>
                             {/* DIFFICULTY BADGE */}
-                            <span className={`rounded-full text-center border px-3 py-1 text-xs font-semibold ${difficultyStyles[difficulty]}`}>
+                            <span
+                                className={`rounded-full text-center border px-3 py-1 text-xs font-semibold ${difficultyStyles[difficulty]}`}>
                         {difficulty}
                     </span>
                         </div>

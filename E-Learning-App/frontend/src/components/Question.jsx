@@ -54,12 +54,12 @@ export default function Question({activeIndex, question}) {
         }
     }, [activeIndex]); //pri zmene strany ulozim zaznacene odpovede do skutocnej struktury testu (cely JSON -> cely vygenerovany test)
 
-    console.log("xx: " + getNumberOfCorrectAnswers(question.answers))
+    //console.log("xx: " + getNumberOfCorrectAnswers(question.answers))
     return <>
         <div className="pb-8 justify-self-center self-center flex flex-col gap-0 overflow-hidden max-[750px]:w-[70vw]  mb-5">
 
             <div id = "BODY" className="flex items-center justify-center text-center text-white font-bold text-xl w-[600px] pb-3">{question.body}</div>
-            {<p className="text-sm font-light text-gray-500">{question.points} points {testDifficulty === "Medium" ? (getNumberOfCorrectAnswers(question.answers) > 1 ? "| Multi-select" : "| Single-select") : "| Single-select"}</p>}
+            {<p className="text-sm font-light text-gray-500">{question.points} points {testDifficulty === "medium" ? (getNumberOfCorrectAnswers(question.answers) > 1 ? "| Multi-select" : "| Single-select") : "| Single-select"}</p>}
 
 
             {/*<div id = "QUESTION_NUMBER" className="grid place-items-center [grid-area:1_/_1_/_2_/_2]"></div>*/}

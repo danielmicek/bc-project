@@ -3,10 +3,10 @@ import SignedInProfilePage from "./SignedInProfilePage.jsx";
 import '../styles/styles.css';
 import React, {useEffect, useRef, useState} from "react";
 import {friendListLoader, friendRequestListLoader, getUser_info} from "../methods/methodsClass.jsx";
-import CircularIndeterminate from "../components/Loader.jsx";
 import {Toaster} from "react-hot-toast";
 import TypingAnimatedText from "../components/TypingAnimatedText.jsx";
 import SlidingCircle from "../components/SlidingCircle.jsx";
+import Loader from "../components/Loader.jsx";
 
 
 // initialize both friendList and list of FR by calling endpoints to get all friends and another one to get all FR
@@ -55,7 +55,7 @@ export function Profile() {
     // Wait until the user state is fully loaded
     if (!isLoaded) {
         console.log("Clerk is loading the user.");
-        return <CircularIndeterminate/>;
+        return <Loader/>;
     }
 
     return <div id="BLACK_BACKGROUND" className="flex flex-col w-full h-fit justify-center border-2 shadow-xl relative overflow-hidden"

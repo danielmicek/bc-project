@@ -14,10 +14,16 @@ export default function StartTestPopup({difficulty, refForStartPopup, openedStar
     const navigate = useNavigate();
     const [testStarted, setTestStarted] = useState(false);
 
+    const difficultyTransformation = {
+        Ľahký: "easy",
+        Stredný: "medium",
+        Ťažký: "hard",
+    };
+
     const goToPage = () =>
         navigate({
             pathname: `/test`,
-            search: setParams(getUniqueTestID(), difficulty)
+            search: setParams(getUniqueTestID(), difficultyTransformation[difficulty])
         });
 
     return <>
