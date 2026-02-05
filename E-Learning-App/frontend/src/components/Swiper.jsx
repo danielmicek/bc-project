@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -6,7 +6,7 @@ import 'swiper/css/pagination';
 import {Navigation, Pagination} from 'swiper/modules';
 import Question from "./Question.jsx";
 
-export default function SwiperComponent({testQuestions}) {
+export default function SwiperComponent({questions, setQuestions}) {
 
     const pagination = {
         clickable: true,
@@ -14,6 +14,11 @@ export default function SwiperComponent({testQuestions}) {
             return '<span class="' + className + '">' + (index + 1) + '</span>';
         },
     };
+
+    useEffect(() => {
+        console.log("----------------------------------------");
+        console.log(questions);
+    }, [questions])
 
     const refSwiper = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -32,12 +37,13 @@ export default function SwiperComponent({testQuestions}) {
                     setActiveIndex(refSwiper.current.activeIndex);
                 }}
             >
-                {testQuestions.map((question, index) => {
+                {questions.map((question, index) => {
+                    //console.log(question);
 
                     return <SwiperSlide className="swiper">
                         <Question activeIndex = {activeIndex}
                                   question = {question}
-                                  key = {index}
+                                  setQuestions = {setQuestions}
                         />
                     </SwiperSlide>
 

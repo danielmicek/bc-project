@@ -7,19 +7,11 @@ import {POST_test} from "../methods/fetchMethods.jsx";
 import SwiperComponent from "../components/Swiper.jsx";
 import {Button} from "@heroui/react";
 import {showOrHidePopup} from "../methods/methodsClass.jsx";
-import {easyTestMaker, hardTestMaker, mediumTestMaker} from "../methods/testMakers.jsx";
+import {testMaker} from "../methods/testMakers.jsx";
 import Loader from "../components/Loader.jsx";
 
 function getCurrentDate(){
     return new Date().toJSON().slice(0, 10);
-}
-
-async function getTestMakerBasedOnDifficulty(difficulty){
-    switch(difficulty){
-        case "easy": return await easyTestMaker()
-        case "medium": return await mediumTestMaker()
-        case "hard": return await hardTestMaker()
-    }
 }
 
 export default function Test() {
@@ -35,13 +27,10 @@ export default function Test() {
     const refForEndButton = useRef(null);
     const [openedEndTestPopup, setOpenedEndTestPopup] = useState(false);
 
-    //todo delete
-    const [testQuestions, setTestQuestions] = useState(getTestMakerBasedOnDifficulty(TEST_DIFFICULTY));
-
     useEffect(() => {
         async function loadQuestions() {
             try{
-                const tmp = await getTestMakerBasedOnDifficulty(TEST_DIFFICULTY)
+                const tmp = await testMaker(TEST_DIFFICULTY)
                 setQuestions(tmp)
             }
             finally {
@@ -51,13 +40,6 @@ export default function Test() {
         loadQuestions()
     }, [])
 
-    addEventListener("beforeunload", (event) => {
-        if(window.location.href.startsWith("http://localhost:5173/test?testID=EL-")){
-            event.preventDefault(); //zabrani refreshu
-        } //so the beforeunload event is triggered only when the user is on the test page
-    })
-
-    console.log(questions)
 
     return <>
         <div id = "BLACK_BACKGROUND" className="flex flex-col min-h-screen justify-center shadow-xl relative"
@@ -76,19 +58,21 @@ export default function Test() {
                         <>
                             <div id = "BUTTON_CONTAINER" className = "flex max-[750px]:justify-center gap-10">
                                 <Button id = "SUBMIT_TEST_BUTTON" className="bg-(--main-color-orange) font-bold" onPress={() => POST_test(searchParams.get("testID"), 50, getCurrentDate(), "C", "Silver", user.username, testQuestions)}>
-                                    Submit test
+                                    Potvrdiť test
                                 </Button>
 
                                 <Button id = "QUIT_TEST_BUTTON" className="bg-gray-600 font-bold" onPress={() => {
                                     showOrHidePopup(refForEnd, openedEndTestPopup, setOpenedEndTestPopup);
                                 }}>
-                                    Quit test
+                                    Ukončiť test
                                 </Button>
                             </div>
 
                         </>}
 
-                            <SwiperComponent testQuestions = {testQuestions}/>
+                            <SwiperComponent questions = {questions}
+                                             setQuestions = {setQuestions}
+                            />
                         </div>
                     </>
             }

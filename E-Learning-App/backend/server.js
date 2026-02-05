@@ -349,15 +349,14 @@ app.get("/api/getAllChapters", (request, response)=> {
 // first I get all the questions according to difficulty and multiselect (if it is true/false) -> the result1.rows is a list of all those questions
                                                                                  // -> if it is set to true, ic can be either singleselect or multiselect, not only multiselect (practically it means that the multiselect is allowed, it is not mandatory)
 // then, with id from each row, I find its answers in the answers table and add it to the finalList -> question from questions table + answers from answers table
-app.get("/api/getQuestionsBasedOnDifficulty/:difficulty/:multiselect", (request, response)=> {
+app.get("/api/getQuestionsBasedOnDifficulty/:difficulty/", (request, response)=> {
     let difficulty = request.params.difficulty;
-    let multiselect = request.params.multiselect;
     const finalList = []
 
-    const getQuestionsQuery = "SELECT * FROM questions WHERE difficulty = $1" + (multiselect ? " AND multiselect = $2;" : ";")
-    const getAnswersQuery = "SELECT * FROM answers WHERE question_id = $1"
+    const getQuestionsQuery = "SELECT * FROM questions WHERE difficulty = $1;"
+    const getAnswersQuery = "SELECT * FROM answers WHERE question_id = $1;"
 
-    pool.query(getQuestionsQuery, multiselect ? [difficulty, multiselect] : [difficulty])
+    pool.query(getQuestionsQuery, [difficulty])
         .then(async (result1) => {
 
             if (result1.rows.length === 0) {

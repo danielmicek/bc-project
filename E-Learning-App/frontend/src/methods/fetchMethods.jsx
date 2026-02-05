@@ -169,8 +169,8 @@ export async function GET_allChapters() {
 /*----------------------------------------------------------------------------------------------*/
 
 /*-------------GET ALL QUESTIONS OF SPECIFIC DIFFICULTY----------------------------------------------------------------*/
-export async function GET_Questions(difficulty, multiselect) {
-    const response = await fetch(`http://localhost:3000/api/getQuestionsBasedOnDifficulty/${difficulty}/${multiselect}`, {
+export async function GET_Questions(difficulty) {
+    const response = await fetch(`http://localhost:3000/api/getQuestionsBasedOnDifficulty/${difficulty}`, {
         method: "GET",
         cache: "no-store"
     })
