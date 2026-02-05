@@ -108,23 +108,33 @@ export async function DELETE_deleteFriend(userId, friendId){
 /*----------------------------------------------------------------------------------------------*/
 
 /*-------------TEST API CALLS----------------------------------------------------------------*/
-export async function POST_test(testID, points, date, grade, medal, username, structure) {
-    const x = await fetch(`http://localhost:3000/api/addTest`, {
+export async function POST_test(testID, percentage, date, grade, medal, userId, structure) {
+    const response = await fetch(`http://localhost:3000/api/addTest`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            test_id: testID,
-            points: points,
+            testId: testID,
+            percentage: percentage,
             date: date,
             grade: grade,
             medal: medal,
-            fk_username: username,
+            userId: userId,
             structure: structure
         })
     })
-    console.log(await x.text());
+    return await response.text();
+}
+
+export async function GET_allUsersTests(userId){
+    //setIsLoading(true);
+    const response = await fetch(`http://localhost:3000/api/getAllUsersTests/${userId}`, {
+        method: "GET",
+        cache: "no-store"
+    })
+    //setIsLoading(false);
+    return await response.json();
 }
 /*----------------------------------------------------------------------------------------------*/
 

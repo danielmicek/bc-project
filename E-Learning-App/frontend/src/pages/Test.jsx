@@ -7,7 +7,7 @@ import {POST_test} from "../methods/fetchMethods.jsx";
 import SwiperComponent from "../components/Swiper.jsx";
 import {Button} from "@heroui/react";
 import {showOrHidePopup} from "../methods/methodsClass.jsx";
-import {testMaker} from "../methods/testMakers.jsx";
+import {testMaker} from "../methods/testMethods.jsx";
 import Loader from "../components/Loader.jsx";
 
 function getCurrentDate(){
@@ -21,10 +21,7 @@ export default function Test() {
     const [searchParams] = useSearchParams();
     const TEST_DIFFICULTY = searchParams.get("testDifficulty")
     const [testStarted, setTestStarted] = useState(true);
-    const [easyQuestions, setEasyQuestions] = useState([]);
-    const ref = useRef(null);
     const refForEnd = useRef(null);
-    const refForEndButton = useRef(null);
     const [openedEndTestPopup, setOpenedEndTestPopup] = useState(false);
 
     useEffect(() => {
@@ -57,7 +54,7 @@ export default function Test() {
                     {testStarted && !openedEndTestPopup &&
                         <>
                             <div id = "BUTTON_CONTAINER" className = "flex max-[750px]:justify-center gap-10">
-                                <Button id = "SUBMIT_TEST_BUTTON" className="bg-(--main-color-orange) font-bold" onPress={() => POST_test(searchParams.get("testID"), 50, getCurrentDate(), "C", "Silver", user.username, testQuestions)}>
+                                <Button id = "SUBMIT_TEST_BUTTON" className="bg-(--main-color-orange) font-bold" onPress={() => POST_test(searchParams.get("testID"), 50, getCurrentDate(), "C", "Silver", user.id, JSON.stringify(questions))}>
                                     Potvrdiť test
                                 </Button>
 
@@ -77,8 +74,5 @@ export default function Test() {
                     </>
             }
         </div>
-
-
-
     </>
 }

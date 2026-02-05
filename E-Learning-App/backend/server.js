@@ -29,13 +29,11 @@ app.get("/api/getUser/:username", (request, response)=> {
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
-                response.status(404);
-                response.send("user_id: " + username + " not found.  Status code: " + response.statusCode);
+                response.status(404).send("user_id: " + username + " not found.  Status code: " + response.statusCode);
             }
             else{
-                response.status(200);
                 const foundUser = result.rows[0]
-                response.send({
+                response.status(200).send({
                     userId: foundUser.user_id,
                     userName: foundUser.username,
                     userEmail: foundUser.email,
@@ -63,8 +61,7 @@ app.post("/api/addUser", async (request, response) => {
     pool.query(insertQuery, [user_id, username, email, image_url])
         .then((result) => {
         console.log(result);
-        response.status(200);
-        response.send("User added: " + username + "  Status code: " + response.statusCode);
+        response.status(200).send("User added: " + username + "  Status code: " + response.statusCode);
     })
         .catch((error) => {
             response.status(500);
@@ -75,26 +72,54 @@ app.post("/api/addUser", async (request, response) => {
 
 // ------------------POST REQUEST - POST TEST TO DBS---------------------------------------------------------------
 app.post("/api/addTest", async (request, response) => {
-    const test_id = request.body["test_id"];
-    const points = request.body["points"];
+    const test_id = request.body["testId"];
+    const percentage = request.body["percentage"];
     const date = request.body["date"];
     const grade = request.body["grade"];
     const medal = request.body["medal"];
-    const fk_user_id = request.body["fk_user_id"];
+    const fk_user_id = request.body["userId"];
     const structure = request.body["structure"];
 
-    const insertQuery = "INSERT INTO tests (test_id, points, date, grade, medal, fk_user_id, structure) VALUES ($1, $2, $3, $4, $5, $6, $7)";
-    pool.query(insertQuery, [test_id, points, date, grade, medal, fk_user_id, JSON.stringify(structure)])
+    const insertQuery = "INSERT INTO tests (test_id, percentage, date, grade, medal, fk_user_id, structure) VALUES ($1, $2, $3, $4, $5, $6, $7)";
+    pool.query(insertQuery, [test_id, percentage, date, grade, medal, fk_user_id, JSON.stringify(structure)])
         .then((result) => {
             console.log(result);
-            response.status(200);
-            response.send("Test added: " + test_id + "  Status code: " + response.statusCode);
+            response.status(200).send("Test added: " + test_id + "  Status code: " + response.statusCode);
         })
         .catch((error) => {
             response.status(500);
             console.log(error);
         })
 })
+
+// ------------------GET REQUEST - GET ALL USER's TESTS---------------------------------------------------------------
+app.get("/api/getAllUsersTests/:userId", (request, response)=> {
+    let userId = request.params.userId;
+
+    const getQuery = "SELECT * FROM tests WHERE fk_user_id = $1";
+    pool.query(getQuery, [userId])
+        .then((result) => {
+            console.log(result);
+            if (result.rows.length === 0) {
+                response.status(404).send("No tests found");
+            }
+            else{
+                let foundTests = result.rows.map(test => ({
+                    testId: test.test_id,
+                    percentage: test.percentage,
+                    date: test.date,
+                    grade: test.grade,
+                    medal: test.medal,
+                    structure: JSON.parse(test.structure),
+                }))
+                response.status(200).send(foundTests);
+            }
+        })
+        .catch((error) => {
+            response.status(500);
+            console.log(error);
+        })
+});
 
 
 // ------------------POST REQUEST - POST FRIEND_REQUEST TO DBS---------------------------------------------------------------
@@ -171,13 +196,11 @@ app.get("/api/getAllFriendRequests/:userId", (request, response)=> {
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
-                response.status(404);
-                response.send({}); // just sending empty body, because only .status doesnt send anything, so the response.status is then undefined
+                response.status(404).send("No friend requests"); // .status doesnt send anything, so the response.status is then undefined
             }
             else{
-                response.status(200);
                 let foundFriends = result.rows.map(row => row.friend_username); // returns an array of user's friend requests
-                response.send(foundFriends);
+                response.status(200).send(foundFriends);
             }
 
         })
@@ -204,13 +227,11 @@ app.get("/api/getAllFriends/:userId", (request, response)=> {
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
-                response.status(404);
-                response.send({});
+                response.status(404).send({});
             }
             else{
                 let foundFriends = result.rows.map(row => ({friendName: row.friend_username, friendId: row.friend_id, imgUrl: row.image_url})); // returns an array of user's friends
-                response.status(200);
-                response.send(foundFriends);
+                response.status(200).send(foundFriends);
             }
         })
         .catch((error) => {
@@ -228,8 +249,7 @@ app.patch("/api/getFriendship/:userId/:friendId", (request, response)=> {
     pool.query(getQuery, [userId, friendId])
         .then((result) => {
             console.log(result);
-            response.status(200);
-            response.send(friendId);
+            response.status(200).send(friendId);
         })
         .catch((error) => {
             response.status(500);
@@ -260,8 +280,7 @@ app.delete("/api/deleteFriend/:userId/:friendId", (request, response)=> {
     pool.query(getQuery, [userId, friendId])
         .then((result) => {
             console.log(result);
-            response.status(200);
-            response.send("User " + friendId + " removed from the list");
+            response.status(200).send("User " + friendId + " removed from the list");
         })
         .catch((error) => {
             response.status(500);

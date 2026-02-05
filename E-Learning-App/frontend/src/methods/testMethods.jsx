@@ -75,6 +75,15 @@ export async function testMaker(difficulty){
     return generatedTestQuestions;
 }
 
+
+export function getBestTestScore(tests){
+    if(tests.length === 0) return "N/A"
+    let bestScore = 0
+    for(const test of tests){
+        if(test.percentage > bestScore) bestScore = test.percentage
+    }
+    return bestScore;
+}
 // ----------- HELPER METHODS --------------------------------------------------------
 
 function getRandomElementsFromArray(fromArray, toArray, numberOfElements) {

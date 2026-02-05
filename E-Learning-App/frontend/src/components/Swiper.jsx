@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -6,7 +6,7 @@ import 'swiper/css/pagination';
 import {Navigation, Pagination} from 'swiper/modules';
 import Question from "./Question.jsx";
 
-export default function SwiperComponent({questions, setQuestions}) {
+export default function SwiperComponent({questions, setQuestions = null, readOnly = false}) {
 
     const pagination = {
         clickable: true,
@@ -14,11 +14,6 @@ export default function SwiperComponent({questions, setQuestions}) {
             return '<span class="' + className + '">' + (index + 1) + '</span>';
         },
     };
-
-    useEffect(() => {
-        console.log("----------------------------------------");
-        console.log(questions);
-    }, [questions])
 
     const refSwiper = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -44,6 +39,7 @@ export default function SwiperComponent({questions, setQuestions}) {
                         <Question activeIndex = {activeIndex}
                                   question = {question}
                                   setQuestions = {setQuestions}
+                                  readOnly={readOnly}
                         />
                     </SwiperSlide>
 

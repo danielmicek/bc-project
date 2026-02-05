@@ -11,7 +11,10 @@ export default function EndTestYesOrNo({showOrHidePopup, refForEnd, openedEndPop
                 showOrHidePopup(refForEnd, openedEndPopup, setOpenedEndPopup);
             }}>No</button>
             <Link to = "/courseInfoPage" className="buttonLink">
-                <button className = "customButton yesButton" onClick={() => setTestStarted(false)}>Yes</button>
+                <button className = "customButton yesButton" onClick={() => {
+                    setTestStarted(false)
+
+                }}>Yes</button>
             </Link>
         </div>
     </>

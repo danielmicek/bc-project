@@ -6,8 +6,10 @@ import FriendList from "../components/FriendList.jsx";
 import StatCard from "../components/StatCard.jsx";
 import ClickToCopy from "../components/ClickToCopy.jsx";
 import {Button} from "@heroui/react";
-import {GET_ai_response, PUT_user} from "../methods/fetchMethods.jsx";
+import {GET_ai_response, GET_allUsersTests, PUT_user} from "../methods/fetchMethods.jsx";
 import {toast, Toaster} from "react-hot-toast";
+import {getBestTestScore} from "../methods/testMethods.jsx";
+import SwiperComponent from "../components/Swiper.jsx";
 
 
 export default function SignedInProfilePage({   userFriendList,
@@ -15,6 +17,7 @@ export default function SignedInProfilePage({   userFriendList,
                                                 setUserFriendList,
                                                 setFriendRequestList}){
     const [isLoading, setIsLoading] = useState(false);
+    const [userTests, setUserTests] = useState([]);
     const inputRef = useRef(null);
     const {user} = useUser();
 
@@ -33,8 +36,16 @@ export default function SignedInProfilePage({   userFriendList,
             } catch (e) {}
         }
         run()
-
     }, [user.username, user.emailAddresses[0].emailAddress, user.imageUrl])
+
+    useEffect(() => {
+        async function load(){
+            const tests = await GET_allUsersTests(user.id)
+            setUserTests(tests)
+        }
+        load()
+    }, [])
+
 
     return(<>
         <Toaster
@@ -56,8 +67,8 @@ export default function SignedInProfilePage({   userFriendList,
 
                         <div id = "SQUARES" className="flex min-[700px]:flex-row flex-col items-center min-[700px]:flex-wrap min-[700px]:items-start justify-start mt-[25px] gap-3 sm:gap-5 min-[1000px]:pr-5 pt-10">
                             <StatCard text="Friends" imgPath="/friends.png" number={userFriendList.length}/>
-                            <StatCard text="Finished tests" imgPath="/test.png" number={4}/>
-                            <StatCard text="Best score %" imgPath="/score.png" number={92}/>
+                            <StatCard text="Finished tests" imgPath="/test.png" number={userTests.length}/>
+                            <StatCard text="Best score %" imgPath="/score.png" number={getBestTestScore(userTests)}/>
                         </div>
                         {/*
                 todo done tests*/}
@@ -122,10 +133,16 @@ export default function SignedInProfilePage({   userFriendList,
 
                 {/*docasny buttonn s ktorym som skusal gemini api*/}
                 <Button className = "bg-(--main-color-orange) font-bold absolute bottom-0 right-0"
-                        onPress={() => GET_ai_response("Používateľ musí pred začatím testu odpovedať na všetky povinné otázky, inak nebude môcť pokračovať.")}>GET GEMINI RESPONSE</Button>
+                        onPress={() => GET_ai_response("Používateľ musí pred začatím testu odpovedať na všetky povinné otázky, inak nebude môcť pokračovať.")}>
+                    GET GEMINI RESPONSE</Button>
+                {/*docasny buttonn s ktorym som skusal get user tests z db*/}
+                <Button className = "bg-(--main-color-orange) font-bold absolute bottom-0 right-70"
+                        onPress={async () => console.log(await GET_allUsersTests(user.id))}>
+                    GET ALL USERS TESTS</Button>
 
             </div>
         </div>
+        {userTests.length > 0 && <SwiperComponent questions={userTests[0].structure} readOnly={true}/>}
 
     </>)
 }
