@@ -10,6 +10,13 @@ import {
 } from "./fetchMethods.jsx";
 import {toast} from "react-hot-toast";
 
+/**
+ *
+ * @typedef {Object} user
+ * @property {Array} emailAddresses
+ * @property {String} emailAddress
+ *
+ */
 
 export async function getUser_info(user){ // only find if a user exists
     const responseObject = await GET_user(user.username);
@@ -51,7 +58,7 @@ export async function sendFriendRequest(userUsername, user_id, friendUniqueIdent
         const params = new URLSearchParams(url.search);
         friendUsername = params.get("username");
     }
-    catch{
+    catch{ // if userUid is actual uid - not url
         friendUsername = friendUniqueIdentifier;
     }
 
@@ -62,7 +69,6 @@ export async function sendFriendRequest(userUsername, user_id, friendUniqueIdent
     }
 
     const friend_id = (await responseObject.json()).userId;
-    console.log("qqq: " + friend_id);
 
     responseObject = await GET_friendship(user_id, friend_id)
     if(responseObject.status === 200){
@@ -162,24 +168,4 @@ export async function friendListLoader(userId, setFriendList, setIsLoading){
 export function showOrHidePopup(ref, openedPopup, setOpenedPopup) {
     openedPopup === true ? ref.current.style.display = "none" : ref.current.style.display = "grid";
     setOpenedPopup((boolean_value) => !boolean_value);
-}
-
-let RIGHT_ANSWER_POINTS;
-let WRONG_ANSWER_POINTS;
-let DONT_ANSWER_POINTS
-let totalPoints;
-
-export function calculateTestResult({test}){
-    totalPoints = 0;
-    switch (test.difficulty) {
-        case "easy":
-            RIGHT_ANSWER_POINTS
-    }
-    for(let question of test){
-        for(let answer of question){
-            if(answer.selected && answer.correct){
-                totalPoints += RIGHT_ANSWER_POINTS;
-            }
-        }
-    }
 }

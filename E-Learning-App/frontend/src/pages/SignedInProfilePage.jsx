@@ -21,8 +21,8 @@ export default function SignedInProfilePage({   userFriendList,
     const inputRef = useRef(null);
     const {user} = useUser();
 
+    // save user's info such as img url, name or email to db after he changes it
     useEffect(() => {
-
         async function run(){
             try {
                 await toast.promise(
@@ -35,15 +35,17 @@ export default function SignedInProfilePage({   userFriendList,
                 );
             } catch (e) {}
         }
-        run()
+        void run()
     }, [user.username, user.emailAddresses[0].emailAddress, user.imageUrl])
 
+
+    // load all user's tests
     useEffect(() => {
         async function load(){
             const tests = await GET_allUsersTests(user.id)
             setUserTests(tests)
         }
-        load()
+        void load()
     }, [])
 
 
@@ -83,7 +85,7 @@ export default function SignedInProfilePage({   userFriendList,
                     <form className="flex h-[55px] min-[1100px]:w-[50%] w-full"
                           onSubmit={(event) => {
                               event.preventDefault(); // prevent page reload
-                              sendFriendRequest(user.username, user.id, inputRef.current.value);
+                              void sendFriendRequest(user.username, user.id, inputRef.current.value);
                               inputRef.current.value = "";
                           }}
                     >
