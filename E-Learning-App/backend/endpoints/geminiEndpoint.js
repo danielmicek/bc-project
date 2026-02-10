@@ -1,5 +1,10 @@
 import express from "express";
+import dotenv from 'dotenv';
+import {GoogleGenAI} from "@google/genai";
 
+dotenv.config(); // Load environment variables from .env file
+const AI_KEY = process.env.GEMINI_API_KEY
+const ai = new GoogleGenAI({apiKey: AI_KEY});
 const router = express.Router();
 
 // ------------------GET RESPONSE FROM GEMINI-API---------------------------------------------------------------

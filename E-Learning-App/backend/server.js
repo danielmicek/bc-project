@@ -2,7 +2,6 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import cors from "cors";
-import {GoogleGenAI} from "@google/genai";
 
 import friendsRouter from "./endpoints/friendshipEndpoints.js"
 import userRouter from "./endpoints/userEndpoints.js"
@@ -13,8 +12,6 @@ import questionRouter from "./endpoints/questionEndpoints.js"
 
 dotenv.config(); // Load environment variables from .env file
 const PORT = process.env.BACKEND_PORT || 3000;
-const AI_KEY = process.env.GEMINI_API_KEY
-const ai = new GoogleGenAI({apiKey: AI_KEY});
 const app = express();
 app.use(express.json());
 

@@ -54,7 +54,7 @@ export default function Test() {
                     {testStarted && !openedEndTestPopup &&
                         <>
                             <div id = "BUTTON_CONTAINER" className = "flex max-[750px]:justify-center gap-10">
-                                <Button id = "SUBMIT_TEST_BUTTON" className="bg-(--main-color-orange) font-bold" onPress={() => POST_test(searchParams.get("testID"), 50, getCurrentDate(), "C", "Silver", user.id, JSON.stringify(questions))}>
+                                <Button id = "SUBMIT_TEST_BUTTON" className="bg-(--main-color-orange) font-bold" onPress={() => POST_test(searchParams.get("testID"), 50, getCurrentDate(), "C", "Silver", user.id, JSON.stringify(questions), TEST_DIFFICULTY)}>
                                     Potvrdiť test
                                 </Button>
 

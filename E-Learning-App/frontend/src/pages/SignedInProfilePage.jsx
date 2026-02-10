@@ -6,7 +6,7 @@ import FriendList from "../components/FriendList.jsx";
 import StatCard from "../components/StatCard.jsx";
 import ClickToCopy from "../components/ClickToCopy.jsx";
 import {Button} from "@heroui/react";
-import {GET_ai_response, GET_allUsersTests, PUT_user} from "../methods/fetchMethods.jsx";
+import {GET_ai_response, GET_allUsersTests, POST_calculateTestResults, PUT_user} from "../methods/fetchMethods.jsx";
 import {toast, Toaster} from "react-hot-toast";
 import {getBestTestScore} from "../methods/testMethods.jsx";
 import SwiperComponent from "../components/Swiper.jsx";
@@ -133,14 +133,21 @@ export default function SignedInProfilePage({   userFriendList,
                     }}>Refresh tables ⟳</Button>
                 </div>
 
-                {/*docasny buttonn s ktorym som skusal gemini api*/}
+                {/*docasny button s ktorym som skusal gemini api*/}
                 <Button className = "bg-(--main-color-orange) font-bold absolute bottom-0 right-0"
-                        onPress={() => GET_ai_response("Používateľ musí pred začatím testu odpovedať na všetky povinné otázky, inak nebude môcť pokračovať.")}>
-                    GET GEMINI RESPONSE</Button>
-                {/*docasny buttonn s ktorym som skusal get user tests z db*/}
+                        onPress={async () => console.log(await GET_ai_response("Používateľ musí pred začatím testu odpovedať na všetky povinné otázky, inak nebude môcť pokračovať."))}>
+                    GET GEMINI RESPONSE
+                </Button>
+                {/*docasny button s ktorym som skusal get user tests z db*/}
                 <Button className = "bg-(--main-color-orange) font-bold absolute bottom-0 right-70"
                         onPress={async () => console.log(await GET_allUsersTests(user.id))}>
-                    GET ALL USERS TESTS</Button>
+                    GET ALL USERS TESTS
+                </Button>
+                {/*docasny button s ktorym som skusal kalkulaciu trest resultov*/}
+                <Button className = "bg-(--main-color-orange) font-bold absolute bottom-0 right-140"
+                        onPress={async () => console.log(await POST_calculateTestResults(userTests[0].structure, userTests[0].difficulty))}>
+                    CALCULATE TEST RESULTS
+                </Button>
 
             </div>
         </div>

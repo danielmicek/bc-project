@@ -1,11 +1,6 @@
 import {useEffect, useState} from "react";
 import {useSearchParams} from "react-router-dom";
 
-// todo pouzijem to pri kalkulacii vysledkov testu
-function getNumberOfCorrectAnswers(answers) {
-    return answers.reduce(
-        (accumulator, currentValue) => accumulator + (currentValue.correct ? 1 : 0), 0);
-}
 
 function handleClick(selectedArray, setSelectedArray, index, difficulty, answers, multiselect) {
     // neodpovedat
@@ -102,7 +97,7 @@ export default function Question({activeIndex, question, setQuestions, readOnly 
 
             <div id = "BODY" className="flex items-center justify-center text-center text-white font-bold text-xl w-[600px] pb-3">{question.body}</div>
             {<p className="text-sm font-light text-gray-500">
-                 Body: {points} {question.multiselect === true ? "| Multi-select" : "| Single-select"}</p>}
+                 Body: {points} {testDifficulty === "medium" ? (question.multiselect === true ? "| Multi-select" : "| Single-select") : ""}</p>}
 
 
             {/*<div id = "QUESTION_NUMBER" className="grid place-items-center [grid-area:1_/_1_/_2_/_2]"></div>*/}

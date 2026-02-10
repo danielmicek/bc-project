@@ -108,7 +108,7 @@ export async function DELETE_deleteFriend(userId, friendId){
 /*----------------------------------------------------------------------------------------------*/
 
 /*-------------TEST API CALLS----------------------------------------------------------------*/
-export async function POST_test(testID, percentage, date, grade, medal, userId, structure) {
+export async function POST_test(testID, percentage, date, grade, medal, userId, structure, difficulty) {
     const response = await fetch(`http://localhost:3000/api/test/addTest`, {
         method: "POST",
         headers: {
@@ -121,7 +121,23 @@ export async function POST_test(testID, percentage, date, grade, medal, userId, 
             grade: grade,
             medal: medal,
             userId: userId,
-            structure: structure
+            structure: structure,
+            difficulty: difficulty
+        })
+    })
+    return await response.text();
+}
+
+export async function POST_calculateTestResults(testStructure, testDifficulty) {
+    console.log(testStructure);
+    const response = await fetch(`http://localhost:3000/api/test/calculateTestScore`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            testStructure: testStructure,
+            testDifficulty: testDifficulty
         })
     })
     return await response.text();

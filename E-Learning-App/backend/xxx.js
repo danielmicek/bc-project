@@ -3,7 +3,6 @@ import pool from "./database.js";
 
 import dotenv from 'dotenv';
 import express from 'express';
-import {GoogleGenAI} from "@google/genai";
 
 // TODO DELETE THIS FILE
 // tento file sluzi iba cisto na naplneni 100 otazok do databazy
@@ -11,8 +10,6 @@ import {GoogleGenAI} from "@google/genai";
 
 dotenv.config(); // Load environment variables from .env file
 const PORT = process.env.BACKEND_PORT || 3000;
-const AI_KEY = process.env.GEMINI_API_KEY
-const ai = new GoogleGenAI({apiKey: AI_KEY});
 const app = express();
 app.use(express.json());
 
