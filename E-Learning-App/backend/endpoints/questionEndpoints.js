@@ -6,13 +6,15 @@ const router = express.Router();
 // ------------------GET REQUEST - GET QUESTIONS & ANSWERS OF SPECIFIC DIFFICULTY---------------------------------------------------------------
 
 // first I get all the questions according to difficulty and multiselect (if it is true/false) -> the result1.rows is a list of all those questions
-// -> if it is set to true, ic can be either singleselect or multiselect, not only multiselect (practically it means that the multiselect is allowed, it is not mandatory)
+// -> if it is set to true, it can be either singleselect or multiselect, not only multiselect (practically it means that the multiselect is allowed, it is not mandatory)
 // then, with id from each row, I find its answers in the answers table and add it to the finalList -> question from questions table + answers from answers table
-router.get("/getQuestionsBasedOnDifficulty/:difficulty", (request, response)=> {
+router.get("/getQuestionsBasedOnDifficulty/:difficulty/:testDifficulty", (request, response)=> {
     let difficulty = request.params.difficulty;
+    const testDifficulty = request.params.testDifficulty;
+    const multiselectFlag = testDifficulty !== "easy";
     const finalList = []
 
-    const getQuestionsQuery = "SELECT * FROM questions WHERE difficulty = $1;"
+    const getQuestionsQuery = "SELECT * FROM questions WHERE difficulty = $1 " + (multiselectFlag === false ? "AND multiselect = false;" : ";")
     const getAnswersQuery = "SELECT * FROM answers WHERE question_id = $1;"
 
     pool.query(getQuestionsQuery, [difficulty])

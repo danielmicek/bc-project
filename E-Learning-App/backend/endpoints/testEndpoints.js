@@ -21,7 +21,7 @@ router.get("/getAllUsersTests/:userId", (request, response)=> {
                     date: test.date,
                     grade: test.grade,
                     medal: test.medal,
-                    structure: JSON.parse(test.structure),
+                    structure: test.structure,
                     difficulty: test.difficulty
                 }))
                 response.status(200).send(foundTests);
@@ -34,35 +34,44 @@ router.get("/getAllUsersTests/:userId", (request, response)=> {
 });
 
 // ------------------POST REQUEST - POST TEST TO DBS---------------------------------------------------------------
-router.post("/addTest", async (request, response) => {
-    const test_id = request.body["testId"];
-    const percentage = request.body["percentage"];
-    const date = request.body["date"];
-    const grade = request.body["grade"];
-    const medal = request.body["medal"];
-    const fk_user_id = request.body["userId"];
-    const structure = request.body["structure"];
-    const difficulty = request.body["difficulty"];
-
+async function addTest(test_id, percentage, date, grade, medal, fk_user_id, structure, difficulty) {
     const insertQuery = "INSERT INTO tests (test_id, percentage, date, grade, medal, fk_user_id, structure, difficulty) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)";
-    pool.query(insertQuery, [test_id, percentage, date, grade, medal, fk_user_id, JSON.stringify(structure), difficulty])
-        .then((result) => {
-            console.log(result);
-            response.status(200).send("Test added: " + test_id + "  Status code: " + response.statusCode);
-        })
-        .catch((error) => {
-            response.status(500);
-            console.log(error);
-        })
-})
+    const result = await pool.query(insertQuery, [test_id, percentage, date, grade, medal, fk_user_id, JSON.stringify(structure), difficulty]);
+    return result.rowCount > 0 // if INSERT was succesfull, rows are of length at least 1 (in this case it is = 1)
+}
+
+// ------------------POST REQUEST - SUBMIT OF TEST---------------------------------------------------------------
+// first calculate TEST SCORE
+// then save the test to db
+// eventually send the calculated score to frontend
+router.post("/submitTest", (request, response)=> {
+    const userId = request.body["userId"];
+    const testStructure = request.body["testStructure"];
+    const testDifficulty = request.body["testDifficulty"];
+    const testId = request.body["testId"];
+    const fullPoints = testDifficulty === "easy" ? 13 : testDifficulty === "medium" ? 40 : 70
+
+    const calculatedResult = calculateTestScore(testStructure, testDifficulty)
+    const calculatedResultPercantage = ((calculatedResult/fullPoints) * 100).toFixed(2)
+    const grade = getGrade(calculatedResultPercantage)
+
+    if(addTest(testId, calculatedResultPercantage, getCurrentDate(), grade, getMedal(grade, testDifficulty), userId, testStructure, testDifficulty) === false){
+        response.status(500).send("Error posting test to database.");
+    }
+
+    try {
+        response.status(200).send({testResult: calculatedResultPercantage});
+    }
+    catch(error) {
+        response.status(500).send("Error during calculating test results.");
+    }
+});
 
 // ------------------POST REQUEST - CALCULATION OF TEST SCORE---------------------------------------------------------------
-router.post("/calculateTestScore", (request, response)=> {
-    const test = request.body["testStructure"];
-    const testDifficulty = request.body["testDifficulty"];
-    const EASY_QUESTION_POINTS = 3
-    const MEDIUM_QUESTION_POINTS = 5
-    const HARD_QUESTION_POINTS = 7
+function calculateTestScore(test, testDifficulty){
+    const EASY_QUESTION_POINTS = 1
+    const MEDIUM_QUESTION_POINTS = 3
+    const HARD_QUESTION_POINTS = 5
     const PENALTY = testDifficulty === "medium" ? 0.2 : testDifficulty === "hard" ? 0.3 : 0.1  // percentage; 0.1 penalty for easy test is used in case when a user does not select all the answers in the given time
     let points = 0
 
@@ -98,18 +107,33 @@ router.post("/calculateTestScore", (request, response)=> {
     }
 
     if(points < 0) points = 0
-    try {
-        response.status(200).send({points: points.toFixed(2)});
-    }
-    catch(error) {
-        response.status(500).send("Error during calculating test results.");
-    }
-});
+    return points;
+}
 
-//             ------HELPER METHOD--------
+//             ------HELPER METHODS--------
 function getNumberOfCorrectAnswers(answers) {
     return answers.reduce(
         (accumulator, currentValue) => accumulator + (currentValue.correct ? 1 : 0), 0);
+}
+
+function getCurrentDate(){
+    return new Date().toJSON().slice(0, 10);
+}
+
+function getGrade(testResult){
+    if(testResult >= 92) return "A"
+    else if(testResult < 92 && testResult >= 83) return "B"
+    else if(testResult < 83 && testResult >= 74) return "C"
+    else if(testResult < 74 && testResult >= 65) return "D"
+    else if(testResult < 65 && testResult >= 56) return "E"
+    else return "Fx"
+}
+
+function getMedal(grade, testDifficulty){
+    if(testDifficulty === "hard" && grade === "A") return "Gold"
+    else if(testDifficulty === "medium" && grade === "A") return "Silver"
+    else if(testDifficulty === "easy" && grade === "A") return "Bronze"
+    else return "None"
 }
 
 export default router;

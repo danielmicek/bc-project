@@ -169,3 +169,18 @@ export function showOrHidePopup(ref, openedPopup, setOpenedPopup) {
     openedPopup === true ? ref.current.style.display = "none" : ref.current.style.display = "grid";
     setOpenedPopup((boolean_value) => !boolean_value);
 }
+
+function getUniqueTestID() {
+    return "EL-" + crypto.randomUUID();
+}
+
+function setParams(testID, testDifficulty){
+    return "?" + new URLSearchParams({testID, testDifficulty }).toString()
+}
+
+export function goToPage(path, navigate, difficulty = null){
+    navigate({
+        pathname: path,
+        search: difficulty ? setParams(getUniqueTestID(), difficulty) : undefined
+    });
+}

@@ -48,7 +48,7 @@ function Home() {
                         </Link>
                         <SignedOut>
                             <SignInButton className = "bg-(--main-color-orange) font-bold" mode={"modal"}>
-                                <Button className = "w-full h-full">Sign in</Button>
+                                <Button className = "w-full h-full">Prihlásiť sa</Button>
                             </SignInButton>
                         </SignedOut>
                     </div>

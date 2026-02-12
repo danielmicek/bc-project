@@ -1,14 +1,14 @@
-import React, {useEffect, useRef, useState} from "react";
-import EndTestYesOrNo from "../components/EndTestYesOrNo.jsx";
+import React, {useEffect, useState} from "react";
 import Timer from "../components/Timer.jsx";
 import {useUser} from "@clerk/clerk-react";
-import {useSearchParams} from "react-router-dom";
-import {POST_test} from "../methods/fetchMethods.jsx";
+import {Link, useNavigate, useSearchParams} from "react-router-dom";
+import {POST_submitTest} from "../methods/fetchMethods.jsx";
 import SwiperComponent from "../components/Swiper.jsx";
-import {Button} from "@heroui/react";
-import {showOrHidePopup} from "../methods/methodsClass.jsx";
+import {Button, useDisclosure} from "@heroui/react";
 import {testMaker} from "../methods/testMethods.jsx";
 import Loader from "../components/Loader.jsx";
+import ModalComponent from "../components/ModalComponent.jsx";
+import {goToPage} from "../methods/methodsClass.jsx";
 
 function getCurrentDate(){
     return new Date().toJSON().slice(0, 10);
@@ -18,11 +18,16 @@ export default function Test() {
     const {user} = useUser();
     const [questions, setQuestions] = useState( []);
     const [isLoading, setIsLoading] = useState( true);
+    const [timerGoing, setTimerGoing] = useState( false);
     const [searchParams] = useSearchParams();
     const TEST_DIFFICULTY = searchParams.get("testDifficulty")
-    const [testStarted, setTestStarted] = useState(true);
-    const refForEnd = useRef(null);
-    const [openedEndTestPopup, setOpenedEndTestPopup] = useState(false);
+    const TEST_ID = searchParams.get("testID")
+    const [testGoing, setTestGoing] = useState(true);
+    const {isOpen: isOpenEndTestModal, onOpen: onOpenEndTestModal, onClose: onCloseEndTestModal} = useDisclosure();
+    const {isOpen: isOpenSubmitTestModal, onOpen: onOpenSubmitTestModal, onClose: onCloseSubmitTestModal} = useDisclosure();
+    const {isOpen: isOpenTestResultsModal, onOpen: onOpenTestResultsModal, onClose: onCloseTestResultsModal} = useDisclosure();
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function loadQuestions() {
@@ -32,46 +37,93 @@ export default function Test() {
             }
             finally {
                 setIsLoading(false)
+                setTimerGoing(true)
             }
         }
         loadQuestions()
     }, [])
 
+    // stop the timer when modal is opened
+    useEffect(() => {
+        setTimerGoing(prev => !prev)
+    }, [isOpenEndTestModal])
+
+
+
 
     return <>
+        {/*END TEST MODAL*/}
+        <ModalComponent title={"Naozaj chceš ukončiť test?"}
+                        mainText={"Zaznačené odpovede budú stratené a v teste nebude možné pokračovať."}
+                        isOpen={isOpenEndTestModal}
+                        onClose={onCloseEndTestModal}
+                        confirmButtonText = {"Áno"}
+                        declineButtonText = {"Nie"}
+                        confirmButtonclickHandler={() => navigate("/courseInfoPage")}
+        />
+        {/*SUBMIT TEST MODAL*/}
+        <ModalComponent title={"Naozaj chceš potvrdiť test?"}
+                        mainText={"Zaznačené odpovede nebude možné zmeniť."}
+                        secondaryText={"Po potvrdení sa test odošle na vyhodnotenie."}
+                        isOpen={isOpenSubmitTestModal}
+                        onClose={onCloseSubmitTestModal}
+                        confirmButtonText = {"Áno"}
+                        declineButtonText = {"Nie"}
+                        confirmButtonclickHandler={async () => {
+                            const result = await POST_submitTest(questions, TEST_DIFFICULTY, user.id, TEST_ID, setIsLoading)
+                            onCloseSubmitTestModal()
+                            onOpenTestResultsModal()
+                            setTestGoing(false)
+                            console.log(result); // todo delete when not needed anymore
+                        }}
+        />
+
         <div id = "BLACK_BACKGROUND" className="flex flex-col min-h-screen justify-center shadow-xl relative"
              style={{backgroundColor: "#050505"}}>
             {isLoading ? <Loader/> :
-            <>
-                <EndTestYesOrNo refForEnd = {refForEnd} showOrHidePopup={showOrHidePopup} setTestStarted = {setTestStarted}
-                                openedEndPopup = {openedEndTestPopup} setOpenedEndPopup = {setOpenedEndTestPopup}/>
-                <div className = "container pb-20 h-full flex flex-col items-center">
-                    {/*
-                    <div id = "ELEONORE_TEST_TEXT" className = "absolute w-[10cm] self-start pl-10 pt-10 text-[3rem] font-bold text-white" ref={ref}>eleonore test</div>
-                    */}
-                    <Timer minutes = {30}/>
+                testGoing ?
+                    <>
+                        <div className = "container pb-20 h-full flex flex-col items-center">
+                            <Timer minutes = {30} timerGoing={timerGoing}/>
 
-                    {testStarted && !openedEndTestPopup &&
-                        <>
-                            <div id = "BUTTON_CONTAINER" className = "flex max-[750px]:justify-center gap-10">
-                                <Button id = "SUBMIT_TEST_BUTTON" className="bg-(--main-color-orange) font-bold" onPress={() => POST_test(searchParams.get("testID"), 50, getCurrentDate(), "C", "Silver", user.id, JSON.stringify(questions), TEST_DIFFICULTY)}>
-                                    Potvrdiť test
-                                </Button>
+                                <>
+                                    <div id = "BUTTON_CONTAINER" className = "flex max-[750px]:justify-center gap-10">
+                                        <Button id = "SUBMIT_TEST_BUTTON" className="bg-(--main-color-orange) font-bold" onPress={onOpenSubmitTestModal}>
+                                            Potvrdiť test
+                                        </Button>
 
-                                <Button id = "QUIT_TEST_BUTTON" className="bg-gray-600 font-bold" onPress={() => {
-                                    showOrHidePopup(refForEnd, openedEndTestPopup, setOpenedEndTestPopup);
-                                }}>
-                                    Ukončiť test
-                                </Button>
-                            </div>
+                                        <Button id = "QUIT_TEST_BUTTON"  className="bg-gray-400 font-bold" onPress={onOpenEndTestModal}>
+                                            Ukončiť test
+                                        </Button>
+                                    </div>
 
-                        </>}
+                                </>
 
                             <SwiperComponent questions = {questions}
                                              setQuestions = {setQuestions}
                             />
                         </div>
                     </>
+                :
+                <div className="mt-10">
+                    {/*TEST RESULTS MODAL*/}
+                    <ModalComponent title={"Výsledky"}
+                                    mainText={"xxx"}
+                                    secondaryText={"yyy"}
+                                    isOpen={isOpenTestResultsModal}
+                                    onClose={onCloseTestResultsModal}
+                                    confirmButtonText = {"Pozrieť vyhodnotený test"}
+                                    declineButtonText = {"Späť do menu"}
+                                    confirmButtonclickHandler = {onCloseTestResultsModal}
+                                    declineButtonclickHandler = {() => goToPage("/courseInfoPage", navigate)}
+                    />
+                    <Link to="/courseInfoPage">
+                        <Button variant="light" className="bg-(--main-color-orange) font-bold absolute top-7 left-7">
+                            Späť do menu
+                        </Button>
+                    </Link>
+                    <SwiperComponent questions={questions} readOnly={true}/>
+                </div>
             }
         </div>
     </>

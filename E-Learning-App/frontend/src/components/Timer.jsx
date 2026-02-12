@@ -18,13 +18,13 @@ const renderTime = (dimension, time) => {
 };
 
 
-export default function Timer({minutes}) {
+export default function Timer({minutes, timerGoing}) {
 
     return (
         <div className="flex w-fit m-[20px] mt-15 gap-[10px] max-[750px]:justify-self-center">
 
             <CountdownCircleTimer /*MINUTES*/
-                isPlaying={true}
+                isPlaying={timerGoing}
                 size={120}
                 strokeWidth={6}
                 colors="var(--main-color-orange)"
@@ -44,7 +44,7 @@ export default function Timer({minutes}) {
 
 
             <CountdownCircleTimer  /*SECONDS*/
-                isPlaying={true}
+                isPlaying={timerGoing}
                 size={120}
                 strokeWidth={6}
                 colors="var(--main-color-orange)"

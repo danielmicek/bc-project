@@ -26,9 +26,9 @@ export default function TheNavbar() {
     const location = useLocation();
 
     const menuItems = [
-        "Home",
-        "Course",
-        "Profile",
+        "Domov",
+        "Kurz",
+        "Profil",
     ];
     return (
         <Navbar onMenuOpenChange={setIsMenuOpen} isMenuOpen={isMenuOpen}>
@@ -45,17 +45,17 @@ export default function TheNavbar() {
             <NavbarContent className="hidden sm:flex gap-4" justify="center">
                 <NavbarItem className="data-[active=true]:text-(--main-color-orange) data-[active=true]:font-bold text-xl" isActive={location.pathname === "/"}>
                     <Link to="/" color="foreground">
-                        Home
+                        Domov
                     </Link>
                 </NavbarItem>
                 <NavbarItem className="data-[active=true]:text-(--main-color-orange) data-[active=true]:font-bold text-xl" isActive={location.pathname === "/courseInfoPage"}>
                     <Link to ="/courseInfoPage">
-                        Course
+                        Kurz
                     </Link>
                 </NavbarItem>
                 <NavbarItem className="data-[active=true]:text-(--main-color-orange) data-[active=true]:font-bold text-xl" isActive={location.pathname === "/profile"}>
                     <Link to = "/profile" color="foreground">
-                        Profile
+                        Profil
                     </Link>
                 </NavbarItem>
 
@@ -66,7 +66,7 @@ export default function TheNavbar() {
                 <NavbarItem>
                     <SignedOut>
                         <SignInButton className = "bg-(--main-color-orange) font-bold" mode={"modal"}>
-                            <Button className = "w-full h-full">Sign in</Button>
+                            <Button className = "w-full h-full">Prihlásiť sa</Button>
                         </SignInButton>
                     </SignedOut>
                 </NavbarItem>

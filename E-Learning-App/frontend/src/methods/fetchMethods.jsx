@@ -128,19 +128,23 @@ export async function POST_test(testID, percentage, date, grade, medal, userId, 
     return await response.text();
 }
 
-export async function POST_calculateTestResults(testStructure, testDifficulty) {
+export async function POST_submitTest(testStructure, testDifficulty, userId, testId, setIsLoading) {
+    setIsLoading(true);
     console.log(testStructure);
-    const response = await fetch(`http://localhost:3000/api/test/calculateTestScore`, {
+    const response = await fetch(`http://localhost:3000/api/test/submitTest`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
+            userId: userId,
+            testId: testId,
             testStructure: testStructure,
             testDifficulty: testDifficulty
         })
     })
-    return await response.text();
+    setIsLoading(false)
+    return await response.json();
 }
 
 export async function GET_allUsersTests(userId){
@@ -195,8 +199,8 @@ export async function GET_allChapters() {
 /*----------------------------------------------------------------------------------------------*/
 
 /*-------------GET ALL QUESTIONS OF SPECIFIC DIFFICULTY----------------------------------------------------------------*/
-export async function GET_Questions(difficulty) {
-    const response = await fetch(`http://localhost:3000/api/questions/getQuestionsBasedOnDifficulty/${difficulty}`, {
+export async function GET_Questions(difficulty, testDifficulty) {
+    const response = await fetch(`http://localhost:3000/api/questions/getQuestionsBasedOnDifficulty/${difficulty}/${testDifficulty}`, {
         method: "GET",
         cache: "no-store"
     })

@@ -1,39 +1,41 @@
-import {Button, Card, CardBody, CardFooter, CardHeader, Divider, Image} from "@heroui/react";
-import React, {useRef, useState} from "react";
-import {Link} from "react-router-dom";
+import {Button, Card, CardBody, CardFooter, CardHeader, Divider, Image, useDisclosure} from "@heroui/react";
+import React from "react";
+import {Link, useNavigate} from "react-router-dom";
 import {useUser} from "@clerk/clerk-react";
-import {showOrHidePopup} from "../methods/methodsClass.jsx";
-import StartTestPopup from "./StartTestPopup.jsx";
-import NotSignedInPopup from "./NotSignedInPopup.jsx";
+import ModalComponent from "./ModalComponent.jsx";
+import {goToPage} from "../methods/methodsClass.jsx";
 
+// renders the orange button in each CardComponent according to its type
+// Learning -> "Zobraziť kapitoly" button
+// Test -> "Začať test" button
+// default = Chapter -> "Začať kapitolu" button
 function switchRender(type,
                       chapter = null,
                       isSignedIn,
-                      refForStartPopup,
-                      openedStartTestPopup,
-                      setOpenedStartTestPopup,
-                      refForSignedIntPopup,
-                      openedNotSignedInPopup,
-                      setOpenedNotSignedInPopup) {
+                      onOpen) {
+
     switch (type) {
         case "Learning":
             return (
-                <Link to="/learning">
-                    <Button variant="light" className="bg-(--main-color-orange) font-bold">Zobraziť kapitoly</Button>
-                </Link>
-            )
+                // after clicking on the "Zobraziť kapitoly" button, it either tells us to sign in or directly opens a new page with all chapters
+                isSignedIn ?
+                    <Link to="/learning">
+                        <Button variant="light" className="bg-(--main-color-orange) font-bold">
+                            Zobraziť kapitoly
+                        </Button>
+                    </Link>
+                        :
+                    <Button variant="light" className="bg-(--main-color-orange) font-bold" onPress={onOpen}>
+                        Zobraziť kapitoly
+                    </Button>
+                )
         case "Test":
             return (
-                <Button variant="light" className="bg-(--main-color-orange) font-bold" onPress={() => {
-                    isSignedIn ?
-                        showOrHidePopup(refForStartPopup, openedStartTestPopup, setOpenedStartTestPopup)
-                        :
-                        showOrHidePopup(refForSignedIntPopup, openedNotSignedInPopup, setOpenedNotSignedInPopup)
-                }}>
+                <Button variant="light" className="bg-(--main-color-orange) font-bold" onPress={onOpen}>
                     Začať test
                 </Button>
             )
-        default:
+        default: // for CardComponets on /learning url -> chapters
             return (
                 <Link to={`/learning/${chapter}`}>
                     <Button variant="light" className="bg-(--main-color-orange) font-bold">Začať kapitolu</Button>
@@ -54,10 +56,8 @@ export default function CardComponent({
                                           testColumn = null
                                       }) {
     const {isSignedIn} = useUser();
-    const [openedNotSignedInPopup, setOpenedNotSignedInPopup] = useState(false);
-    const [openedStartTestPopup, setOpenedStartTestPopup] = useState(false);
-    const refForStartPopup = useRef(null);
-    const refForSignedIntPopup = useRef(null);
+    const navigate = useNavigate();
+    const {isOpen, onOpen, onClose} = useDisclosure();
 
     const difficultyStyles = {
         "N/A": "bg-white text-black border-gray-300",
@@ -66,20 +66,31 @@ export default function CardComponent({
         Ťažký: "bg-red-100 text-red-700 border-red-300",
     };
 
+    const difficultyTransformation = {
+        Ľahký: "easy",
+        Stredný: "medium",
+        Ťažký: "hard",
+    };
+
     return (
         <>
             {isSignedIn ?
-                <StartTestPopup difficulty={difficulty}
-                                refForStartPopup={refForStartPopup}
-                                showOrHidePopup={showOrHidePopup}
-                                openedStartPopup={openedStartTestPopup}
-                                setOpenedStartPopup={setOpenedStartTestPopup}
+                <ModalComponent title={"Si pripravený začať test?"}
+                                mainText={"Test sa začne v momente kliknutia na tlačidlo Áno"}
+                                isOpen={isOpen}
+                                onClose={onClose}
+                                confirmButtonText = {"Áno"}
+                                declineButtonText = {"Neskôr"}
+                                confirmButtonclickHandler={() => goToPage("/test", navigate, difficultyTransformation[difficulty])}
                 />
                 :
-                <NotSignedInPopup refForSignedIntPopup={refForSignedIntPopup}
-                                  showOrHidePopup={showOrHidePopup}
-                                  openedNotSignedInPopup={openedNotSignedInPopup}
-                                  setOpenedNotSignedInPopup={setOpenedNotSignedInPopup}
+                <ModalComponent title={"Nie si prihlásený"}
+                                mainText={"Na otestovanie sa je potrebné byt prihlásený."}
+                                isOpen={isOpen}
+                                onClose={onClose}
+                                signInFlag={true}
+                                confirmButtonText = {"Prihlásiť sa"}
+                                confirmButtonclickHandler = {"Neskôr"}
                 />
             }
 
@@ -128,17 +139,12 @@ export default function CardComponent({
                         <Button variant="light" className="bg-gray-500 font-bold" onPress={onDetails}>
                             Detaiy
                         </Button>
-                        {   // orange button
-                            switchRender(
-                                type,
-                                title.split(" ")[1],  // chapter number
-                                isSignedIn,
-                                refForStartPopup,
-                                openedStartTestPopup,
-                                setOpenedStartTestPopup,
-                                refForSignedIntPopup,
-                                openedNotSignedInPopup,
-                                setOpenedNotSignedInPopup)
+                        {// orange button
+                        switchRender(
+                            type,
+                            title.split(" ")[1],  // chapter number
+                            isSignedIn,
+                            onOpen)
                         }
                     </div>
                 </CardFooter>

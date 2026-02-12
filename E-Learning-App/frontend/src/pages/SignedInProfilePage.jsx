@@ -6,11 +6,9 @@ import FriendList from "../components/FriendList.jsx";
 import StatCard from "../components/StatCard.jsx";
 import ClickToCopy from "../components/ClickToCopy.jsx";
 import {Button} from "@heroui/react";
-import {GET_ai_response, GET_allUsersTests, POST_calculateTestResults, PUT_user} from "../methods/fetchMethods.jsx";
+import {GET_ai_response, GET_allUsersTests, PUT_user} from "../methods/fetchMethods.jsx";
 import {toast, Toaster} from "react-hot-toast";
 import {getBestTestScore} from "../methods/testMethods.jsx";
-import SwiperComponent from "../components/Swiper.jsx";
-
 
 export default function SignedInProfilePage({   userFriendList,
                                                 friendRequestsList,
@@ -43,11 +41,11 @@ export default function SignedInProfilePage({   userFriendList,
     useEffect(() => {
         async function load(){
             const tests = await GET_allUsersTests(user.id)
+            console.log(tests);
             setUserTests(tests)
         }
         void load()
     }, [])
-
 
     return(<>
         <Toaster
@@ -68,9 +66,9 @@ export default function SignedInProfilePage({   userFriendList,
                         <div id = "MEMBER_SICNE" className = "relative sm:text-lg text-mf text-[#BFBBBB] max-[900px]:text-center">Member since: 15.06.2025</div>
 
                         <div id = "SQUARES" className="flex min-[700px]:flex-row flex-col items-center min-[700px]:flex-wrap min-[700px]:items-start justify-start mt-[25px] gap-3 sm:gap-5 min-[1000px]:pr-5 pt-10">
-                            <StatCard text="Friends" imgPath="/friends.png" number={userFriendList.length}/>
-                            <StatCard text="Finished tests" imgPath="/test.png" number={userTests.length}/>
-                            <StatCard text="Best score %" imgPath="/score.png" number={getBestTestScore(userTests)}/>
+                            <StatCard text="Priatelia" imgPath="/friends.png" number={userFriendList.length}/>
+                            <StatCard text="Testy" imgPath="/test.png" number={userTests.length}/>
+                            <StatCard text="Naj. skóre %" imgPath="/score.png" number={getBestTestScore(userTests)}/>
                         </div>
                         {/*
                 todo done tests*/}
@@ -143,15 +141,8 @@ export default function SignedInProfilePage({   userFriendList,
                         onPress={async () => console.log(await GET_allUsersTests(user.id))}>
                     GET ALL USERS TESTS
                 </Button>
-                {/*docasny button s ktorym som skusal kalkulaciu trest resultov*/}
-                <Button className = "bg-(--main-color-orange) font-bold absolute bottom-0 right-140"
-                        onPress={async () => console.log(await POST_calculateTestResults(userTests[0].structure, userTests[0].difficulty))}>
-                    CALCULATE TEST RESULTS
-                </Button>
 
             </div>
         </div>
-        {userTests.length > 0 && <SwiperComponent questions={userTests[0].structure} readOnly={true}/>}
-
     </>)
 }

@@ -4,7 +4,7 @@ const EASY = "easy"
 const MEDIUM = "medium"
 const HARD = "hard"
 
-export async function testMaker(difficulty){
+export async function testMaker(testDifficulty){
     let easyQuestions
     let mediumQuestions
     let hardQuestions
@@ -13,12 +13,12 @@ export async function testMaker(difficulty){
     let NUM_OF_MEDIUM_QUESTIONS;
     let NUM_OF_HARD_QUESTIONS
 
-    easyQuestions = await GET_Questions(EASY)
-    mediumQuestions = await GET_Questions(MEDIUM)
-    if(difficulty === "medium" || difficulty === "hard") hardQuestions = await GET_Questions(HARD)
+    easyQuestions = await GET_Questions(EASY, testDifficulty)
+    mediumQuestions = await GET_Questions(MEDIUM, testDifficulty)
+    if(testDifficulty === "medium" || testDifficulty === "hard") hardQuestions = await GET_Questions(HARD, testDifficulty)
 
     try{
-        switch (difficulty) {
+        switch (testDifficulty) {
             case "easy":
                 NUM_OF_EASY_QUESTIONS = 7
                 NUM_OF_MEDIUM_QUESTIONS = 3
@@ -35,7 +35,7 @@ export async function testMaker(difficulty){
         }
     }
     catch(err){
-        console.log("Error during getting questions from databse.");
+        console.log("Error during getting questions from database.");
     }
 
     // add easy questions
@@ -43,7 +43,7 @@ export async function testMaker(difficulty){
     // add medium questions
     getRandomElementsFromArray(mediumQuestions, generatedTestQuestions, NUM_OF_MEDIUM_QUESTIONS)
     // add hard questions (medium and hard test)
-    if(difficulty === "medium" || difficulty === "hard") getRandomElementsFromArray(hardQuestions, generatedTestQuestions, NUM_OF_HARD_QUESTIONS)
+    if(testDifficulty === "medium" || testDifficulty === "hard") getRandomElementsFromArray(hardQuestions, generatedTestQuestions, NUM_OF_HARD_QUESTIONS)
 
     //shuffle each question's answers (from a,b,c,d,e to e.g. c,a,d,b,e  -> e is always last)
     for(const question of generatedTestQuestions){
