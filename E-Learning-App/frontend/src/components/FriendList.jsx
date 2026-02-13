@@ -115,7 +115,7 @@ export default function FriendList({
                                        userId,
                                        isLoading
                                    }) {
-    const title = type === "friendList" ? "Priatelia" : "Žiadosti o priateľtvo";
+    const title = type === "friendList" ? "Priatelia" : "Žiadosti";
 
     return (
 

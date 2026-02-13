@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 
 export default function Loader() {
     return (
-        <Box sx={{ display: 'flex', color: "#FC9328", zIndex: "999"}} className = "absolute left-1/2 top-1/2 z-[999]">
+        <Box sx={{ display: 'flex', color: "#FC9328", zIndex: "999"}} className = "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[999]">
             <CircularProgress color="inherit"/>
         </Box>
     );

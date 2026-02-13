@@ -35,17 +35,22 @@ function handleClick(selectedArray, setSelectedArray, index, difficulty, answers
 }
 
 function styleSetter(selectedArray, index, readOnly, answer, question){
+    //console.log(question);
     if(readOnly){
         // correctly selected answer
         if(answer.selected === true && answer.correct === true){
             return { backgroundColor: "green", borderColor: "green", color: "black", fontWeight: "bold" }
         }
         // the correct answer
-        else if(answer.selected === false && answer.correct === true){
+        if(answer.selected === false && answer.correct === true){
             return { backgroundColor: "green", borderColor: "green", color: "black", fontWeight: "bold" }
         }
+        // "neodpovedať" answer
+        if(answer.selected === true && answer.correct === null){
+            return { backgroundColor: "var(--main-color-orange)", borderColor: "var(--main-color-orange)", color: "black", fontWeight: "bold" }
+        }
         // incorrectly selected answer
-        else if(answer.selected === true && answer.correct === false){
+        if(answer.selected === true && answer.correct === false){
             return { backgroundColor: "red", borderColor: "red", color: "black", fontWeight: "bold" }
         }
     }
@@ -74,6 +79,8 @@ function saveSelectedAnswersIntoTest(selectedArray, setQuestions, activeIndex){
                 selected: selectedArray[ansIndex]
             }))
         }
+        //console.log("----------------");
+        //console.log(newAnswersArray);
         return newAnswersArray
     });
 }
@@ -88,7 +95,7 @@ export default function Question({activeIndex, question, setQuestions, readOnly 
     useEffect(() => {
         if(readOnly) return
         saveSelectedAnswersIntoTest(selectedArray, setQuestions, activeIndex)
-    }, [selectedArray]); //pri zmene strany ulozim zaznacene odpovede do skutocnej struktury testu (cely JSON -> cely vygenerovany test)
+    }, [selectedArray]); //pri zakliknuti odpovede ulozim zaznacene odpovede do skutocnej struktury testu (cely JSON -> cely vygenerovany test)
 
     //console.log("xx: " + getNumberOfCorrectAnswers(question.answers))
     let i = 0

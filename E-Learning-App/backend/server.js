@@ -6,7 +6,6 @@ import cors from "cors";
 import friendsRouter from "./endpoints/friendshipEndpoints.js"
 import userRouter from "./endpoints/userEndpoints.js"
 import testRouter from "./endpoints/testEndpoints.js"
-import geminiRouter from "./endpoints/geminiEndpoint.js"
 import chapterRouter from "./endpoints/chapterEndpoints.js"
 import questionRouter from "./endpoints/questionEndpoints.js"
 
@@ -28,9 +27,6 @@ app.use("/api/user", userRouter)
 
 // ------------------TEST API-------------------------------------------------------------------------------------------
 app.use("/api/test", testRouter)
-
-// ------------------GEMINI API-----------------------------------------------------------------------------------------
-app.use("/api/ai", geminiRouter)
 
 // ------------------CHAPTER API-----------------------------------------------------------------------------------------
 app.use("/api/chapters", chapterRouter)

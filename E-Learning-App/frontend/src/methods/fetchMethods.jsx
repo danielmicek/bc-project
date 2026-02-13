@@ -108,21 +108,15 @@ export async function DELETE_deleteFriend(userId, friendId){
 /*----------------------------------------------------------------------------------------------*/
 
 /*-------------TEST API CALLS----------------------------------------------------------------*/
-export async function POST_test(testID, percentage, date, grade, medal, userId, structure, difficulty) {
-    const response = await fetch(`http://localhost:3000/api/test/addTest`, {
+// POST because we are sending body - recommended not to do so in GET requests
+export async function POST_getBestTestScore(tests) {
+    const response = await fetch(`http://localhost:3000/api/test/getBestTestScore`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            testId: testID,
-            percentage: percentage,
-            date: date,
-            grade: grade,
-            medal: medal,
-            userId: userId,
-            structure: structure,
-            difficulty: difficulty
+            tests: tests
         })
     })
     return await response.text();
@@ -158,26 +152,6 @@ export async function GET_allUsersTests(userId){
 }
 /*----------------------------------------------------------------------------------------------*/
 
-/*-------------AI API CALLS----------------------------------------------------------------*/
-export async function GET_ai_response(prompt) {
-    const response = await fetch(`http://localhost:3000/api/ai/rephrase`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            prompt: prompt
-        })
-    })
-
-    if (!response.ok) {
-        throw new Error("AI request failed");
-    }
-
-    return await response.json()
-}
-/*----------------------------------------------------------------------------------------------*/
-
 /*-------------GET NOTION ID CALL----------------------------------------------------------------*/
 export async function GET_notionId(chapter) {
     const response = await fetch(`http://localhost:3000/api/chapters/getNotionId/${chapter}`, {
@@ -198,12 +172,15 @@ export async function GET_allChapters() {
 }
 /*----------------------------------------------------------------------------------------------*/
 
-/*-------------GET ALL QUESTIONS OF SPECIFIC DIFFICULTY----------------------------------------------------------------*/
-export async function GET_Questions(difficulty, testDifficulty) {
-    const response = await fetch(`http://localhost:3000/api/questions/getQuestionsBasedOnDifficulty/${difficulty}/${testDifficulty}`, {
+/*-------------GET CREATED TEST----------------------------------------------------------------*/
+export async function GET_createTest(testDifficulty) {
+    const response = await fetch(`http://localhost:3000/api/test/createTest/${testDifficulty}`, {
         method: "GET",
         cache: "no-store"
     })
+    if(!response.ok) {
+        throw new Error("AI request failed");
+    }
     return await response.json();
 }
 /*----------------------------------------------------------------------------------------------*/

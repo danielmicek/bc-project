@@ -3,11 +3,13 @@ import pool from "../database.js";
 
 const router = express.Router();
 
-// ------------------GET REQUEST - GET QUESTIONS & ANSWERS OF SPECIFIC DIFFICULTY---------------------------------------------------------------
+//todo delete this file
 
+// ------------------GET REQUEST - GET QUESTIONS & ANSWERS OF SPECIFIC DIFFICULTY---------------------------------------------------------------
 // first I get all the questions according to difficulty and multiselect (if it is true/false) -> the result1.rows is a list of all those questions
 // -> if it is set to true, it can be either singleselect or multiselect, not only multiselect (practically it means that the multiselect is allowed, it is not mandatory)
 // then, with id from each row, I find its answers in the answers table and add it to the finalList -> question from questions table + answers from answers table
+
 router.get("/getQuestionsBasedOnDifficulty/:difficulty/:testDifficulty", (request, response)=> {
     let difficulty = request.params.difficulty;
     const testDifficulty = request.params.testDifficulty;

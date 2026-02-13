@@ -2,45 +2,44 @@ import React, {useEffect, useState} from "react";
 import Timer from "../components/Timer.jsx";
 import {useUser} from "@clerk/clerk-react";
 import {Link, useNavigate, useSearchParams} from "react-router-dom";
-import {POST_submitTest} from "../methods/fetchMethods.jsx";
+import {GET_createTest, POST_submitTest} from "../methods/fetchMethods.jsx";
 import SwiperComponent from "../components/Swiper.jsx";
 import {Button, useDisclosure} from "@heroui/react";
-import {testMaker} from "../methods/testMethods.jsx";
 import Loader from "../components/Loader.jsx";
 import ModalComponent from "../components/ModalComponent.jsx";
 import {goToPage} from "../methods/methodsClass.jsx";
 
-function getCurrentDate(){
-    return new Date().toJSON().slice(0, 10);
-}
 
 export default function Test() {
-    const {user} = useUser();
+    const {user, isLoaded: userIsLoaded} = useUser();
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const [questions, setQuestions] = useState( []);
     const [isLoading, setIsLoading] = useState( true);
     const [timerGoing, setTimerGoing] = useState( false);
-    const [searchParams] = useSearchParams();
-    const TEST_DIFFICULTY = searchParams.get("testDifficulty")
-    const TEST_ID = searchParams.get("testID")
-    const [testGoing, setTestGoing] = useState(true);
+    const [testStatus, setTestStatus] = useState("ongoing"); // "ongoing" / "paused" / "submitted" / "ended"
     const {isOpen: isOpenEndTestModal, onOpen: onOpenEndTestModal, onClose: onCloseEndTestModal} = useDisclosure();
     const {isOpen: isOpenSubmitTestModal, onOpen: onOpenSubmitTestModal, onClose: onCloseSubmitTestModal} = useDisclosure();
     const {isOpen: isOpenTestResultsModal, onOpen: onOpenTestResultsModal, onClose: onCloseTestResultsModal} = useDisclosure();
+    const TEST_DIFFICULTY = searchParams.get("testDifficulty")
+    const TEST_ID = searchParams.get("testID")
 
-    const navigate = useNavigate();
-
+    // create test
     useEffect(() => {
         async function loadQuestions() {
             try{
-                const tmp = await testMaker(TEST_DIFFICULTY)
-                setQuestions(tmp)
+                const tmp = await GET_createTest(TEST_DIFFICULTY)
+                setQuestions(tmp.createdTest)
+            }
+            catch (error) {
+                console.log(error);
             }
             finally {
                 setIsLoading(false)
                 setTimerGoing(true)
             }
         }
-        loadQuestions()
+        void loadQuestions()
     }, [])
 
     // stop the timer when modal is opened
@@ -70,21 +69,26 @@ export default function Test() {
                         confirmButtonText = {"Áno"}
                         declineButtonText = {"Nie"}
                         confirmButtonclickHandler={async () => {
+                            console.log(questions);
                             const result = await POST_submitTest(questions, TEST_DIFFICULTY, user.id, TEST_ID, setIsLoading)
                             onCloseSubmitTestModal()
                             onOpenTestResultsModal()
-                            setTestGoing(false)
-                            console.log(result); // todo delete when not needed anymore
+                            setTestStatus("submitted")
+
                         }}
         />
 
         <div id = "BLACK_BACKGROUND" className="flex flex-col min-h-screen justify-center shadow-xl relative"
              style={{backgroundColor: "#050505"}}>
-            {isLoading ? <Loader/> :
-                testGoing ?
+            {isLoading && userIsLoaded ? <Loader/> :
+                testStatus === "ongoing" ?
                     <>
                         <div className = "container pb-20 h-full flex flex-col items-center">
-                            <Timer minutes = {30} timerGoing={timerGoing}/>
+                            <Timer minutes = {1}
+                                   timerGoing={timerGoing}
+                                   setTimerGoing = {setTimerGoing}
+                                   completeHandler = {() => {}}
+                            />
 
                                 <>
                                     <div id = "BUTTON_CONTAINER" className = "flex max-[750px]:justify-center gap-10">
@@ -99,31 +103,49 @@ export default function Test() {
 
                                 </>
 
-                            <SwiperComponent questions = {questions}
-                                             setQuestions = {setQuestions}
-                            />
+                            <SwiperComponent questions = {questions} setQuestions = {setQuestions}/>
                         </div>
                     </>
-                :
-                <div className="mt-10">
-                    {/*TEST RESULTS MODAL*/}
-                    <ModalComponent title={"Výsledky"}
-                                    mainText={"xxx"}
-                                    secondaryText={"yyy"}
-                                    isOpen={isOpenTestResultsModal}
-                                    onClose={onCloseTestResultsModal}
-                                    confirmButtonText = {"Pozrieť vyhodnotený test"}
-                                    declineButtonText = {"Späť do menu"}
-                                    confirmButtonclickHandler = {onCloseTestResultsModal}
-                                    declineButtonclickHandler = {() => goToPage("/courseInfoPage", navigate)}
-                    />
-                    <Link to="/courseInfoPage">
-                        <Button variant="light" className="bg-(--main-color-orange) font-bold absolute top-7 left-7">
-                            Späť do menu
-                        </Button>
-                    </Link>
-                    <SwiperComponent questions={questions} readOnly={true}/>
-                </div>
+                : testStatus === "submitted" ?
+                    <div className="mt-10">
+                        {/*TEST RESULTS MODAL*/}
+                        <ModalComponent title={"Výsledky"}
+                                        mainText={"xxx"}
+                                        secondaryText={"yyy"}
+                                        isOpen={isOpenTestResultsModal}
+                                        onClose={onCloseTestResultsModal}
+                                        confirmButtonText = {"Pozrieť vyhodnotený test"}
+                                        declineButtonText = {"Späť do menu"}
+                                        confirmButtonclickHandler = {onCloseTestResultsModal}
+                                        declineButtonclickHandler = {() => goToPage("/courseInfoPage", navigate)}
+                        />
+                        <Link to="/courseInfoPage">
+                            <Button variant="light" className="bg-(--main-color-orange) font-bold absolute top-7 left-7">
+                                Späť do menu
+                            </Button>
+                        </Link>
+                        <SwiperComponent questions={questions} readOnly={true}/>
+                    </div>
+                : // testStatus === "submitted" -> timer ended
+                        <div className="mt-10">
+                            {/*TEST RESULTS MODAL*/}
+                            <ModalComponent title={"Čas vypršal"}
+                                            mainText={"Zaznačené odpovede boli vyhodnotené,za nezaznačené boli strhnuté body."}
+                                            secondaryText={"yyy"}
+                                            isOpen={isOpenTestResultsModal}
+                                            onClose={onCloseTestResultsModal}
+                                            confirmButtonText = {"Pozrieť vyhodnotený test"}
+                                            declineButtonText = {"Späť do menu"}
+                                            confirmButtonclickHandler = {onCloseTestResultsModal}
+                                            declineButtonclickHandler = {() => goToPage("/courseInfoPage", navigate)}
+                            />
+                            <Link to="/courseInfoPage">
+                                <Button variant="light" className="bg-(--main-color-orange) font-bold absolute top-7 left-7">
+                                    Späť do menu
+                                </Button>
+                            </Link>
+                            <SwiperComponent questions={questions} readOnly={true}/>
+                        </div>
             }
         </div>
     </>

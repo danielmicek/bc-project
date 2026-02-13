@@ -1,9 +1,21 @@
 import express from "express";
 import pool from "../database.js";
+import getQuestionsBasedOnDifficulty from "../steps/questionsSteps.js";
+import {
+    addTest,
+    calculateTestScore,
+    getBestTestScore,
+    getCurrentDate,
+    getGrade,
+    getMedal,
+    getRandomElementsFromArray,
+    shuffleArray
+} from "../steps/testSteps.js";
 
 const router = express.Router();
 
-// ------------------GET REQUEST - GET ALL USER's TESTS---------------------------------------------------------------
+// ------------------GET REQUEST - GET ALL USER's TESTS-----------------------------------------------------------------
+// sending back an object of: {all tests, best test score}
 router.get("/getAllUsersTests/:userId", (request, response)=> {
     let userId = request.params.userId;
 
@@ -24,7 +36,11 @@ router.get("/getAllUsersTests/:userId", (request, response)=> {
                     structure: test.structure,
                     difficulty: test.difficulty
                 }))
-                response.status(200).send(foundTests);
+                const bestTestScore = getBestTestScore(foundTests)
+                console.log("------------------------------------");
+                console.log(bestTestScore);
+                console.log(foundTests);
+                response.status(200).send({tests: foundTests, bestScore: bestTestScore});
             }
         })
         .catch((error) => {
@@ -33,14 +49,94 @@ router.get("/getAllUsersTests/:userId", (request, response)=> {
         })
 });
 
-// ------------------POST REQUEST - POST TEST TO DBS---------------------------------------------------------------
-async function addTest(test_id, percentage, date, grade, medal, fk_user_id, structure, difficulty) {
-    const insertQuery = "INSERT INTO tests (test_id, percentage, date, grade, medal, fk_user_id, structure, difficulty) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)";
-    const result = await pool.query(insertQuery, [test_id, percentage, date, grade, medal, fk_user_id, JSON.stringify(structure), difficulty]);
-    return result.rowCount > 0 // if INSERT was succesfull, rows are of length at least 1 (in this case it is = 1)
-}
+//----------------------------GET REQUEST - CREATE TEST-----------------------------------------------------------------
+// create test based on testDifficulty
+router.get("/createTest/:testDifficulty", async (request, response)=> {
+    let testDifficulty = request.params.testDifficulty;
+    const EASY = "easy"
+    const MEDIUM = "medium"
+    const HARD = "hard"
+    let easyQuestions
+    let mediumQuestions
+    let hardQuestions
+    let generatedTestQuestions = [];
+    let NUM_OF_EASY_QUESTIONS;
+    let NUM_OF_MEDIUM_QUESTIONS;
+    let NUM_OF_HARD_QUESTIONS
 
-// ------------------POST REQUEST - SUBMIT OF TEST---------------------------------------------------------------
+    try{
+        easyQuestions = await getQuestionsBasedOnDifficulty(EASY, testDifficulty)
+        mediumQuestions = await getQuestionsBasedOnDifficulty(MEDIUM, testDifficulty)
+        if(testDifficulty === "medium" || testDifficulty === "hard") hardQuestions = await getQuestionsBasedOnDifficulty(HARD, testDifficulty)
+
+        switch (testDifficulty) {
+            case "easy":
+                NUM_OF_EASY_QUESTIONS = 7
+                NUM_OF_MEDIUM_QUESTIONS = 3
+                break
+            case "medium":
+                NUM_OF_EASY_QUESTIONS = 5
+                NUM_OF_MEDIUM_QUESTIONS = 10
+                NUM_OF_HARD_QUESTIONS = 5
+                break
+            case "hard":
+                NUM_OF_EASY_QUESTIONS = 5
+                NUM_OF_MEDIUM_QUESTIONS = 10
+                NUM_OF_HARD_QUESTIONS = 15
+        }
+
+        // add easy questions
+        getRandomElementsFromArray(easyQuestions, generatedTestQuestions, NUM_OF_EASY_QUESTIONS)
+        // add medium questions
+        getRandomElementsFromArray(mediumQuestions, generatedTestQuestions, NUM_OF_MEDIUM_QUESTIONS)
+        // add hard questions (medium and hard test)
+        if(testDifficulty === "medium" || testDifficulty === "hard") getRandomElementsFromArray(hardQuestions, generatedTestQuestions, NUM_OF_HARD_QUESTIONS)
+
+        //shuffle each question's answers (from a,b,c,d,e to e.g. c,a,d,b,e  -> e is always last)
+        for(const question of generatedTestQuestions){
+            const lastElement = question.answers[question.answers.length - 1]
+            const allElementsExceptLast = question.answers.slice(0, -1)
+
+            shuffleArray(allElementsExceptLast)
+            question.answers = [...allElementsExceptLast, lastElement];   // the last choice - "neodpovedať" stays last after shuffle
+        }
+        /*// TODO funguje to, zakomentoval som to aby to nezralo tokeny pri kazdom nacitani stranky
+        const aiResponse =
+            await getAiResponse(
+                "You will receive JSON. Edit it in-place.\n" +
+                "GOAL: Paraphrase each item.body and each answers[i].text EXCEPT the last answer in each answers array. Preserve meaning strictly.\n" +
+                "OUTPUT (MUST):\n" +
+                "- Return ONLY raw JSON (no markdown, no ```).\n" +
+                "- Must start with [ or { and end with ] or }.\n" +
+                "- Keep EXACT same JSON structure: same keys, nesting, array lengths, and order.\n" +
+                "- Do NOT add/remove/rename keys. Do NOT add extra fields or text.\n" +
+                "- Do NOT change ids, numbers, names, units, code, punctuation that changes meaning or language (KEEP SLOVAK)\n" +
+                "- Leave the last answers element unchanged (answers[answers.length-1]).\n" +
+                "INPUT:\n" + JSON.stringify(generatedTestQuestions)
+            )
+
+        if(!aiResponse){
+            response.status(500).send({errorMessage: "Error during crating the test"});
+            return
+        }
+
+        try{
+            console.log(aiResponse);
+            generatedTestQuestions = JSON.parse(aiResponse)
+        } catch(err){
+            console.log(err);
+            return
+        }*/
+
+        response.status(200).send({createdTest: generatedTestQuestions});
+    }
+    catch(err){
+        console.log("Error during crating the test");
+        response.status(500).send({errorMessage: "Error during crating the test"});
+    }
+})
+
+// -------------------------POST REQUEST - SUBMIT OF TEST---------------------------------------------------------------
 // first calculate TEST SCORE
 // then save the test to db
 // eventually send the calculated score to frontend
@@ -50,90 +146,22 @@ router.post("/submitTest", (request, response)=> {
     const testDifficulty = request.body["testDifficulty"];
     const testId = request.body["testId"];
     const fullPoints = testDifficulty === "easy" ? 13 : testDifficulty === "medium" ? 40 : 70
+    console.log(testStructure[0].answers);
 
     const calculatedResult = calculateTestScore(testStructure, testDifficulty)
-    const calculatedResultPercantage = ((calculatedResult/fullPoints) * 100).toFixed(2)
-    const grade = getGrade(calculatedResultPercantage)
+    const calculatedResultPercentagentage = ((calculatedResult/fullPoints) * 100).toFixed(2)
+    const grade = getGrade(calculatedResultPercentagentage)
 
-    if(addTest(testId, calculatedResultPercantage, getCurrentDate(), grade, getMedal(grade, testDifficulty), userId, testStructure, testDifficulty) === false){
+    if(addTest(testId, calculatedResultPercentagentage, getCurrentDate(), grade, getMedal(grade, testDifficulty), userId, testStructure, testDifficulty) === false){
         response.status(500).send("Error posting test to database.");
     }
 
     try {
-        response.status(200).send({testResult: calculatedResultPercantage});
+        response.status(200).send({testResult: calculatedResultPercentagentage});
     }
     catch(error) {
         response.status(500).send("Error during calculating test results.");
     }
 });
-
-// ------------------POST REQUEST - CALCULATION OF TEST SCORE---------------------------------------------------------------
-function calculateTestScore(test, testDifficulty){
-    const EASY_QUESTION_POINTS = 1
-    const MEDIUM_QUESTION_POINTS = 3
-    const HARD_QUESTION_POINTS = 5
-    const PENALTY = testDifficulty === "medium" ? 0.2 : testDifficulty === "hard" ? 0.3 : 0.1  // percentage; 0.1 penalty for easy test is used in case when a user does not select all the answers in the given time
-    let points = 0
-
-    for(const question of test){ // jednotliva otazka z testu
-        if(question.answers.at(-1).selected) continue;  // ak je zvolena moznost "neodpovedat", teda posledna odpoved, nic sa nestane -> pripocita sa 0
-        for(const answer of question.answers.slice(0, -1)){  // jednotliva odpoved k otazke - neberieme do uvahy poslednu odpoved, tu vyhodnocujeme samostatne v riadkiu nad tymto
-            // EASY QUESTION - SINGLESELECT ONLY
-            if(question.difficulty === "easy"){  // single otazka
-                if(answer.selected && answer.correct) points += EASY_QUESTION_POINTS;  // ak je otazka odkiknuta a aj spravna => + body
-                else if(testDifficulty !== "easy" && answer.selected && !answer.correct) points -= (EASY_QUESTION_POINTS * PENALTY)
-            }
-            // MEDIUM MULTISELECT QUESTION
-            else if(question.difficulty === "medium" && question.multiselect){
-                if(answer.selected && answer.correct) points += MEDIUM_QUESTION_POINTS / getNumberOfCorrectAnswers(question.answers);
-                else if(testDifficulty !== "easy" && answer.selected && !answer.correct) points -= (MEDIUM_QUESTION_POINTS * PENALTY) / (question.answers.length - 1) // testDifficulty != easy pretoze pri easy testoch sa nestrhavaju boidy za nespravnu oodpoved
-            }
-            // MEDIUM SINGLESELECT QUESTION
-            else if(question.difficulty === "medium" && !question.multiselect){
-                if(answer.selected && answer.correct) points += MEDIUM_QUESTION_POINTS
-                else if(testDifficulty !== "easy" && answer.selected && !answer.correct) points -= MEDIUM_QUESTION_POINTS * PENALTY
-            }
-            // HARD MULTISELECT QUESTION
-            else if(question.difficulty === "hard" && question.multiselect){
-                if(answer.selected && answer.correct) points += HARD_QUESTION_POINTS / getNumberOfCorrectAnswers(question.answers);
-                else if(testDifficulty !== "easy" && answer.selected && !answer.correct) points -= (HARD_QUESTION_POINTS * PENALTY) / (question.answers.length - 1)  // minus 1 pretoze neberiem do uvahy poslednu moznost ktora je neodpovedat
-            }
-            // HARD SINGLESELECT QUESTION
-            else if(question.difficulty === "hard" && !question.multiselect){
-                if(answer.selected && answer.correct) points += HARD_QUESTION_POINTS;
-                else if(testDifficulty !== "easy" && answer.selected && !answer.correct) points -= HARD_QUESTION_POINTS * PENALTY
-            }
-        }
-    }
-
-    if(points < 0) points = 0
-    return points;
-}
-
-//             ------HELPER METHODS--------
-function getNumberOfCorrectAnswers(answers) {
-    return answers.reduce(
-        (accumulator, currentValue) => accumulator + (currentValue.correct ? 1 : 0), 0);
-}
-
-function getCurrentDate(){
-    return new Date().toJSON().slice(0, 10);
-}
-
-function getGrade(testResult){
-    if(testResult >= 92) return "A"
-    else if(testResult < 92 && testResult >= 83) return "B"
-    else if(testResult < 83 && testResult >= 74) return "C"
-    else if(testResult < 74 && testResult >= 65) return "D"
-    else if(testResult < 65 && testResult >= 56) return "E"
-    else return "Fx"
-}
-
-function getMedal(grade, testDifficulty){
-    if(testDifficulty === "hard" && grade === "A") return "Gold"
-    else if(testDifficulty === "medium" && grade === "A") return "Silver"
-    else if(testDifficulty === "easy" && grade === "A") return "Bronze"
-    else return "None"
-}
 
 export default router;
