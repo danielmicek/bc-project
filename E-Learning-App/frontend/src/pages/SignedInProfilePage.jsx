@@ -8,6 +8,8 @@ import ClickToCopy from "../components/ClickToCopy.jsx";
 import {Button} from "@heroui/react";
 import {GET_allUsersTests, PUT_user} from "../methods/fetchMethods.jsx";
 import {toast, Toaster} from "react-hot-toast";
+import Stats from "../components/Stats.jsx";
+import TestHistory from "../components/TestHistory.jsx";
 
 export default function SignedInProfilePage({   userFriendList,
                                                 friendRequestsList,
@@ -57,16 +59,16 @@ export default function SignedInProfilePage({   userFriendList,
                         <SignedIn>
                             <UserAvatar/>
                         </SignedIn>
-                        <div id = "GRID_CONTAINER_LOGGED_PROFILE_PAGE" className="flex flex-col relative min-[900px]:ml-20 my-12.5 min-[900px]:border-l-3 min-[900px]:border-l-(--main-color-orange) min-[900px]:pl-20 max-[900px]:border-t-3 max-[900px]:border-t-(--main-color-orange) max-[900px]:pt-20">
+                        <div id = "GRID_CONTAINER_LOGGED_PROFILE_PAGE" className="flex flex-col relative min-[900px]:ml-20 my-12.5 min-[900px]:border-l-3 min-[900px]:border-l-(--main-color-orange) items-center max-[900px]:border-t-3 max-[900px]:border-t-(--main-color-orange) max-[900px]:pt-20 lg:pl-10">
 
                             <div id = "USERNAME" className = "sm:text-4xl text-3xl font-bold mb-3.75 text-shadow-md max-[900px]:text-center text-white">{user.username}</div>
                             <div id = "EMAIL" className = "relative sm:text-xl text-lg text-[#BFBBBB] max-[900px]:text-center">{user.primaryEmailAddress.emailAddress}</div>
                             <div id = "MEMBER_SICNE" className = "relative sm:text-lg text-mf text-[#BFBBBB] max-[900px]:text-center">Member since: 15.06.2025</div>
 
-                            <div id = "SQUARES" className="flex min-[700px]:flex-row flex-col items-center min-[700px]:flex-wrap min-[700px]:items-start justify-start mt-[25px] gap-3 sm:gap-5 min-[1000px]:pr-5 pt-10">
+                            <div id = "SQUARES" className="flex items-center flex-wrap min-[700px]:items-start justify-center mt-[25px] sm:gap-5 pt-10">
                                 <StatCard text="Priatelia" imgPath="/friends.png" number={userFriendList.length}/>
                                 <StatCard text="Testy" imgPath="/test.png" number={userTests.tests.length}/>
-                                <StatCard text="Naj. skóre %" imgPath="/score.png" number={userTests.bestScore}/>
+                                <StatCard text="Celkové body" imgPath="/score.png" number={1}/>
                             </div>
                             {/*todo done tests*/}
                         </div>
@@ -101,7 +103,7 @@ export default function SignedInProfilePage({   userFriendList,
                         </form>
                     </div>
 
-                    <div className="flex min-[900px]:flex-row flex-col items-center h-fit w-[90%] mt-20 relative min-[900px]:gap-30 gap-10 pb-18 ">
+                    <div className="flex min-[900px]:flex-row flex-col border-2 items-center h-fit w-[90%] mt-20 relative min-[900px]:gap-30 gap-10 pb-18 ">
                         <FriendList type="friendList"
                                     list={userFriendList}
                                     setRequestList={setFriendRequestList}
@@ -127,6 +129,14 @@ export default function SignedInProfilePage({   userFriendList,
                             ]);
                         }}>Refresh tables ⟳</Button>
                     </div>
+
+                    <div className="flex min-[900px]:flex-row flex-col border-2 items-center h-fit w-[90%] mt-20 relative min-[900px]:gap-30 gap-10">
+                        <Stats userTests = {userTests} />
+
+                        <TestHistory/>
+                    </div>
+
+
                 </div>
             }
         </div>

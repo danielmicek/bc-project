@@ -1,5 +1,5 @@
 import * as React from 'react';
-import List from '@mui/material/List';
+import {useState} from 'react';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
@@ -11,6 +11,7 @@ import EqualizerOutlinedIcon from '@mui/icons-material/EqualizerOutlined';
 import {acceptFriendRequest, deleteFriend} from "../methods/methodsClass.jsx";
 import {Link} from "react-router-dom";
 import Loader from "./Loader.jsx";
+import StatCard from "./StatCard.jsx";
 
 
 function handleClick({
@@ -106,65 +107,26 @@ function generateList({
 }
 
 
-export default function FriendList({
-                                       type,
-                                       list,
-                                       setRequestList,
-                                       setFriendsList,
-                                       userUsername,
-                                       userId,
-                                       isLoading
+export default function Stats({
+                                  userTests
                                    }) {
-    const title = type === "friendList" ? "Priatelia" : "Žiadosti";
+
+    const [isLoading, setIsLoading] = useState(false);
 
     return (
 
-        <div className="flex relative flex-col h-[400px] max-[900px]:h-[200px] min-[900px]:w-[50%] w-full rounded-lg bg-gradient-to-br from-[#2a2a2a] to-[#1f1f1f] pt-10 px-5 shadow-[5px_10px_30px_rgba(252,147,40,0.5)] border-2 border-(--main-color-orange)">
-            <div className = "flex relative w-full gap-5 border-b-2 border-b-(--main-color-orange) items-center mb-3 pb-3">
-                <img className="shrink-0 w-[40px] h-[40px] aspect-square relative" src ={type === "friendList" ? "/friends-white.png" : "/add-user-white.png"} alt = {title}/>
-                <h1 className = "font-bold min-w-0 max-[500px]:text-3xl text-4xl text-white">{title}</h1>
-            </div>
-
+        <div className="flex relative flex-col min-h-[400px] max-[900px]:min-h-[200px] min-[900px]:w-[50%] w-full px-5 border-2 border-(--main-color-orange)">
             {isLoading ? <Loader/>
                 :
-            <div className="overflow-y-scroll no-scrollbar rounded-lg">
-                {type === "friendList" && list.length === 0 && <div className = "absolute inset-0 mt-10 flex h-full w-full items-center justify-center text-center text-gray-400 font-bold text-xl">Žiadny priatelia</div>}
-                {type === "friendRequestList" && list.length === 0 && <div className = "absolute inset-0 mt-10 flex h-full w-full items-center justify-center text-center text-gray-400 font-bold text-xl">Žiadne žiadosti o priateľstvo</div>}
-                {list.length !== 0 &&
-                    <List dense={false}>
-                        {generateList(
-                            {
-                                type,
-                                list,
-                                setRequestList,
-                                userUsername,
-                                userId,
-                                setFriendsList
-                            }
-                        )}
-                        {generateList(
-                            {
-                                type,
-                                list,
-                                setRequestList,
-                                userUsername,
-                                userId,
-                                setFriendsList
-                            }
-                        )}
-                        {generateList(
-                            {
-                                type,
-                                list,
-                                setRequestList,
-                                userUsername,
-                                userId,
-                                setFriendsList
-                            }
-                        )}
-                    </List>
-                }
-            </div>
+            <>
+                <div id = "SQUARES" className="flex min-[700px]:flex-row items-center min-[700px]:flex-wrap min-[700px]:items-start justify-start mt-[25px] gap-3 sm:gap-5 min-[1000px]:pr-5 pt-10">
+                    <StatCard text="Bronz test" imgPath="/bronze_medal.png" number={1}/>
+                    <StatCard text="Silver test" imgPath="/silver_medal.png" number={2}/>
+                    <StatCard text="Gold test" imgPath="/gold_medal.png" number={3}/>
+                    <StatCard text="Naj. skóre %" imgPath="/score.png" number={userTests.bestScore}/>
+                    <StatCard text="Posl. skóre %" imgPath="/score.png" number={userTests.bestScore}/>
+                </div>
+            </>
             }
         </div>
     );
