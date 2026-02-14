@@ -157,7 +157,7 @@ router.post("/submitTest", (request, response)=> {
     }
 
     try {
-        response.status(200).send({testResult: calculatedResultPercentagentage});
+        response.status(200).send({testResult: calculatedResultPercentagentage, testStructure: testStructure});
     }
     catch(error) {
         response.status(500).send("Error during calculating test results.");

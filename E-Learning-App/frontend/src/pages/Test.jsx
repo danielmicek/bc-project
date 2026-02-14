@@ -48,8 +48,6 @@ export default function Test() {
     }, [isOpenEndTestModal])
 
 
-
-
     return <>
         {/*END TEST MODAL*/}
         <ModalComponent title={"Naozaj chceš ukončiť test?"}
@@ -69,12 +67,11 @@ export default function Test() {
                         confirmButtonText = {"Áno"}
                         declineButtonText = {"Nie"}
                         confirmButtonclickHandler={async () => {
-                            console.log(questions);
                             const result = await POST_submitTest(questions, TEST_DIFFICULTY, user.id, TEST_ID, setIsLoading)
+                            setQuestions(result.testStructure)
                             onCloseSubmitTestModal()
                             onOpenTestResultsModal()
                             setTestStatus("submitted")
-
                         }}
         />
 
@@ -102,7 +99,6 @@ export default function Test() {
                                     </div>
 
                                 </>
-
                             <SwiperComponent questions = {questions} setQuestions = {setQuestions}/>
                         </div>
                     </>

@@ -7,7 +7,6 @@ import {Navigation, Pagination} from 'swiper/modules';
 import Question from "./Question.jsx";
 
 export default function SwiperComponent({questions, setQuestions = null, readOnly = false}) {
-
     const pagination = {
         clickable: true,
         renderBullet: function (index, className) {
@@ -33,8 +32,6 @@ export default function SwiperComponent({questions, setQuestions = null, readOnl
                 }}
             >
                 {questions.map((question, index) => {
-                    //console.log(question);
-
                     return <SwiperSlide className="swiper">
                         <Question activeIndex = {activeIndex}
                                   question = {question}
