@@ -7,7 +7,6 @@ import friendsRouter from "./endpoints/friendshipEndpoints.js"
 import userRouter from "./endpoints/userEndpoints.js"
 import testRouter from "./endpoints/testEndpoints.js"
 import chapterRouter from "./endpoints/chapterEndpoints.js"
-import questionRouter from "./endpoints/questionEndpoints.js"
 
 dotenv.config(); // Load environment variables from .env file
 const PORT = process.env.BACKEND_PORT || 3000;
@@ -31,8 +30,6 @@ app.use("/api/test", testRouter)
 // ------------------CHAPTER API-----------------------------------------------------------------------------------------
 app.use("/api/chapters", chapterRouter)
 
-// ------------------QUESTION API-----------------------------------------------------------------------------------------
-app.use("/api/questions", questionRouter)
 
 app.listen(PORT, () => {
     console.log("Server listening on port " + PORT);

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
@@ -8,7 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EqualizerOutlinedIcon from '@mui/icons-material/EqualizerOutlined';
-import {acceptFriendRequest, deleteFriend} from "../methods/methodsClass.jsx";
+import {acceptFriendRequest, deleteFriend, getAStreak, getAvgGrade} from "../methods/methodsClass.jsx";
 import {Link} from "react-router-dom";
 import Loader from "./Loader.jsx";
 import StatCard from "./StatCard.jsx";
@@ -108,26 +108,44 @@ function generateList({
 
 
 export default function Stats({
-                                  userTests
+                                  userTests,
+                                  userScore
                                    }) {
 
     const [isLoading, setIsLoading] = useState(false);
+    const [avgGrade, setAvgGrade] = useState("N/A");
+    const [aStreak, setAStreak] = useState(0);
+
+    // load avg grade
+    useEffect(() => {
+        function loadAvgGrade(){
+            setAvgGrade(getAvgGrade(userTests.tests))
+        }
+        if(userTests.tests.length > 0) loadAvgGrade()
+    }, [userTests]);
+
+    // load A-streak
+    useEffect(() => {
+        function loadAStreak(){
+            setAStreak(getAStreak(userTests.tests))
+        }
+        if(userTests.tests.length > 0) loadAStreak()
+    }, [userTests]);
+
 
     return (
+        isLoading ? <Loader/>
+            :
+        <>
+            <div id = "SQUARES" className="grid grid-cols-2 gap-3 sm:gap-5 pt-10">
+                <StatCard text="Počet testov" imgPath="/test.png" value={userTests.tests.length}/>
+                <StatCard text="Naj. skóre %" imgPath="/best.png" value={userTests.bestScore}/>
+                <StatCard text="Posl. skóre %" imgPath="/score.png" value={userTests.tests[userTests.tests.length-1].percentage}/>
+                <StatCard text="Celkové skóre" imgPath="/total-score.png" value={userScore}/>
+                <StatCard text="Priemerné %" imgPath="/grade.png" value={avgGrade}/>
+                <StatCard text="A-streak" imgPath="/streak.png" value={aStreak}/>
+            </div>
+        </>
 
-        <div className="flex relative flex-col min-h-[400px] max-[900px]:min-h-[200px] min-[900px]:w-[50%] w-full px-5 border-2 border-(--main-color-orange)">
-            {isLoading ? <Loader/>
-                :
-            <>
-                <div id = "SQUARES" className="flex min-[700px]:flex-row items-center min-[700px]:flex-wrap min-[700px]:items-start justify-start mt-[25px] gap-3 sm:gap-5 min-[1000px]:pr-5 pt-10">
-                    <StatCard text="Bronz test" imgPath="/bronze_medal.png" number={1}/>
-                    <StatCard text="Silver test" imgPath="/silver_medal.png" number={2}/>
-                    <StatCard text="Gold test" imgPath="/gold_medal.png" number={3}/>
-                    <StatCard text="Naj. skóre %" imgPath="/score.png" number={userTests.bestScore}/>
-                    <StatCard text="Posl. skóre %" imgPath="/score.png" number={userTests.bestScore}/>
-                </div>
-            </>
-            }
-        </div>
     );
 }

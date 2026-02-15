@@ -42,6 +42,16 @@ export async function PUT_user(username, email, imageUrl, userId){
 
     return await response.text();
 }
+
+export async function GET_UserScore(userId){
+    //setIsLoading(true);
+    const response = await fetch(`http://localhost:3000/api/user/getUserScore/${userId}`, {
+        method: "GET",
+        cache: "no-store"
+    })
+    //setIsLoading(false);
+    return await response.json();
+}
 /*----------------------------------------------------------------------------------------------*/
 
 /*-------------FRIENDSHIP API CALLS----------------------------------------------------------------*/

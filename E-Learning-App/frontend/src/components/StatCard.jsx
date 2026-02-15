@@ -2,7 +2,7 @@ import * as React from "react";
 
 export default function StatCard({
                                      imgPath,
-                                     number,
+                                     value,
                                      text
 }){
     return (
@@ -12,7 +12,7 @@ export default function StatCard({
                     <img className="w-[40px] h-[40px] aspect-square" src ={imgPath} alt = {text}/>
                 </div>
                 <div className="my-2">
-                    <h2 className="text-4xl font-bold text-(--main-color-orange)"><span>{number}</span> </h2>
+                    <h2 className="text-4xl font-bold text-(--main-color-orange)"><span>{value}</span> </h2>
                 </div>
 
                 <div>

@@ -50,15 +50,14 @@ function getNumberOfCorrectAnswers(answers) {
 }
 
 // post test to db
-export async function addTest(test_id, percentage, date, grade, medal, fk_user_id, structure, difficulty) {
-    const insertQuery = "INSERT INTO tests (test_id, percentage, date, grade, medal, fk_user_id, structure, difficulty) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)";
-    const result = await pool.query(insertQuery, [test_id, percentage, date, grade, medal, fk_user_id, JSON.stringify(structure), difficulty]);
+export async function addTest(test_id, points, percentage, timestamp, grade, medal, fk_user_id, structure, difficulty) {
+    const insertQuery = "INSERT INTO tests (test_id, points, percentage, timestamp, grade, medal, fk_user_id, structure, difficulty) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)";
+    const result = await pool.query(insertQuery, [test_id, points, percentage, timestamp, grade, medal, fk_user_id, JSON.stringify(structure), difficulty]);
     return result.rowCount > 0 // if INSERT was successful, rows are of length at least 1 (in this case it is = 1)
 }
 
 // get the best score of all user's tests
 export function getBestTestScore(tests){
-    if(tests.length === 0) return "N/A"
     let bestScore = 0
     for(const test of tests){
         if(test.percentage > bestScore) bestScore = test.percentage
@@ -83,9 +82,9 @@ export function shuffleArray(array) {
     }
 }
 
-// get the current date
-export function getCurrentDate(){
-    return new Date().toJSON().slice(0, 10);
+// get the current timestamp
+export function getCurrentTimestamp(){
+    return new Date().toJSON();
 }
 
 // get grade using FEI STU grade scale
@@ -103,5 +102,5 @@ export function getMedal(grade, testDifficulty){
     if(testDifficulty === "hard" && grade === "A") return "Gold"
     else if(testDifficulty === "medium" && grade === "A") return "Silver"
     else if(testDifficulty === "easy" && grade === "A") return "Bronze"
-    else return "None"
+    else return "none"
 }

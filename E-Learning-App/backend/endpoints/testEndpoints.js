@@ -5,7 +5,7 @@ import {
     addTest,
     calculateTestScore,
     getBestTestScore,
-    getCurrentDate,
+    getCurrentTimestamp,
     getGrade,
     getMedal,
     getRandomElementsFromArray,
@@ -19,27 +19,24 @@ const router = express.Router();
 router.get("/getAllUsersTests/:userId", (request, response)=> {
     let userId = request.params.userId;
 
-    const getQuery = "SELECT * FROM tests WHERE fk_user_id = $1";
+    const getQuery = "SELECT * FROM tests WHERE fk_user_id = $1 ORDER BY timestamp";
     pool.query(getQuery, [userId])
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
-                response.status(404).send("No tests found");
+                response.status(404).send({error: "No tests found", tests: result.rows, bestScore: 0});
             }
             else{
                 let foundTests = result.rows.map(test => ({
                     testId: test.test_id,
                     percentage: test.percentage,
-                    date: test.date,
+                    timestamp: test.timestamp,
                     grade: test.grade,
                     medal: test.medal,
                     structure: test.structure,
                     difficulty: test.difficulty
                 }))
                 const bestTestScore = getBestTestScore(foundTests)
-                console.log("------------------------------------");
-                console.log(bestTestScore);
-                console.log(foundTests);
                 response.status(200).send({tests: foundTests, bestScore: bestTestScore});
             }
         })
@@ -136,7 +133,7 @@ router.get("/createTest/:testDifficulty", async (request, response)=> {
     }
 })
 
-// -------------------------POST REQUEST - SUBMIT OF TEST---------------------------------------------------------------
+// -------------------------POST REQUEST - SUBMIT TEST---------------------------------------------------------------
 // first calculate TEST SCORE
 // then save the test to db
 // eventually send the calculated score to frontend
@@ -152,7 +149,7 @@ router.post("/submitTest", (request, response)=> {
     const calculatedResultPercentagentage = ((calculatedResult/fullPoints) * 100).toFixed(2)
     const grade = getGrade(calculatedResultPercentagentage)
 
-    if(addTest(testId, calculatedResultPercentagentage, getCurrentDate(), grade, getMedal(grade, testDifficulty), userId, testStructure, testDifficulty) === false){
+    if(addTest(testId, calculatedResult, calculatedResultPercentagentage, getCurrentTimestamp(), grade, getMedal(grade, testDifficulty), userId, testStructure, testDifficulty) === false){
         response.status(500).send("Error posting test to database.");
     }
 

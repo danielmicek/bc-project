@@ -184,3 +184,41 @@ export function goToPage(path, navigate, difficulty = null){
         search: difficulty ? setParams(getUniqueTestID(), difficulty) : undefined
     });
 }
+
+// filter tests by difficulty
+export function filterTestsByDifficulty(tests, difficulty){
+    return tests.filter((test) => test.difficulty === difficulty)
+}
+
+// get medal count
+export function getMedalCount(tests, medalType){
+    return tests.filter((test) => test.medal.toLowerCase() === medalType).length
+}
+
+// get most often grade
+export function getAvgGrade(tests){
+    let count = 0
+
+    for(const test of tests){
+        count += parseInt(test.percentage)
+    }
+    return (count/tests.length).toFixed(2)
+}
+
+// get A-streak - how many times in a row a user got A from a test
+export function getAStreak(tests){
+    let bestStreak = 0
+    let currentStreak = 0
+
+    for(const test of tests){
+        if(test.grade === "A") {
+            currentStreak ++
+        }
+        else{
+            if(currentStreak > bestStreak) bestStreak = currentStreak
+            currentStreak = 0
+        }
+    }
+    if(currentStreak > bestStreak) bestStreak = currentStreak // need to add this for this case [C, A, A]
+    return bestStreak
+}

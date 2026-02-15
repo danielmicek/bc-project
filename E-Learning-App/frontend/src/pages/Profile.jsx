@@ -43,13 +43,13 @@ export function Profile() {
     // Call the postRequest function when the user state changes to save the user's information to the database
     useEffect(() => {
         if (isSignedIn && user) {
-            getUser_info(user);
+            void getUser_info(user);
         }
     }, [isSignedIn, user]);
 
     // only call this when the user is signed, isLoaded changes, and the user already exists
     useEffect(() => {
-        if (isSignedIn && user !== undefined) listInitializer(user.id, setUserFriendList, setFriendRequestList, setIsLoading)
+        if (isSignedIn && user !== undefined) void listInitializer(user.id, setUserFriendList, setFriendRequestList, setIsLoading)
     }, [isLoaded]);
 
     // Wait until the user state is fully loaded
