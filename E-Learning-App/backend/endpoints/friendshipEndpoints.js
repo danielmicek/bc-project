@@ -10,7 +10,7 @@ router.get("/getAllFriends/:userId", (request, response)=> {
     const userId = request.params.userId;
 
     const getQuery = `
-        SELECT fr.friend_username, us.image_url, fr.friend_id, SUM(ts.points)
+        SELECT fr.friend_username, us.image_url, fr.friend_id, SUM(ts.points), us.email
         FROM friendship AS fr
         LEFT JOIN tests AS ts
           ON fr.friend_id = ts.fk_user_id
@@ -18,7 +18,7 @@ router.get("/getAllFriends/:userId", (request, response)=> {
           ON fr.friend_id = us.user_id
         WHERE fr.user_id = $1
           AND fr.status = 'ACCEPTED'
-        GROUP BY fr.friend_id, us.image_url, fr.friend_username;
+        GROUP BY fr.friend_id, us.image_url, fr.friend_username, us.email;
     `;
     pool.query(getQuery, [userId])
         .then((result) => {
@@ -31,6 +31,7 @@ router.get("/getAllFriends/:userId", (request, response)=> {
                     friendName: row.friend_username,
                     friendId: row.friend_id,
                     imgUrl: row.image_url,
+                    email: row.email,
                     score: row.sum === null ? 0 : parseInt(row.sum)
                 })); // returns an array of user's friends
                 response.status(200).send(foundFriends);

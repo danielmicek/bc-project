@@ -222,3 +222,11 @@ export function getAStreak(tests){
     if(currentStreak > bestStreak) bestStreak = currentStreak // need to add this for this case [C, A, A]
     return bestStreak
 }
+// get test length in minutes based on difficulty
+export function getTestLength(difficulty){
+    switch(difficulty){
+        case "easy": return 20
+        case "medium": return 30
+        case "hard": return 40
+    }
+}

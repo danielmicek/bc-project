@@ -1,12 +1,7 @@
 import React from "react";
 import {CountdownCircleTimer} from "react-countdown-circle-timer";
-
-
-const timerProps = {
-    isPlaying: true,
-    size: 120,
-    strokeWidth: 6
-};
+import {POST_submitTest} from "../methods/fetchMethods.jsx";
+import {useSearchParams} from "react-router-dom";
 
 const renderTime = (dimension, time) => {
     return (
@@ -17,9 +12,19 @@ const renderTime = (dimension, time) => {
     );
 };
 
-
-export default function Timer({minutes, timerGoing}) {
-
+export default function Timer({
+                                  minutes,
+                                  timerGoing,
+                                  TEST_DIFFICULTY,
+                                  TEST_ID,
+                                  questions,
+                                  setQuestions,
+                                  userId,
+                                  setIsLoading,
+                                  onCloseSubmitTestModal,
+                                  onOpenTestResultsModal,
+                                  setTestStatus}) {
+    const [searchParams, setSearchParams] = useSearchParams();
     return (
         <div className="flex w-fit m-[20px] mt-15 gap-[10px] max-[750px]:justify-self-center">
 
@@ -30,8 +35,13 @@ export default function Timer({minutes, timerGoing}) {
                 colors="var(--main-color-orange)"
                 duration={minutes*60}
                 initialRemainingTime={minutes*60-1}
-                onComplete={(totalElapsedTime) => {
-                    console.log("completed");
+                onComplete={async (totalElapsedTime) => {
+                    const result = await POST_submitTest(questions, TEST_DIFFICULTY, userId, TEST_ID, setIsLoading)
+                    setQuestions(result.testStructure)
+                    onCloseSubmitTestModal()
+                    onOpenTestResultsModal()
+                    setTestStatus("submitted")
+                    setSearchParams({ readOnly: "true" });
                     if(totalElapsedTime === minutes*60){
                         return {shouldRepeat:true}
                     }

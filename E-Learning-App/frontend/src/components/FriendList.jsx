@@ -41,9 +41,9 @@ function generateList({
                           setFriendsList
                       }) {
 
-    return list.map((friend) =>
-
-        React.cloneElement(
+    return list.map((friend) => {
+        console.log(friend);
+        return React.cloneElement(
             <ListItem
                 sx={{
                     backgroundColor: "white",
@@ -69,14 +69,14 @@ function generateList({
                                 <CheckCircleIcon/>
                             </IconButton>
                             :
-                            <Link to = {`/userPage/?username=${friend.friendName}`}>
+                            <Link to={`/userPage/?username=${friend.friendName}`}>
                                 <IconButton edge="end" aria-label="accept">
                                     <EqualizerOutlinedIcon/>
                                 </IconButton>
                             </Link>
                         }
 
-                        <IconButton edge="end" aria-label="delete" color = "warning"
+                        <IconButton edge="end" aria-label="delete" color="warning"
                                     onClick={() => handleClick({
                                         decision: "reject_or_delete",
                                         type: type === "friendRequestList" ? "friendRequestList" : "friendList",
@@ -99,11 +99,12 @@ function generateList({
                 </ListItemAvatar>
                 <ListItemText
                     primary={friend.friendName}
+                    secondary={friend.email}
                 />
             </ListItem>, {
                 key: friend.friendName,
-            }),
-    );
+            })
+    });
 }
 
 

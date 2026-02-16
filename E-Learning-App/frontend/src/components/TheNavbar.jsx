@@ -104,8 +104,8 @@ export default function TheNavbar() {
 }
 
 function getPagePathnameFromPageName(pageName) {
-    if(pageName === "Home") return "/";
-    else if(pageName === "Course") return "/courseInfoPage";
+    if(pageName === "Domov") return "/";
+    else if(pageName === "Kurz") return "/courseInfoPage";
     return "/" + pageName.toLowerCase();
 }
 

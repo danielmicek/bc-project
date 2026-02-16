@@ -7,7 +7,7 @@ import SwiperComponent from "../components/Swiper.jsx";
 import {Button, useDisclosure} from "@heroui/react";
 import Loader from "../components/Loader.jsx";
 import ModalComponent from "../components/ModalComponent.jsx";
-import {goToPage} from "../methods/methodsClass.jsx";
+import {getTestLength, goToPage} from "../methods/methodsClass.jsx";
 
 
 export default function Test() {
@@ -24,12 +24,15 @@ export default function Test() {
     const TEST_DIFFICULTY = searchParams.get("testDifficulty")
     const TEST_ID = searchParams.get("testID")
     const READ_ONLY = searchParams.get("readOnly") === "true"
-    // create test
+
+    // if READ_ONLY = false -> create test
+    // if READ_ONLY = true -> get test from db
+    // READ_ONLY is true only when the test is done -> either after submitting or after viewing it from Profile
+    // both cases have the same behavior
     useEffect(() => {
         async function loadQuestions() {
             try{
                 const tmp = READ_ONLY ? await GET_getTestByTestId(TEST_ID) : await GET_createdTest(TEST_DIFFICULTY)
-                console.log(tmp);
                 setQuestions(READ_ONLY ? tmp.test.structure : tmp.createdTest)
             }
             catch (error) {
@@ -43,10 +46,10 @@ export default function Test() {
         void loadQuestions()
     }, [])
 
-    // stop the timer when modal is opened
+    // stop/resume the timer when modal is opened/closed
     useEffect(() => {
         setTimerGoing(prev => !prev)
-    }, [isOpenEndTestModal])
+    }, [isOpenSubmitTestModal, isOpenEndTestModal])
 
 
     return <>
@@ -83,10 +86,19 @@ export default function Test() {
                 testStatus === "ongoing" && !READ_ONLY ?
                     <>
                         <div className = "container pb-20 h-full flex flex-col items-center">
-                            <Timer minutes = {1}
+                            <Timer minutes = {getTestLength(TEST_DIFFICULTY)}
                                    timerGoing={timerGoing}
                                    setTimerGoing = {setTimerGoing}
                                    completeHandler = {() => {}}
+                                   TEST_DIFFICULTY = {TEST_DIFFICULTY}
+                                   TEST_ID = {TEST_ID}
+                                   questions = {questions}
+                                   userId = {user.id}
+                                   setQuestions = {setQuestions}
+                                   setIsLoading = {setIsLoading}
+                                   onCloseSubmitTestModal = {onCloseSubmitTestModal}
+                                   onOpenTestResultsModal = {onOpenTestResultsModal}
+                                   setTestStatus = {setTestStatus}
                             />
 
                                 <>

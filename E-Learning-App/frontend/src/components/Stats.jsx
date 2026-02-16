@@ -31,10 +31,10 @@ export default function Stats({userTests, userScore}) {
         isLoading ? <Loader/>
             :
         <>
-            <div id = "SQUARES" className="grid grid-cols-2 gap-3 sm:gap-5 pt-10">
+            <div id = "SQUARES" className="grid w-fit grid-cols-2 gap-5 max-[900px]:mt-10 lg:mr-20">
                 <StatCard text="Počet testov" imgPath="/test.png" value={userTests.tests.length}/>
                 <StatCard text="Naj. skóre %" imgPath="/best.png" value={userTests.bestScore}/>
-                <StatCard text="Posl. skóre %" imgPath="/score.png" value={userTests.tests[userTests.tests.length-1].percentage}/>
+                <StatCard text="Posl. skóre %" imgPath="/score.png" value={userTests.tests.length > 0 ? userTests.tests[userTests.tests.length-1].percentage : "N/A"}/>
                 <StatCard text="Celkové skóre" imgPath="/total-score.png" value={userScore}/>
                 <StatCard text="Priemerné %" imgPath="/grade.png" value={avgGrade}/>
                 <StatCard text="A-streak" imgPath="/streak.png" value={aStreak}/>

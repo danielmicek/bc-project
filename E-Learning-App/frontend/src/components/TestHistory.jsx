@@ -1,4 +1,5 @@
 import * as React from "react";
+import {useEffect, useState} from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import IconButton from "@mui/material/IconButton";
@@ -7,7 +8,7 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import {Divider} from "@heroui/react";
 import ListItemText from "@mui/material/ListItemText";
 
-function generateHistory(tests) {
+function generateHistory(tests, screenWidth) {
 
     return tests.map((test, i) =>
 
@@ -54,31 +55,32 @@ function generateHistory(tests) {
                     primary={String(i+1).padStart(2, "0")}
                 />
 
-                <Divider orientation="vertical" className="h-10 mr-8"/>
+                <Divider orientation="vertical" className="h-10 mr-8 ml-3 sm:ml-0"/>
 
                 <ListItemText
                     primary={"%"}
                     secondary={test.percentage}
                     sx={{
                         color: 'var(--main-color-orange)',
+                        marginRight: screenWidth < 640 ? "30px" : "0"
                     }}
                 />
-                <ListItemText
+                {screenWidth >= 640 && <ListItemText
                     primary = {"Známka"}
                     secondary={test.grade}
                     sx={{
                         color: 'var(--main-color-orange)',
                     }}
-                />
-                <ListItemText
-                    primary = {"Medaila"}
+                />}
+                {screenWidth >= 640 && <ListItemText
+                    primary={"Medaila"}
                     secondary={test.medal}
                     sx={{
                         color: 'var(--main-color-orange)',
                     }}
-                />
+                />}
                 <ListItemText
-                    primary = {"Dátum"}
+                    primary={"Dátum"}
                     secondary={new Date(test.timestamp).toLocaleString()}
                     sx={{
                         color: 'var(--main-color-orange)',
@@ -92,6 +94,20 @@ function generateHistory(tests) {
 }
 
 export default function TestHistory({userTests}) {
+    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+        setScreenWidth(window.innerWidth);
+        function resizeHandler() {
+            setScreenWidth(window.innerWidth);
+        }
+        window.addEventListener("resize", resizeHandler);
+        console.log(screenWidth);
+        return () => {
+            window.removeEventListener("resize", resizeHandler);
+        };
+    })
+
 
     return (
 
@@ -109,11 +125,11 @@ export default function TestHistory({userTests}) {
             <div className="overflow-y-scroll no-scrollbar rounded-lg">
                 {userTests.length === 0 ?
                     <div className="absolute inset-0 mt-10 flex h-full w-full items-center justify-center
-                    text-center text-gray-400 font-bold text-xl">Žiadny priatelia
+                    text-center text-gray-400 font-bold text-xl">Žiadne testy
                     </div>
                 :
                     <List dense={false}>
-                        {generateHistory(userTests)}
+                        {generateHistory(userTests, screenWidth)}
                     </List>
                 }
             </div>
