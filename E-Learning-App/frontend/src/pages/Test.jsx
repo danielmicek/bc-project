@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import Timer from "../components/Timer.jsx";
 import {useUser} from "@clerk/clerk-react";
 import {Link, useNavigate, useSearchParams} from "react-router-dom";
-import {GET_createTest, POST_submitTest} from "../methods/fetchMethods.jsx";
+import {GET_createdTest, GET_getTestByTestId, POST_submitTest} from "../methods/fetchMethods.jsx";
 import SwiperComponent from "../components/Swiper.jsx";
 import {Button, useDisclosure} from "@heroui/react";
 import Loader from "../components/Loader.jsx";
@@ -13,7 +13,7 @@ import {goToPage} from "../methods/methodsClass.jsx";
 export default function Test() {
     const {user, isLoaded: userIsLoaded} = useUser();
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [questions, setQuestions] = useState( []);
     const [isLoading, setIsLoading] = useState( true);
     const [timerGoing, setTimerGoing] = useState( false);
@@ -23,13 +23,14 @@ export default function Test() {
     const {isOpen: isOpenTestResultsModal, onOpen: onOpenTestResultsModal, onClose: onCloseTestResultsModal} = useDisclosure();
     const TEST_DIFFICULTY = searchParams.get("testDifficulty")
     const TEST_ID = searchParams.get("testID")
-
+    const READ_ONLY = searchParams.get("readOnly") === "true"
     // create test
     useEffect(() => {
         async function loadQuestions() {
             try{
-                const tmp = await GET_createTest(TEST_DIFFICULTY)
-                setQuestions(tmp.createdTest)
+                const tmp = READ_ONLY ? await GET_getTestByTestId(TEST_ID) : await GET_createdTest(TEST_DIFFICULTY)
+                console.log(tmp);
+                setQuestions(READ_ONLY ? tmp.test.structure : tmp.createdTest)
             }
             catch (error) {
                 console.log(error);
@@ -72,13 +73,14 @@ export default function Test() {
                             onCloseSubmitTestModal()
                             onOpenTestResultsModal()
                             setTestStatus("submitted")
+                            setSearchParams({ readOnly: "true" });
                         }}
         />
 
         <div id = "BLACK_BACKGROUND" className="flex flex-col min-h-screen justify-center shadow-xl relative"
              style={{backgroundColor: "#050505"}}>
             {isLoading && userIsLoaded ? <Loader/> :
-                testStatus === "ongoing" ?
+                testStatus === "ongoing" && !READ_ONLY ?
                     <>
                         <div className = "container pb-20 h-full flex flex-col items-center">
                             <Timer minutes = {1}
@@ -120,7 +122,7 @@ export default function Test() {
                                 Späť do menu
                             </Button>
                         </Link>
-                        <SwiperComponent questions={questions} readOnly={true}/>
+                        <SwiperComponent questions={questions}/>
                     </div>
                 : // testStatus === "submitted" -> timer ended
                         <div className="mt-10">
@@ -140,7 +142,7 @@ export default function Test() {
                                     Späť do menu
                                 </Button>
                             </Link>
-                            <SwiperComponent questions={questions} readOnly={true}/>
+                            <SwiperComponent questions={questions}/>
                         </div>
             }
         </div>

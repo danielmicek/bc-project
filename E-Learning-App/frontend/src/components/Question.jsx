@@ -86,14 +86,15 @@ function saveSelectedAnswersIntoTest(selectedArray, setQuestions, activeIndex){
 }
 
 // the active index is the swiper page
-export default function Question({activeIndex, question, setQuestions, readOnly = false}) {
+export default function Question({activeIndex, question, setQuestions}) {
     const[selectedArray, setSelectedArray] = useState([false, false, false, false, false]);
     const [searchParams] = useSearchParams();
     const testDifficulty = searchParams.get("testDifficulty")
+    const READ_ONLY = searchParams.get("readOnly") === "true"
     const points = getPoints(question.difficulty)
 
     useEffect(() => {
-        if(readOnly) return
+        if(READ_ONLY) return
         saveSelectedAnswersIntoTest(selectedArray, setQuestions, activeIndex)
     }, [selectedArray]); //pri zakliknuti odpovede ulozim zaznacene odpovede do skutocnej struktury testu (cely JSON -> cely vygenerovany test)
 
@@ -112,8 +113,8 @@ export default function Question({activeIndex, question, setQuestions, readOnly 
         <ul id = "ANSWERS" className="relative flex flex-col gap-[20px] mb-[50px] justify-self-center self-center w-[550px] h-fit text-white max-[750px]:w-[60vw] mt-3 ">
             {question.answers.map((answer, i) => (
                     <li key = {i} className = "ans a"
-                        style = {styleSetter(selectedArray, i, readOnly, answer, question)}
-                        onClick={() => readOnly ? undefined : handleClick(selectedArray, setSelectedArray, i, testDifficulty, question.answers, question.multiselect)}>{question.answers[i].text}
+                        style = {styleSetter(selectedArray, i, READ_ONLY, answer, question)}
+                        onClick={() => READ_ONLY ? undefined : handleClick(selectedArray, setSelectedArray, i, testDifficulty, question.answers, question.multiselect)}>{question.answers[i].text}
                     </li>
                 )
             )}

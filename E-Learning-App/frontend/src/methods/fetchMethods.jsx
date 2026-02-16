@@ -132,6 +132,16 @@ export async function POST_getBestTestScore(tests) {
     return await response.text();
 }
 
+export async function GET_getTestByTestId(testId){
+    //setIsLoading(true);
+    const response = await fetch(`http://localhost:3000/api/test/getTestByTestId/${testId}`, {
+        method: "GET",
+        cache: "no-store"
+    })
+    //setIsLoading(false);
+    return await response.json();
+}
+
 export async function POST_submitTest(testStructure, testDifficulty, userId, testId, setIsLoading) {
     setIsLoading(true);
     console.log(testStructure);
@@ -160,6 +170,17 @@ export async function GET_allUsersTests(userId){
     //setIsLoading(false);
     return await response.json();
 }
+
+export async function GET_createdTest(testDifficulty) {
+    const response = await fetch(`http://localhost:3000/api/test/createTest/${testDifficulty}`, {
+        method: "GET",
+        cache: "no-store"
+    })
+    if(!response.ok) {
+        throw new Error("AI request failed");
+    }
+    return await response.json();
+}
 /*----------------------------------------------------------------------------------------------*/
 
 /*-------------GET NOTION ID CALL----------------------------------------------------------------*/
@@ -178,19 +199,6 @@ export async function GET_allChapters() {
         method: "GET",
         cache: "no-store"
     })
-    return await response.json();
-}
-/*----------------------------------------------------------------------------------------------*/
-
-/*-------------GET CREATED TEST----------------------------------------------------------------*/
-export async function GET_createTest(testDifficulty) {
-    const response = await fetch(`http://localhost:3000/api/test/createTest/${testDifficulty}`, {
-        method: "GET",
-        cache: "no-store"
-    })
-    if(!response.ok) {
-        throw new Error("AI request failed");
-    }
     return await response.json();
 }
 /*----------------------------------------------------------------------------------------------*/

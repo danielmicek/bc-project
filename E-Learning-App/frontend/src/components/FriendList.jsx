@@ -26,9 +26,9 @@ function handleClick({
                      imgUrl}) {
 
     if (decision === "accept") {
-        acceptFriendRequest(userUsername, friendName, userId, friendId, setFriendsList, setRequestList, imgUrl);
+        void acceptFriendRequest(userUsername, friendName, userId, friendId, setFriendsList, setRequestList, imgUrl);
     } else {
-        deleteFriend(type === "friendRequestList"? "FR" : "F", userUsername, friendName, userId, friendId, setFriendsList, setRequestList);
+        void deleteFriend(type === "friendRequestList"? "FR" : "F", userUsername, friendName, userId, friendId, setFriendsList, setRequestList);
     }
 }
 
@@ -131,9 +131,12 @@ export default function FriendList({
             {isLoading ? <Loader/>
                 :
             <div className="overflow-y-scroll no-scrollbar rounded-lg">
-                {type === "friendList" && list.length === 0 && <div className = "absolute inset-0 mt-10 flex h-full w-full items-center justify-center text-center text-gray-400 font-bold text-xl">Žiadny priatelia</div>}
-                {type === "friendRequestList" && list.length === 0 && <div className = "absolute inset-0 mt-10 flex h-full w-full items-center justify-center text-center text-gray-400 font-bold text-xl">Žiadne žiadosti o priateľstvo</div>}
-                {list.length !== 0 &&
+                {list.length === 0 ?
+                    <div className = "absolute inset-0 mt-10 flex h-full w-full items-center justify-center text-center
+                    text-gray-400 font-bold text-xl">
+                        {type === "friendList" ? "Žiadny priatelia" : "Žiadne žiadosti o priateľstvo"}
+                    </div>
+                    :
                     <List dense={false}>
                         {generateList(
                             {

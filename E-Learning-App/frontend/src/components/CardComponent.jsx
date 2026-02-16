@@ -81,7 +81,7 @@ export default function CardComponent({
                                 onClose={onClose}
                                 confirmButtonText = {"Áno"}
                                 declineButtonText = {"Neskôr"}
-                                confirmButtonclickHandler={() => goToPage("/test", navigate, difficultyTransformation[difficulty])}
+                                confirmButtonclickHandler={() => goToPage("/test", navigate, false, difficultyTransformation[difficulty])}
                 />
                 :
                 <ModalComponent title={"Nie si prihlásený"}
@@ -90,7 +90,7 @@ export default function CardComponent({
                                 onClose={onClose}
                                 signInFlag={true}
                                 confirmButtonText = {"Prihlásiť sa"}
-                                confirmButtonclickHandler = {"Neskôr"}
+                                declineButtonText = {"Neskôr"}
                 />
             }
 

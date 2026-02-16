@@ -19,7 +19,7 @@ export default function BasicSparkLineComponent({tests, title}) {
     return (
         <>
             <h1 className = "text-white font-bold text-3xl mb-10">{title}</h1>
-            <Stack direction="column" sx={{ width: '70%' }}>
+            <Stack direction="column" sx={{ width: '80%' }}>
                 <Stack direction="column" sx={{ width: '100%' }}>
                     <Box sx={{ flexGrow: 1 }}>
                         <SparkLineChart

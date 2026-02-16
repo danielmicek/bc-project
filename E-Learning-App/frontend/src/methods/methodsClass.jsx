@@ -174,14 +174,14 @@ function getUniqueTestID() {
     return "EL-" + crypto.randomUUID();
 }
 
-function setParams(testID, testDifficulty){
-    return "?" + new URLSearchParams({testID, testDifficulty }).toString()
+function setParams(testID, testDifficulty, readOnly){
+    return "?" + new URLSearchParams({testID, testDifficulty, readOnly}).toString()
 }
 
-export function goToPage(path, navigate, difficulty = null){
+export function goToPage(path, navigate, readOnly = null, difficulty = null){
     navigate({
         pathname: path,
-        search: difficulty ? setParams(getUniqueTestID(), difficulty) : undefined
+        search: difficulty ? setParams(getUniqueTestID(), difficulty, readOnly) : undefined
     });
 }
 

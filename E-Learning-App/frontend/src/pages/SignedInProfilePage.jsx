@@ -15,7 +15,7 @@ import {GET_allUsersTests, GET_UserScore, PUT_user} from "../methods/fetchMethod
 import {toast, Toaster} from "react-hot-toast";
 import Stats from "../components/Stats.jsx";
 import TestHistory from "../components/TestHistory.jsx";
-import ListComponent from "../components/ListComponent.jsx";
+import LeaderBoard from "../components/LeaderBoard.jsx";
 import BarChartComponent from "../components/BarChartComponent.jsx";
 import PieChartComponent from "../components/PieChartComponent.jsx";
 import BasicSparkLineComponent from "../components/SparkLineChartComponent.jsx";
@@ -105,7 +105,7 @@ export default function SignedInProfilePage({   userFriendList,
                         <SignedIn>
                             <UserAvatar/>
                         </SignedIn>
-                        <div id = "GRID_CONTAINER_LOGGED_PROFILE_PAGE" className="flex flex-col relative min-[900px]:ml-20 my-12.5 min-[900px]:border-l-2 min-[900px]:border-l-[#545454] items-center max-[900px]:border-t-2 max-[900px]:border-t-gray-[#545454] max-[900px]:pt-20 lg:pl-10">
+                        <div id = "GRID_CONTAINER_LOGGED_PROFILE_PAGE" className="flex flex-col relative min-[900px]:ml-20 my-12.5 min-[900px]:border-l-2 min-[900px]:border-l-[#545454] items-center max-[900px]:border-t-2 max-[900px]:border-t-[#545454] max-[900px]:pt-20 lg:pl-10">
 
                             <div id = "USERNAME" className = "sm:text-4xl text-3xl font-bold mb-3.75 text-shadow-md max-[900px]:text-center text-white">{user.username}</div>
                             <div id = "EMAIL" className = "relative sm:text-xl text-lg text-[#BFBBBB] max-[900px]:text-center">{user.primaryEmailAddress.emailAddress}</div>
@@ -203,17 +203,18 @@ export default function SignedInProfilePage({   userFriendList,
                         </div>
                     </div>
 
-                    <Divider className="bg-gray-500 w-[70%] mb-25"/>
+                    <Divider className="bg-gray-500 w-[50%] mb-25"/>
 
                     <BasicSparkLineComponent title = {"Graf progresu v čase"} tests={userTests.tests}/>
 
-                    <TestHistory/>
+                    <TestHistory userTests={userTests.tests}/>
 
-                    <ListComponent title = {"Rebríček priateľov"}
-                                   friends = {userFriendList}
-                                   user = {user}
-                                   userScore = {userScore}
+                    <LeaderBoard title = {"Rebríček priateľov"}
+                                 friends = {userFriendList}
+                                 user = {user}
+                                 userScore = {userScore}
                     />
+
                 </div>
             }
         </div>

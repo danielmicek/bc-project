@@ -46,6 +46,27 @@ router.get("/getAllUsersTests/:userId", (request, response)=> {
         })
 });
 
+// ------------------GET REQUEST - GET TEST BY TEST ID-----------------------------------------------------------------
+router.get("/getTestByTestId/:testId", (request, response)=> {
+    let testId = request.params.testId;
+
+    const getQuery = "SELECT * FROM tests WHERE test_id = $1 ORDER BY timestamp";
+    pool.query(getQuery, [testId])
+        .then((result) => {
+            console.log(result);
+            if (result.rows.length === 0) {
+                response.status(404).send({error: "Test not found", tests: result.rows, bestScore: 0});
+            }
+            else{
+                response.status(200).send({test: result.rows[0]});
+            }
+        })
+        .catch((error) => {
+            response.status(500);
+            console.log(error);
+        })
+});
+
 //----------------------------GET REQUEST - CREATE TEST-----------------------------------------------------------------
 // create test based on testDifficulty
 router.get("/createTest/:testDifficulty", async (request, response)=> {
