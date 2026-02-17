@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {GET_notionId} from "../methods/fetchMethods.jsx";
+import {GET_notionId} from "../methods/fetchMethods.js";
 import {Button} from "@heroui/react";
 import {Link} from "react-router-dom";
 
@@ -12,7 +12,7 @@ export default function Chapter() {
             const data = await GET_notionId(chapter);
             setNotionPageId(data.notionId);
         }
-        loadChapter();
+        void loadChapter();
     }, [])
 
     return(

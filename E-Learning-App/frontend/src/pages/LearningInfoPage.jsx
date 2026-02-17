@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import CardComponent from "../components/CardComponent.jsx";
 import {Button} from "@heroui/react";
 import {Link} from "react-router-dom";
-import {GET_allChapters} from "../methods/fetchMethods.jsx";
+import {GET_allChapters} from "../methods/fetchMethods.js";
 
 export default function LearningInfoPage() {
     const [notionPages, setNotionPages] = useState([]);
@@ -12,10 +12,8 @@ export default function LearningInfoPage() {
             const data = await GET_allChapters();
             setNotionPages(data);
         }
-        loadChapters();
+        void loadChapters();
     }, [])
-
-    console.log(notionPages);
 
     return (
         <div id = "BLACK_BACKGROUND" className="flex flex-col p-5 w-full h-fit justify-center shadow-xl relative"

@@ -7,7 +7,7 @@ import {
     PATCH_acceptFriendRequest,
     POST_friendship,
     POST_user
-} from "./fetchMethods.jsx";
+} from "./fetchMethods.js";
 import {toast} from "react-hot-toast";
 
 /**
@@ -88,7 +88,6 @@ export async function sendFriendRequest(userUsername, user_id, friendUniqueIdent
     }
 }
 
-
 // accept the friend-request from friend_username user
 export async function acceptFriendRequest(user_username, friend_username, userId, friendId, setUserFriendsList, setUserFriendRequestList, imgUrl){
 
@@ -165,13 +164,8 @@ export async function friendListLoader(userId, setFriendList, setIsLoading){
     setFriendList(await result.json()); // different than method friendRequestListLoader, because this endpoint returns an object of users, the friendRequestListLoader returns an array of usernames
 }
 
-export function showOrHidePopup(ref, openedPopup, setOpenedPopup) {
-    openedPopup === true ? ref.current.style.display = "none" : ref.current.style.display = "grid";
-    setOpenedPopup((boolean_value) => !boolean_value);
-}
-
-function getUniqueTestID() {
-    return "EL-" + crypto.randomUUID();
+export function getUniqueTestID(prefix) {
+    return prefix + "-" + crypto.randomUUID();
 }
 
 function setParams(testID, testDifficulty, readOnly){
@@ -181,7 +175,7 @@ function setParams(testID, testDifficulty, readOnly){
 export function goToPage(path, navigate, readOnly = null, difficulty = null){
     navigate({
         pathname: path,
-        search: difficulty ? setParams(getUniqueTestID(), difficulty, readOnly) : undefined
+        search: difficulty ? setParams(getUniqueTestID("EL"), difficulty, readOnly) : undefined
     });
 }
 
@@ -229,4 +223,24 @@ export function getTestLength(difficulty){
         case "medium": return 30
         case "hard": return 40
     }
+}
+
+// find if a gold medal exists
+export function findGoldMedal(tests){
+    for(const test of tests){
+        if(test.difficulty === "hard" && test.medal === "gold") return true
+    }
+    return false
+}
+
+// get the highest percentage of the test with a gold medal reward
+export function getHighestGoldMedalTestPercentage(tests){
+    let highestPercentage = 0
+
+    for(const test of tests){
+        if(test.difficulty === "hard" && test.medal === "gold"){
+            if(test.percentage > highestPercentage) highestPercentage = test.percentage
+        }
+    }
+    return highestPercentage
 }

@@ -6,7 +6,8 @@ export default function BigStatCard({
                                         iconPath
                                     }) {
     return (
-        <div className="w-[300px] aspect-square bg-gray-600 shadow-[5px_10px_30px_rgba(252,147,40,0.5)] rounded-lg border-2 border-(--main-color-orange) p-8 hover:shadow-[5px_10px_30px_rgba(252,147,40,0.8)]">
+        <div className="w-[300px] aspect-square bg-gray-600 shadow-[5px_10px_30px_rgba(252,147,40,0.5)] rounded-lg
+             border-2 border-(--main-color-orange) p-8 hover:shadow-[5px_10px_30px_rgba(252,147,40,0.8)]">
             <div className="h-12">
                 <img className="w-[40px] h-[40px] aspect-square" src ={iconPath} alt = {mainText}/>
             </div>

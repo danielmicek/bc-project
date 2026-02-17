@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useSearchParams} from "react-router-dom";
-import {getUser_object} from "../methods/methodsClass.jsx";
+import {getUser_object} from "../methods/methodsClass.js";
 import Loader from "../components/Loader.jsx";
 import Stats from "../components/Stats.jsx";
 import {Divider} from "@heroui/react";

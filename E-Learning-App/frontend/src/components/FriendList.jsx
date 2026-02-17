@@ -8,7 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EqualizerOutlinedIcon from '@mui/icons-material/EqualizerOutlined';
-import {acceptFriendRequest, deleteFriend} from "../methods/methodsClass.jsx";
+import {acceptFriendRequest, deleteFriend} from "../methods/methodsClass.js";
 import {Link} from "react-router-dom";
 import Loader from "./Loader.jsx";
 import {Divider} from "@heroui/react";
@@ -42,7 +42,6 @@ function generateList({
                       }) {
 
     return list.map((friend) => {
-        console.log(friend);
         return React.cloneElement(
             <ListItem
                 sx={{

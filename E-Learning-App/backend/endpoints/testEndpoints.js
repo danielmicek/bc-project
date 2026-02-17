@@ -67,6 +67,43 @@ router.get("/getTestByTestId/:testId", (request, response)=> {
         })
 });
 
+// ------------------GET REQUEST - GET CERTIFICATE BY ID--------------------------------------------------------------------
+router.get("/getCertificateById/:certId", (request, response)=> {
+    const certId = request.params.certId;
+
+    const getQuery = "SELECT * FROM certificates WHERE certificate_id = $1";
+    pool.query(getQuery, [certId])
+        .then((result) => {
+            console.log(result);
+            if (result.rows.length === 0) {
+                response.status(404).send({certificateFound: false});
+            }
+            else{
+                response.status(200).send({certificateFound: true});
+            }
+        })
+        .catch((error) => {
+            response.status(500);
+            console.log(error);
+        })
+});
+
+// -------------------------POST REQUEST - POST CERTIFICATE TO DB----------------------------------------------------
+router.post("/postCertificate", async (request, response) => {
+    const certId = request.body["certId"];
+
+    const insertQuery = "INSERT INTO certificates VALUES ($1)";
+    pool.query(insertQuery, [certId])
+        .then((result) => {
+            console.log(result);
+            response.status(200).send({message: "CertificateID added successfully."});
+        })
+        .catch((error) => {
+            response.status(500).send({error: "Error adding certificateID"})
+            console.log(error);
+        })
+})
+
 //----------------------------GET REQUEST - CREATE TEST-----------------------------------------------------------------
 // create test based on testDifficulty
 router.get("/createTest/:testDifficulty", async (request, response)=> {

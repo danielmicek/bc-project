@@ -3,15 +3,17 @@ import {SignedIn, UserAvatar, useUser} from "@clerk/clerk-react";
 import '../styles/index.css';
 import {
     filterTestsByDifficulty,
+    findGoldMedal,
     friendListLoader,
     friendRequestListLoader,
+    getHighestGoldMedalTestPercentage,
     sendFriendRequest
-} from "../methods/methodsClass.jsx";
+} from "../methods/methodsClass.js";
 import FriendList from "../components/FriendList.jsx";
 import StatCard from "../components/StatCard.jsx";
 import ClickToCopy from "../components/ClickToCopy.jsx";
 import {Button, Divider} from "@heroui/react";
-import {GET_allUsersTests, GET_UserScore, PUT_user} from "../methods/fetchMethods.jsx";
+import {GET_allUsersTests, GET_UserScore, PUT_user} from "../methods/fetchMethods.js";
 import {toast, Toaster} from "react-hot-toast";
 import Stats from "../components/Stats.jsx";
 import TestHistory from "../components/TestHistory.jsx";
@@ -19,6 +21,7 @@ import LeaderBoard from "../components/LeaderBoard.jsx";
 import BarChartComponent from "../components/BarChartComponent.jsx";
 import PieChartComponent from "../components/PieChartComponent.jsx";
 import BasicSparkLineComponent from "../components/SparkLineChartComponent.jsx";
+import ExportCertificateContainer from "../components/ExportCertificateContainer.jsx";
 
 export default function SignedInProfilePage({
                                                 userFriendList,
@@ -31,6 +34,7 @@ export default function SignedInProfilePage({
     const [mediumTests, setMediumTests] = useState([]);
     const [hardTests, setHardTests] = useState([]);
     const [userTests, setUserTests] = useState(null);  // userTests look like this - {tests, bestScore}
+    const [certificateEnabled, setCertificateEnabled] = useState(false);
     const inputRef = useRef(null);
     const {user} = useUser();
     const [userScore, setUserScore] = useState(0);
@@ -44,6 +48,17 @@ export default function SignedInProfilePage({
 
         void loadUserScore();
     }, [])
+
+    //set certificateEnabled - enabled if user received a gold medal
+    useEffect(() => {
+        if(!userTests) return
+        function isCertificateEnabled() {
+            const tmp = findGoldMedal(userTests.tests)
+            setCertificateEnabled(tmp);
+        }
+
+        void isCertificateEnabled();
+    }, [userTests])
 
     // save user's info such as img url, name or email to db after he changes it
     useEffect(() => {
@@ -65,7 +80,7 @@ export default function SignedInProfilePage({
     useEffect(() => {
         async function load() {
             const tests = await GET_allUsersTests(user.id)
-            console.log(tests); // todo remove
+            console.log(tests);
             setUserTests(tests)
         }
 
@@ -129,8 +144,7 @@ export default function SignedInProfilePage({
                             {user.primaryEmailAddress.emailAddress}
                         </div>
                         <div id="MEMBER_SICNE"
-                             className="relative sm:text-lg text-mf text-[#BFBBBB] max-[900px]:text-center">Member
-                            since: 15.06.2025
+                             className="relative sm:text-lg text-mf text-[#BFBBBB] max-[900px]:text-center">Profil vytvorený: 15.06.2025
                         </div>
 
                         <div id="SQUARES"
@@ -150,7 +164,7 @@ export default function SignedInProfilePage({
                         <ClickToCopy username={user.username}/>
                     </div>
 
-                    <form className="flex h-[55px] min-[1100px]:w-[50%] w-full"
+                    <form className="flex h-[55px] min-[1100px]:w-[50%] w-full gap-3"
                           onSubmit={(event) => {
                               event.preventDefault(); // prevent page reload
                               void sendFriendRequest(user.username, user.id, inputRef.current.value);
@@ -163,22 +177,34 @@ export default function SignedInProfilePage({
                             dark:focus:ring-blue-500"
                             ref={inputRef}
                             type="text"
-                            placeholder="Enter username or user's URL"
+                            placeholder="Zadaj username alebo URL profilu"
                             pattern="^([a-zA-Z0-9\-_\s]{4,15}|https?:\/\/.+)$" // regex for either being string of length 4-15 or url address which is validated in sendFriendRequest
                             onInvalid={(event) => {
                                 event.preventDefault();
-                                toast.error("Must be either name or user's URL")
+                                toast.error("Musí byť username alebo URL")
                             }} // show error message when input is invalid
                             required  // when present, it specifies that the input field must be filled out before submitting the form
                         />
                         <Button type="submit" variant="light"
-                                className="bg-(--main-color-orange) font-bold h-[55px] ml-2">
-                            Send FR
+                                className="bg-(--main-color-orange) font-bold h-[55px] px-6">
+                            Poslať žiadosť
                         </Button>
                     </form>
                 </div>
 
-                <div className="flex min-[900px]:flex-row flex-col items-center h-fit w-[90%] mt-40 relative
+                    {certificateEnabled ?
+                        <ExportCertificateContainer text={"Úspešne si absolvoval najvyššiu úroveň testu - Gold. Teraz si môžeš exportovať certifikát"}
+                                                    certificateEnabled = {certificateEnabled}
+                                                    userName = {user.username}
+                                                    percentage = {getHighestGoldMedalTestPercentage(userTests.tests)}
+                        />
+                    :
+                        <ExportCertificateContainer text={"Na získanie certifikátu je potrebné úšpešné absolvovanie testu Gold (získanie medaile)"}
+                                                    certificateEnabled = {certificateEnabled}
+                        />
+                    }
+
+                <div className="flex min-[900px]:flex-row flex-col items-center h-fit w-[90%] mt-30 relative
                     min-[900px]:gap-30 gap-10 pb-18 ">
                     <FriendList type="friendList"
                                 list={userFriendList}

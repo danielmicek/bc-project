@@ -1,6 +1,6 @@
 import React from "react";
 import {CountdownCircleTimer} from "react-countdown-circle-timer";
-import {POST_submitTest} from "../methods/fetchMethods.jsx";
+import {POST_submitTest} from "../methods/fetchMethods.js";
 import {useSearchParams} from "react-router-dom";
 
 const renderTime = (dimension, time) => {

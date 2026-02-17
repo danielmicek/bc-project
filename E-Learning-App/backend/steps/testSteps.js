@@ -7,36 +7,45 @@ export function calculateTestScore(test, testDifficulty){
     const HARD_QUESTION_POINTS = 5
     const PENALTY = testDifficulty === "medium" ? 0.2 : testDifficulty === "hard" ? 0.3 : 0.1  // percentage; 0.1 penalty for easy test is used in case when a user does not select all the answers in the given time
     let points = 0
+    let notAnsweredCount = 0
 
-    for(const question of test){ // jednotliva otazka z testu
-        if(question.answers.at(-1).selected) continue;  // ak je zvolena moznost "neodpovedat", teda posledna odpoved, nic sa nestane -> pripocita sa 0
-        for(const answer of question.answers.slice(0, -1)){  // jednotliva odpoved k otazke - neberieme do uvahy poslednu odpoved, tu vyhodnocujeme samostatne v riadkiu nad tymto
+    for(const question of test){ // single question of test
+        if(question.answers.at(-1).selected) continue;  // if option "neodpovedat" is selected - the last option, nothing happens -> +0 points
+        for(const answer of question.answers.slice(0, -1)){  // single answer of question - not working with the last one, it is handled above
             // EASY QUESTION - SINGLESELECT ONLY
-            if(question.difficulty === "easy"){  // single otazka
-                if(answer.selected && answer.correct) points += EASY_QUESTION_POINTS;  // ak je otazka odkiknuta a aj spravna => + body
-                else if(testDifficulty !== "easy" && answer.selected && !answer.correct) points -= (EASY_QUESTION_POINTS * PENALTY)
+            if(question.difficulty === "easy"){  // single question
+                if(answer.selected && answer.correct) points += EASY_QUESTION_POINTS;  // selected and correct => + points
+                else if(answer.selected && !answer.correct) points -= (EASY_QUESTION_POINTS * PENALTY) // selected and incorrect
+                else if(!answer.selected) notAnsweredCount++
             }
             // MEDIUM MULTISELECT QUESTION
             else if(question.difficulty === "medium" && question.multiselect){
                 if(answer.selected && answer.correct) points += MEDIUM_QUESTION_POINTS / getNumberOfCorrectAnswers(question.answers);
                 else if(testDifficulty !== "easy" && answer.selected && !answer.correct) points -= (MEDIUM_QUESTION_POINTS * PENALTY) / (question.answers.length - 1) // testDifficulty != easy pretoze pri easy testoch sa nestrhavaju boidy za nespravnu oodpoved
+                else if(!answer.selected) notAnsweredCount++
             }
             // MEDIUM SINGLESELECT QUESTION
             else if(question.difficulty === "medium" && !question.multiselect){
                 if(answer.selected && answer.correct) points += MEDIUM_QUESTION_POINTS
                 else if(testDifficulty !== "easy" && answer.selected && !answer.correct) points -= MEDIUM_QUESTION_POINTS * PENALTY
+                else if(!answer.selected) notAnsweredCount++
             }
             // HARD MULTISELECT QUESTION
             else if(question.difficulty === "hard" && question.multiselect){
                 if(answer.selected && answer.correct) points += HARD_QUESTION_POINTS / getNumberOfCorrectAnswers(question.answers);
                 else if(testDifficulty !== "easy" && answer.selected && !answer.correct) points -= (HARD_QUESTION_POINTS * PENALTY) / (question.answers.length - 1)  // minus 1 pretoze neberiem do uvahy poslednu moznost ktora je neodpovedat
+                else if(!answer.selected) notAnsweredCount++
             }
             // HARD SINGLESELECT QUESTION
             else if(question.difficulty === "hard" && !question.multiselect){
                 if(answer.selected && answer.correct) points += HARD_QUESTION_POINTS;
                 else if(testDifficulty !== "easy" && answer.selected && !answer.correct) points -= HARD_QUESTION_POINTS * PENALTY
+                else if(!answer.selected) notAnsweredCount++
             }
         }
+        // in case all 5 answers are NOT selected -> - points
+        if(notAnsweredCount === 5) points -= question.difficulty === "easy" ? 1 : question.difficulty === "medium" ? 2 : 3
+        notAnsweredCount = 0
     }
 
     if(points < 0) points = 0

@@ -2,12 +2,12 @@ import React, {useEffect, useState} from "react";
 import Timer from "../components/Timer.jsx";
 import {useUser} from "@clerk/clerk-react";
 import {Link, useNavigate, useSearchParams} from "react-router-dom";
-import {GET_createdTest, GET_getTestByTestId, POST_submitTest} from "../methods/fetchMethods.jsx";
+import {GET_createdTest, GET_getTestByTestId, POST_submitTest} from "../methods/fetchMethods.js";
 import SwiperComponent from "../components/Swiper.jsx";
 import {Button, useDisclosure} from "@heroui/react";
 import Loader from "../components/Loader.jsx";
 import ModalComponent from "../components/ModalComponent.jsx";
-import {getTestLength, goToPage} from "../methods/methodsClass.jsx";
+import {getTestLength, goToPage} from "../methods/methodsClass.js";
 
 
 export default function Test() {

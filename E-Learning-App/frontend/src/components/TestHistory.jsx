@@ -13,7 +13,7 @@ function generateHistory(tests, screenWidth) {
     return tests.map((test, i) =>
 
         React.cloneElement(
-            <ListItem
+            <ListItem key={i}
                 sx={{
                     backgroundColor: "white",
                     borderRadius: 2,
@@ -102,7 +102,6 @@ export default function TestHistory({userTests}) {
             setScreenWidth(window.innerWidth);
         }
         window.addEventListener("resize", resizeHandler);
-        console.log(screenWidth);
         return () => {
             window.removeEventListener("resize", resizeHandler);
         };

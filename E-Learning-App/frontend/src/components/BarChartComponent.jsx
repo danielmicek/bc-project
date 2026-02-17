@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import {BarChart} from '@mui/x-charts/BarChart';
-import {getMedalCount} from "../methods/methodsClass.jsx";
+import {getMedalCount} from "../methods/methodsClass.js";
 import React from "react";
 
 const labels = [

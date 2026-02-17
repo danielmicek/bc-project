@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useEffect, useState} from 'react';
-import {getAStreak, getAvgGrade} from "../methods/methodsClass.jsx";
+import {getAStreak, getAvgGrade} from "../methods/methodsClass.js";
 import Loader from "./Loader.jsx";
 import StatCard from "./StatCard.jsx";
 

@@ -2,7 +2,7 @@ import {useUser} from "@clerk/clerk-react";
 import SignedInProfilePage from "./SignedInProfilePage.jsx";
 import '../styles/styles.css';
 import React, {useEffect, useRef, useState} from "react";
-import {friendListLoader, friendRequestListLoader, getUser_info} from "../methods/methodsClass.jsx";
+import {friendListLoader, friendRequestListLoader, getUser_info} from "../methods/methodsClass.js";
 import {Toaster} from "react-hot-toast";
 import TypingAnimatedText from "../components/TypingAnimatedText.jsx";
 import SlidingCircle from "../components/SlidingCircle.jsx";

@@ -161,6 +161,27 @@ export async function POST_submitTest(testStructure, testDifficulty, userId, tes
     return await response.json();
 }
 
+export async function getCertificateById(certId){
+    const response = await fetch(`http://localhost:3000/api/test/getCertificateById/${certId}`, {
+        method: "GET",
+        cache: "no-store"
+    })
+    return await response.json();
+}
+
+export async function POST_postCertificate(certId) {
+    const response = await fetch(`http://localhost:3000/api/test/postCertificate`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            certId: certId,
+        })
+    })
+    return await response.json();
+}
+
 export async function GET_allUsersTests(userId){
     //setIsLoading(true);
     const response = await fetch(`http://localhost:3000/api/test/getAllUsersTests/${userId}`, {
