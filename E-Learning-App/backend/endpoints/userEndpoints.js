@@ -94,11 +94,11 @@ router.put("/putUser", (request, response)=> {
     const putQuery = "UPDATE users SET username = $1, email = $2, image_url = $3 WHERE user_id = $4";
     pool.query(putQuery, [user_username, user_email, user_imageUrl, clerk_user_id])
         .then((result) => {
-            response.status(200).send("Update successful");
+            response.status(200).send("Dáta úspešne zmenené");
             console.log(result);
         })
         .catch((error) => {
-            response.status(500).send("Update failed");
+            response.status(500).send("Error: Skús znova neskôr");
             console.log(error);
         })
 });

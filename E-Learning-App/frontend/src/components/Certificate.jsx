@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
 
 export default function Certificate({ userName, percentage, certificateId }) {
     const date = new Date().toLocaleDateString("sk-SK");
-    console.log(certificateId);
+
     return (
         <Document title="Eleonore Certificate" author="eleonore">
             <Page size="A4" style={styles.page}>

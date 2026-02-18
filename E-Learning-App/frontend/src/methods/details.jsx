@@ -4,7 +4,7 @@ export const testsAndLearningDetails = {
     "N/A": [
         <li>Obsah systematicky rozdelený do <span className="text-[var(--main-color-orange)] font-bold">desiatich kapitol</span></li>,
         <li>Dôraz kladený na <span className="text-[var(--main-color-orange)] font-bold">pochopenie súvislostí</span> medzi jednotlivými konceptmi</li>,
-        <li>Jasne formulované vysvetlenia podporujú <span className="text-[var(--main-color-orange)] font-bold">hlbšie porozumenie, nie len memorovanie</span></li>,
+        <li>Jasne formulované vysvetlenia pre <span className="text-[var(--main-color-orange)] font-bold">hlbšie porozumenie, nie len memorovanie</span></li>,
         <li>Základné metodiky, procesy a návrhové princípy</li>
     ],
 

@@ -1,4 +1,3 @@
-import {StrictMode} from 'react'
 import {createRoot} from 'react-dom/client'
 import {createBrowserRouter, Outlet, RouterProvider} from 'react-router-dom';
 import './styles/index.css'
@@ -83,10 +82,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
     <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-      <StrictMode>
-          <HeroUIProvider>
-            <RouterProvider  router={router}/>
-          </HeroUIProvider>
-      </StrictMode>
+      <HeroUIProvider>
+        <RouterProvider  router={router}/>
+      </HeroUIProvider>
     </ClerkProvider>
 );

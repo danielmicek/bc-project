@@ -16,38 +16,45 @@ import {Button, Divider} from "@heroui/react";
 import {GET_allUsersTests, GET_UserScore, PUT_user} from "../methods/fetchMethods.js";
 import {toast, Toaster} from "react-hot-toast";
 import Stats from "../components/Stats.jsx";
-import TestHistory from "../components/TestHistory.jsx";
 import LeaderBoard from "../components/LeaderBoard.jsx";
 import BarChartComponent from "../components/BarChartComponent.jsx";
 import PieChartComponent from "../components/PieChartComponent.jsx";
 import BasicSparkLineComponent from "../components/SparkLineChartComponent.jsx";
 import ExportCertificateContainer from "../components/ExportCertificateContainer.jsx";
+import HistoryTable from "../components/HistoryTable.jsx";
 
-export default function SignedInProfilePage({
-                                                userFriendList,
-                                                friendRequestsList,
-                                                setUserFriendList,
-                                                setFriendRequestList
-                                            }) {
+
+// initialize both friendList and list of FR by calling endpoints to get all friends and another one to get all FR
+// Promise.all() is resolving both promises at the same time - parallel execution
+async function listInitializer(userId,
+                               setFriendList,
+                               setFriendRequestList,
+                               setIsLoading) {
+    await Promise.all([
+        friendRequestListLoader(userId, setFriendRequestList, setIsLoading),
+        friendListLoader(userId, setFriendList, setIsLoading)
+    ]);
+}
+
+export default function SignedInProfilePage() {
+
     const [isLoading, setIsLoading] = useState(false);
+    const [friendRequestsList, setFriendRequestList] = useState([]);
+    const [userFriendList, setUserFriendList] = useState([]);
     const [easyTests, setEasyTests] = useState([]);
     const [mediumTests, setMediumTests] = useState([]);
     const [hardTests, setHardTests] = useState([]);
     const [userTests, setUserTests] = useState(null);  // userTests look like this - {tests, bestScore}
     const [certificateEnabled, setCertificateEnabled] = useState(false);
     const inputRef = useRef(null);
-    const {user} = useUser();
+    const {isSignedIn, user, isLoaded} = useUser();
     const [userScore, setUserScore] = useState(0);
 
-    // load userScore
-    useEffect(() => {
-        async function loadUserScore() {
-            const tmp = await GET_UserScore(user.id)
-            setUserScore(tmp.score);
-        }
 
-        void loadUserScore();
-    }, [])
+    // only call this when the user is signed, isLoaded changes, and the user already exists
+    useEffect(() => {
+        if (isSignedIn && user !== undefined) void listInitializer(user.id, setUserFriendList, setFriendRequestList, setIsLoading)
+    }, [isLoaded])
 
     //set certificateEnabled - enabled if user received a gold medal
     useEffect(() => {
@@ -64,23 +71,27 @@ export default function SignedInProfilePage({
     useEffect(() => {
         async function run() {
             try {
-                await toast.promise(PUT_user(user.username, user.emailAddresses[0].emailAddress, user.imageUrl, user.id), {
-                    loading: "Updating profile...",
-                    success: (responseText) => responseText,
-                    error: (responseErrorText) => responseErrorText.message,
-                });
-            } catch (e) {
-            }
+                await PUT_user(user.username, user.emailAddresses[0].emailAddress, user.imageUrl, user.id)
+            } catch (e) {}
         }
 
         void run()
     }, [user.username, user.emailAddresses[0].emailAddress, user.imageUrl])
 
+    // load userScore
+    useEffect(() => {
+        async function loadUserScore() {
+            const tmp = await GET_UserScore(user.id)
+            setUserScore(tmp.score);
+        }
+
+        void loadUserScore();
+    }, [])
+
     // load all user's tests
     useEffect(() => {
         async function load() {
             const tests = await GET_allUsersTests(user.id)
-            console.log(tests);
             setUserTests(tests)
         }
 
@@ -144,7 +155,7 @@ export default function SignedInProfilePage({
                             {user.primaryEmailAddress.emailAddress}
                         </div>
                         <div id="MEMBER_SICNE"
-                             className="relative sm:text-lg text-mf text-[#BFBBBB] max-[900px]:text-center">Profil vytvorený: 15.06.2025
+                             className="relative sm:text-lg text-mf text-[#BFBBBB] max-[900px]:text-center">Profil vytvorený: {new Date(user.createdAt).toLocaleDateString()}
                         </div>
 
                         <div id="SQUARES"
@@ -154,7 +165,6 @@ export default function SignedInProfilePage({
                             <StatCard text="Testy" imgPath="/test.png" value={userTests.tests.length}/>
                             <StatCard text="Celkové body" imgPath="/score.png" value={userScore}/>
                         </div>
-                        {/*todo done tests*/}
                     </div>
                 </div>
 
@@ -182,7 +192,7 @@ export default function SignedInProfilePage({
                             onInvalid={(event) => {
                                 event.preventDefault();
                                 toast.error("Musí byť username alebo URL")
-                            }} // show error message when input is invalid
+                            }} // show an error message when input is invalid
                             required  // when present, it specifies that the input field must be filled out before submitting the form
                         />
                         <Button type="submit" variant="light"
@@ -241,12 +251,12 @@ export default function SignedInProfilePage({
                     />
                     <Divider orientation="vertical" className="bg-gray-500 h-130 mt-10 hidden min-[900px]:block"/>
 
-                    <div
-                        className="flex flex-col gap-10 items-center mt-5 min-[900px]:w-[50%] w-[100%] lg:mt-0 mt-15 ">
+                    <div className="flex flex-col gap-10 items-center mt-5 min-[900px]:w-[50%] w-[100%] lg:mt-0 mt-15 ">
+
                         <PieChartComponent title={"Graf počtu testov"}
-                                           easyTests={easyTests}
-                                           mediumTests={mediumTests}
-                                           hardTests={hardTests}
+                                        easyTests={easyTests}
+                                        mediumTests={mediumTests}
+                                        hardTests={hardTests}
                         />
 
                         <Divider className="bg-gray-500"/>
@@ -263,14 +273,13 @@ export default function SignedInProfilePage({
 
                 <BasicSparkLineComponent title={"Graf progresu v čase"} tests={userTests.tests}/>
 
-                <TestHistory userTests={userTests.tests}/>
+                <HistoryTable tests={userTests.tests}/>
 
                 <LeaderBoard title={"Rebríček priateľov"}
                              friends={userFriendList}
                              user={user}
                              userScore={userScore}
                 />
-
             </div>}
         </div>
 

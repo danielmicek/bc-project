@@ -3,7 +3,6 @@ import pool from "../database.js";
 
 const router = express.Router();
 
-
 // ------------------GET REQUEST - GET ALL USER'S FRIENDS---------------------------------------------------------------
 // get friend's name from friends table, then join users table and get friends image_url
 router.get("/getAllFriends/:userId", (request, response)=> {
@@ -24,7 +23,7 @@ router.get("/getAllFriends/:userId", (request, response)=> {
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
-                response.status(404).send({});
+                return response.status(404).send({});
             }
             else{
                 let foundFriends = result.rows.map(row => ({
@@ -38,7 +37,7 @@ router.get("/getAllFriends/:userId", (request, response)=> {
             }
         })
         .catch((error) => {
-            response.status(500);
+            response.status(500).send({error: "error"});
             console.log(error);
         })
 });
@@ -54,7 +53,7 @@ router.patch("/getFriendship/:userId/:friendId", (request, response)=> {
             response.status(200).send(friendId);
         })
         .catch((error) => {
-            response.status(500);
+            response.status(500).send({error: "error"});
             console.log(error);
         })
 });
@@ -67,10 +66,10 @@ router.delete("/deleteFriend/:userId/:friendId", (request, response)=> {
     pool.query(getQuery, [userId, friendId])
         .then((result) => {
             console.log(result);
-            response.status(200).send("User " + friendId + " removed from the list");
+            response.status(200).send("Priateľstvo ukončené");
         })
         .catch((error) => {
-            response.status(500);
+            response.status(500).send({error: "error"});
             console.log(error);
         })
 });
@@ -92,7 +91,7 @@ router.get("/getAllFriendRequests/:userId", (request, response)=> {
 
         })
         .catch((error) => {
-            response.status(500);
+            response.status(500).send({error: "error"});
             console.log(error);
         })
 });
@@ -106,20 +105,18 @@ router.get("/:userId/:friendId", (request, response)=> {
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
-                response.status(404);
-                response.send("Friendship among users: " + userId + " and " + friendId + " does not exist.  Status code: " + response.statusCode);
+                response.status(404).send("Friendship among users: " + userId + " and " + friendId + " does not exist.  Status code: " + response.statusCode);
             }
             else{
-                response.status(200);
                 const foundFrinedshipStatus = result.rows[0]
-                response.send({
+                response.status(200).send({
                     status: foundFrinedshipStatus.status
                 });
             }
 
         })
         .catch((error) => {
-            response.status(500);
+            response.status(500).send({error: "error"});
             console.log(error);
         })
 });
@@ -139,12 +136,10 @@ router.post("/sendFriendRequest", async (request, response) => {
     pool.query(insertQuery_user_to_friend, [userUsername, friendUsername, status, from, userId, friendId])
         .then((result) => {
             console.log(result);
-            response.status(200);
-            response.send("Friend request sent!");
+            response.status(200).send("Žiadosť odoslaná");
         })
         .catch((error) => {
-            response.status(500);
-            response.send("Error sending friend request")
+            response.status(500).send("Error. Skús znova neskôr")
             console.log(error);
         })
 
@@ -152,11 +147,10 @@ router.post("/sendFriendRequest", async (request, response) => {
     pool.query(insertQuery_friend_to_user, [userUsername, friendUsername, status, from, userId, friendId])
         .then((result) => {
             console.log(result);
-            response.status(200);
-            response.send("Friend request send to: " + friendUsername + "  Status code: " + response.statusCode);
+            response.status(200).send("Friend request send to: " + friendUsername + "  Status code: " + response.statusCode);
         })
         .catch((error) => {
-            response.status(500);
+            response.status(500).send({error: "error"});
             console.log(error);
         })
 })

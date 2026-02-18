@@ -95,7 +95,7 @@ function Home() {
                         <img src="/laptop.png" alt="laptop" className="md:w-[500px] min-[1300px]:w-[800px] lg:w-[700px] w-[450px]"/>
                         <ul className="list-disc flex flex-col list-inside text-white mt-10 md:mt-0 pl-10">
                             <li className="mb-8 font-extrabold text-gray-400 text-xl">Získaj medailu po úspechu v teste</li>
-                            <li className="mb-8 font-extrabold text-gray-400 text-xl">AI na prefrázovanie otázok na odpovedí</li>
+                            <li className="mb-8 font-extrabold text-gray-400 text-xl">AI na prefrázovanie otázok a odpovedí</li>
                             <li className="mb-8 font-extrabold text-gray-400 text-xl">Sústreď sa na pochopenie, nie memorizáciu</li>
                             <li className="mb-8 font-extrabold text-gray-400 text-xl">Unikátny test pri každom pokuse</li>
                             <Button variant="light" className="bg-(--main-color-orange) font-bold w-fit"

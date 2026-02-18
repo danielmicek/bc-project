@@ -4,9 +4,9 @@ export default function StatCard({
                                      imgPath,
                                      value,
                                      text}){
+
     return (
-        <div className="flex flex-col items-center min-[700px]:w-[150px] w-[150px] aspect-square rounded-lg bg-white
-                        p-6">
+        <div className="flex flex-col items-center min-[700px]:w-[150px] w-[150px] aspect-square rounded-lg bg-white p-6">
             <div className="h-12">
                 <img className="w-[40px] h-[40px] aspect-square" src ={imgPath} alt = {text}/>
             </div>

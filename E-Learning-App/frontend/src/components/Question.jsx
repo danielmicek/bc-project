@@ -35,7 +35,7 @@ function handleClick(selectedArray, setSelectedArray, index, difficulty, answers
 }
 
 function styleSetter(selectedArray, index, readOnly, answer, question){
-    //console.log(question);
+
     if(readOnly){
         // correctly selected answer
         if(answer.selected === true && answer.correct === true){
@@ -79,8 +79,6 @@ function saveSelectedAnswersIntoTest(selectedArray, setQuestions, activeIndex){
                 selected: selectedArray[ansIndex]
             }))
         }
-        //console.log("----------------");
-        //console.log(newAnswersArray);
         return newAnswersArray
     });
 }
@@ -98,7 +96,6 @@ export default function Question({activeIndex, question, setQuestions}) {
         saveSelectedAnswersIntoTest(selectedArray, setQuestions, activeIndex)
     }, [selectedArray]); //pri zakliknuti odpovede ulozim zaznacene odpovede do skutocnej struktury testu (cely JSON -> cely vygenerovany test)
 
-    //console.log("xx: " + getNumberOfCorrectAnswers(question.answers))
     let i = 0
     return <>
         <div className="pb-8 justify-self-center self-center flex flex-col gap-0 overflow-hidden max-[750px]:w-[70vw]  mb-5">
@@ -107,8 +104,6 @@ export default function Question({activeIndex, question, setQuestions}) {
             {<p className="text-sm font-light text-gray-500">
                  Body: {points} {testDifficulty === "medium" ? (question.multiselect === true ? "| Multi-select" : "| Single-select") : ""}</p>}
 
-
-            {/*<div id = "QUESTION_NUMBER" className="grid place-items-center [grid-area:1_/_1_/_2_/_2]"></div>*/}
         </div>
         <ul id = "ANSWERS" className="relative flex flex-col gap-[20px] mb-[50px] justify-self-center self-center w-[550px] h-fit text-white max-[750px]:w-[60vw] mt-3 ">
             {question.answers.map((answer, i) => (
@@ -120,14 +115,5 @@ export default function Question({activeIndex, question, setQuestions}) {
             )}
 
         </ul>
-        {/*<button onClick={() => {
-            if (confirm('Are you sure you want to save this thing into the database?')) {
-                // Save it!
-                console.log('Thing was saved to the database.');
-            } else {
-                // Do nothing!
-                console.log('Thing was not saved to the database.');
-            }
-        }}></button>*/}
     </>
 }

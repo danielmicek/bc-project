@@ -13,7 +13,6 @@ export async function POST_user(clerk_id, email, username, imageUrl) {
             image_url: imageUrl
         })
     })
-        console.log(await x.text());
 }
 
 export async function GET_user(username){
@@ -144,7 +143,6 @@ export async function GET_getTestByTestId(testId){
 
 export async function POST_submitTest(testStructure, testDifficulty, userId, testId, setIsLoading) {
     setIsLoading(true);
-    console.log(testStructure);
     const response = await fetch(`http://localhost:3000/api/test/submitTest`, {
         method: "POST",
         headers: {
@@ -183,12 +181,10 @@ export async function POST_postCertificate(certId) {
 }
 
 export async function GET_allUsersTests(userId){
-    //setIsLoading(true);
     const response = await fetch(`http://localhost:3000/api/test/getAllUsersTests/${userId}`, {
         method: "GET",
         cache: "no-store"
     })
-    //setIsLoading(false);
     return await response.json();
 }
 

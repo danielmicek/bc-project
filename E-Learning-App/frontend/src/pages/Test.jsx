@@ -8,6 +8,7 @@ import {Button, useDisclosure} from "@heroui/react";
 import Loader from "../components/Loader.jsx";
 import ModalComponent from "../components/ModalComponent.jsx";
 import {getTestLength, goToPage} from "../methods/methodsClass.js";
+import {toast} from "react-hot-toast";
 
 
 export default function Test() {
@@ -36,7 +37,7 @@ export default function Test() {
                 setQuestions(READ_ONLY ? tmp.test.structure : tmp.createdTest)
             }
             catch (error) {
-                console.log(error);
+                toast.error("Error. Skús znova neskôr")
             }
             finally {
                 setIsLoading(false)

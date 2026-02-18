@@ -44,6 +44,7 @@ function generateList({
     return list.map((friend) => {
         return React.cloneElement(
             <ListItem
+                key = {userId}
                 sx={{
                     backgroundColor: "white",
                     borderRadius: 2,
@@ -68,6 +69,7 @@ function generateList({
                                 <CheckCircleIcon/>
                             </IconButton>
                             :
+                            // show only in the friends table
                             <Link to={`/userPage/?username=${friend.friendName}`}>
                                 <IconButton edge="end" aria-label="accept">
                                     <EqualizerOutlinedIcon/>
@@ -132,32 +134,12 @@ export default function FriendList({
                 :
             <div className="overflow-y-scroll no-scrollbar rounded-lg">
                 {list.length === 0 ?
-                    <div className = "absolute inset-0 mt-10 flex h-full w-full items-center justify-center text-center
+                    <h3 className = "absolute inset-0 mt-10 flex h-full w-full items-center justify-center text-center
                     text-gray-400 font-bold text-xl">
                         {type === "friendList" ? "Žiadny priatelia" : "Žiadne žiadosti o priateľstvo"}
-                    </div>
+                    </h3>
                     :
                     <List dense={false}>
-                        {generateList(
-                            {
-                                type,
-                                list,
-                                setRequestList,
-                                userUsername,
-                                userId,
-                                setFriendsList
-                            }
-                        )}
-                        {generateList(
-                            {
-                                type,
-                                list,
-                                setRequestList,
-                                userUsername,
-                                userId,
-                                setFriendsList
-                            }
-                        )}
                         {generateList(
                             {
                                 type,

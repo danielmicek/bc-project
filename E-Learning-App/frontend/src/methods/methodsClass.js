@@ -20,14 +20,8 @@ import {toast} from "react-hot-toast";
 
 export async function getUser_info(user){ // only find if a user exists
     const responseObject = await GET_user(user.username);
-    if(responseObject.status === 200){
-        console.log("User already exists in the database. GET status code: " + responseObject.status);
-        //console.log(await responseObject.json());
-    }
-    else{
-        console.log("User does not exist in the database, GET status code: " + responseObject.status + ". Creating POST request... " );
+    if(responseObject.status !== 200){
         await POST_user(user.id, user.emailAddresses[0].emailAddress, user.username, user.imageUrl);
-        console.log("POST request sent. GET status code: " + responseObject.status)
     }
 }
 
@@ -37,7 +31,8 @@ export async function getUser_object(username){ //async function always returns 
         return responseObject.status;
     }
     const responseJson = await responseObject.json();
-    return({userId: responseJson.userId,
+    return({
+        userId: responseJson.userId,
         userName: responseJson.userName,
         userEmail: responseJson.userEmail,
         userImgUrl: responseJson.imageUrl
@@ -122,15 +117,12 @@ export async function deleteFriend(flag, user_username, friend_username, userId,
         else if(flag === "F"){
             setUserFriendList((prevList) => prevList.filter((friend) => friend.friendName !== friend_username));
         }
-        else{
-            console.log("Error during friend deletion. Flag is not set to 'FR' or 'F'. Flag: " + flag);
-        }
+
         toast(await friendshipResponseObject.text(), {
             icon: '🗑️',
         });
     }
     else{
-        console.log("Error during friend deletion. GET status code: " + friendshipResponseObject.status);
         return null;
     }
 }
@@ -146,7 +138,7 @@ export async function friendRequestListLoader(userId, setFriendRequestList, setI
     setFriendRequestList([]); // reset the list so everytime we get fresh FR from the db
     for(let friendName of friendRequests){
         getUser_object(friendName).then(result => {
-            setFriendRequestList(prevList => [...prevList, {friendName: friendName, friendId: result.userId, imgUrl: result.userImgUrl}]);
+            setFriendRequestList(prevList => [...prevList, {friendName: friendName, friendId: result.userId, imgUrl: result.userImgUrl, email: result.userEmail}]);
         })
     }
     //toast.success('Friend requests loaded!');
@@ -157,7 +149,7 @@ export async function friendListLoader(userId, setFriendList, setIsLoading){
     // first ↑ we get all friends from the database, then we add each FRIEND to the list so we can display it on the page
     if(result.status === 404){
         setFriendList([])
-        toast.error('No friends');
+        toast.error('Žiadne novinky');
         return;
     }
     setFriendList([])
