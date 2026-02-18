@@ -22,7 +22,7 @@ export default function LearningInfoPage() {
                 <Button variant="light" className="bg-(--main-color-orange) font-bold absolute left-5 top-5">Späť na stránku kurzu</Button>
             </Link>
             <div className = "container pb-20 h-fit flex flex-col items-center mt-20 relative">
-                <div id = "CARDS_CONTAINER" className="flex flex-wrap justify-center gap-15">
+                <div id = "CARDS_CONTAINER" className="flex flex-wrap justify-center gap-10">
                     {notionPages.map(page => {
                         return (
                             <CardComponent title={"Kapitola " + page.chapter}

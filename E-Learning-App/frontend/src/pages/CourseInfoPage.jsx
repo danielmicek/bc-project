@@ -6,7 +6,7 @@ export function CourseInfoPage(){
     return(
         <div id = "BLACK_BACKGROUND" className="flex flex-col p-5 w-full h-fit justify-center border-500-red border-2 shadow-xl relative"
              style={{backgroundColor: "#050505"}}>
-            <div className = "container pb-20 h-full flex flex-col items-center mt-20">
+            <div className = "container relative pb-20 h-full flex flex-col items-center mt-20">
                 <div className = "columnContainer">
                     <CardComponent title = "Študovanie"
                                    imgPath = "/book.png"

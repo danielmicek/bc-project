@@ -145,14 +145,12 @@ body {
     grid-template-rows: repeat(3, 1fr);
     gap: 40px;
 
-    margin: 20px;
-
     height: fit-content;
 
 }
 
 
-@media(max-width: 1000px) {
+@media(max-width: 1024px) {
     .columnContainer {
         grid-template-rows: repeat(8, 1fr);
         grid-template-areas:

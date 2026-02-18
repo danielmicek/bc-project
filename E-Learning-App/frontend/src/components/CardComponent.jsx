@@ -101,8 +101,8 @@ export default function CardComponent({
                 />
             }
 
-            <Card className={`${testColumn} h-[250px] pt-3 px-3 rounded-lg shadow-[5px_10px_30px_rgba(252,147,40,0.5)] 
-            bg-gradient-to-br from-[#2a2a2a] to-[#1f1f1f] border-2 border-(--main-color-orange)`} style = {{width: type === "Learning" ? "100%" : "400px"}}>
+            <Card className={`${testColumn} ${type === "Chapter" ? "sm:w-[400px] w-full" : "w-full"} h-[230px] pt-3 px-3 rounded-lg shadow-[5px_10px_30px_rgba(252,147,40,0.5)]
+            bg-gradient-to-br from-[#2a2a2a] to-[#1f1f1f] border-2 border-(--main-color-orange)`}>
                 <CardHeader className="flex gap-3">
                     <Image
                         alt="heroui logo"
