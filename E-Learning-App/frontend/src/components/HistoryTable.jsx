@@ -9,7 +9,7 @@ const columns = [
     { field: 'id', headerName: 'Poradie', width: 210, sortable: false, headerAlign: 'center', align: 'center'},
     { field: 'grade', headerName: 'Známka', width: 210, sortable: false, headerAlign: 'center', align: 'center' },
     { field: 'percentage', headerName: 'Percentá', width: 210, headerAlign: 'center', align: 'center' },
-    { field: 'medal', headerName: 'Medaila', width: 210, headerAlign: 'center', align: 'center'},
+    { field: 'medal', headerName: 'Medaila', width: 210, sortable: false, headerAlign: 'center', align: 'center'},
     {
         field: 'timestamp',
         headerName: 'Dátum',

@@ -218,15 +218,8 @@ export function getTestLength(difficulty){
 }
 
 // find if a gold medal exists
-export function findGoldMedal(tests){
-    for(const test of tests){
-        if(test.difficulty === "hard" && test.medal === "gold") return true
-    }
-    return false
-}
-
 // get the highest percentage of the test with a gold medal reward
-export function getHighestGoldMedalTestPercentage(tests){
+export function findGoldMedal(tests){
     let highestPercentage = 0
 
     for(const test of tests){
@@ -234,5 +227,5 @@ export function getHighestGoldMedalTestPercentage(tests){
             if(test.percentage > highestPercentage) highestPercentage = test.percentage
         }
     }
-    return highestPercentage
+    return {enabled: highestPercentage !== 0, percentage: highestPercentage}
 }

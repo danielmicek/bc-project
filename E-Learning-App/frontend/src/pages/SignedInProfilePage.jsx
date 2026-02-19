@@ -6,7 +6,6 @@ import {
     findGoldMedal,
     friendListLoader,
     friendRequestListLoader,
-    getHighestGoldMedalTestPercentage,
     sendFriendRequest
 } from "../methods/methodsClass.js";
 import FriendList from "../components/FriendList.jsx";
@@ -45,23 +44,22 @@ export default function SignedInProfilePage() {
     const [mediumTests, setMediumTests] = useState([]);
     const [hardTests, setHardTests] = useState([]);
     const [userTests, setUserTests] = useState(null);  // userTests look like this - {tests, bestScore}
-    const [certificateEnabled, setCertificateEnabled] = useState(false);
+    const [certificateStatus, setCertificateStatus] = useState(false);
     const inputRef = useRef(null);
     const {isSignedIn, user, isLoaded} = useUser();
     const [userScore, setUserScore] = useState(0);
-
 
     // only call this when the user is signed, isLoaded changes, and the user already exists
     useEffect(() => {
         if (isSignedIn && user !== undefined) void listInitializer(user.id, setUserFriendList, setFriendRequestList, setIsLoading)
     }, [isLoaded])
 
-    //set certificateEnabled - enabled if user received a gold medal
+    //set certificateStatus - {enabled, percentage} - enabled if the user received a gold medal
     useEffect(() => {
         if(!userTests) return
         function isCertificateEnabled() {
             const tmp = findGoldMedal(userTests.tests)
-            setCertificateEnabled(tmp);
+            setCertificateStatus(tmp);
         }
 
         void isCertificateEnabled();
@@ -202,15 +200,14 @@ export default function SignedInProfilePage() {
                     </form>
                 </div>
 
-                    {certificateEnabled ?
+                    {certificateStatus.enabled ?
                         <ExportCertificateContainer text={"Úspešne si absolvoval najvyššiu úroveň testu - Gold. Teraz si môžeš exportovať certifikát"}
-                                                    certificateEnabled = {certificateEnabled}
+                                                    certificateStatus = {certificateStatus}
                                                     userName = {user.username}
-                                                    percentage = {getHighestGoldMedalTestPercentage(userTests.tests)}
                         />
                     :
                         <ExportCertificateContainer text={"Na získanie certifikátu je potrebné úšpešné absolvovanie testu Gold (získanie medaile)"}
-                                                    certificateEnabled = {certificateEnabled}
+                                                    certificateStatus = {certificateStatus}
                         />
                     }
 
@@ -237,7 +234,7 @@ export default function SignedInProfilePage() {
                     <Button className="bg-(--main-color-orange) font-bold absolute bottom-0 right-0"
                             onPress={async () => {
                                 await Promise.all([friendRequestListLoader(user.id, setFriendRequestList, setIsLoading), friendListLoader(user.id, setUserFriendList, setIsLoading)]);
-                            }}>Refresh tables ⟳</Button>
+                            }}>Aktualizovať ⟳</Button>
                 </div>
 
 

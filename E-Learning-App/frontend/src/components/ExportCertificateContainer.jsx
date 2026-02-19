@@ -7,9 +7,8 @@ import {getUniqueTestID} from "../methods/methodsClass.js";
 
 export default function ExportCertificateContainer({
                                                        text,
-                                                       certificateEnabled,
-                                                       userName,
-                                                       percentage}){
+                                                       certificateStatus,
+                                                       userName}){
     const certificateId = getUniqueTestID("ELC")
 
     return (
@@ -17,11 +16,11 @@ export default function ExportCertificateContainer({
         bg-gray-600 shadow-[5px_10px_30px_rgba(252,147,40,0.5)] rounded-lg border-2 border-(--main-color-orange) px-10
         py-3 hover:shadow-[5px_10px_30px_rgba(252,147,40,0.8)]">
             <p className="font-bold text-white">{text}</p>
-            <Button isDisabled = {!certificateEnabled} variant="light" className="bg-(--main-color-orange) font-bold px-15"
+            <Button isDisabled = {!certificateStatus.enabled} variant="light" className="bg-(--main-color-orange) font-bold px-15"
                     onPress={() => {void POST_postCertificate(certificateId)}}>
                 <PDFDownloadLink document={
                     <Certificate userName={userName}
-                                 percentage={percentage}
+                                 percentage={certificateStatus.percentage}
                                  certificateId={certificateId}
                     />
                 } fileName="eleonore_certificate.pdf">
