@@ -184,7 +184,7 @@ export default function Certificate({ userName, percentage, certificateId }) {
                     </View>
 
                     <Text style={styles.bodyText}>
-                        Týmto potvrdzujeme, že vyššie uvedený účastník splnil požiadavky kurzu vrátane úspešného absolvovania Gold testu,
+                        Týmto potvrdzujeme, že vyššie uvedený účastník splnil požiadavky kurzu vrátane úspešného absolvovania Gold testu
                         a tým získal nárok na vydanie certifikátu.
                     </Text>
 

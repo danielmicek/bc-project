@@ -83,24 +83,18 @@ export async function GET_friendship(user_id, friend_id){         // check if fr
     })
 }
 
-export async function GET_allFriendRequests(userId, setIsLoading){
-    setIsLoading(true);
-    const response = await fetch(`http://localhost:3000/api/friendship/getAllFriendRequests/${userId}`, {
+export async function GET_allFriendRequests(userId){
+    return await fetch(`http://localhost:3000/api/friendship/getAllFriendRequests/${userId}`, {
         method: "GET",
         cache: "no-store"
-    })
-    setIsLoading(false);
-    return response;
+    });
 }
 
-export async function GET_allFriends(userId, setIsLoading){
-    setIsLoading(true);
-    const response = await fetch(`http://localhost:3000/api/friendship/getAllFriends/${userId}`, {
+export async function GET_allFriends(userId){
+    return await fetch(`http://localhost:3000/api/friendship/getAllFriends/${userId}`, {
         method: "GET",
         cache: "no-store"
-    })
-    setIsLoading(false);
-    return response;
+    });
 }
 
 export async function PATCH_acceptFriendRequest(userId, friendId){    // accepting frined request by updating status PENDING to ACCEPTED

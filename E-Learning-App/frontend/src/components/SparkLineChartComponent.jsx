@@ -24,7 +24,6 @@ export default function BasicSparkLineComponent({tests, title}) {
         ]);
     }, [tests])
 
-
     return (
         <>
             <h1 className = "text-white font-bold text-3xl mb-10">{title}</h1>

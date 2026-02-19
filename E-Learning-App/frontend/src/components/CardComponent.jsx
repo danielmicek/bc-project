@@ -125,7 +125,7 @@ export default function CardComponent({
                         </span>
                             {/* DIFFICULTY BADGE */}
                             <span
-                                className={`rounded-full text-center border px-3 py-1 text-xs font-semibold ${difficultyStyles[difficulty]}`}>
+                                className={`rounded-lg text-center border px-3 py-1 text-xs font-semibold ${difficultyStyles[difficulty]}`}>
                         {difficulty}
                     </span>
                         </div>

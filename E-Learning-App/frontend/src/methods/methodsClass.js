@@ -96,11 +96,10 @@ export async function acceptFriendRequest(user_username, friend_username, userId
             else return prevList;
         })
         setUserFriendRequestList((prevList) => prevList.filter((friend) => friend.friendName !== friend_username)); // remove from the friend request list
-        toast.success("Friend request accepted");
+        toast.success("Žiadosť akceptovaná");
     }
     else{
-        toast.error("Error during friend request acceptance");
-        //return null;
+        toast.error("Error. Skús znova neskór");
     }
 }
 
@@ -127,12 +126,12 @@ export async function deleteFriend(flag, user_username, friend_username, userId,
     }
 }
 
-export async function friendRequestListLoader(userId, setFriendRequestList, setIsLoading){
-    const result = await GET_allFriendRequests(userId, setIsLoading)
+export async function friendRequestListLoader(userId, setFriendRequestList){
+    const result = await GET_allFriendRequests(userId)
     // first ↑ we get all friend-requests from the database, then we add each FR to the list so we can display it on the page
     if(result.status === 404){
         setFriendRequestList([]);
-        return;
+        throw new Error("error")
     }
     const friendRequests = await result.json();
     setFriendRequestList([]); // reset the list so everytime we get fresh FR from the db
@@ -144,16 +143,16 @@ export async function friendRequestListLoader(userId, setFriendRequestList, setI
     //toast.success('Friend requests loaded!');
 }
 
-export async function friendListLoader(userId, setFriendList, setIsLoading){
-    const result = await GET_allFriends(userId, setIsLoading)
+export async function friendListLoader(userId, setFriendList){
+    const result = await GET_allFriends(userId)
     // first ↑ we get all friends from the database, then we add each FRIEND to the list so we can display it on the page
     if(result.status === 404){
         setFriendList([])
-        toast.error('Žiadne novinky');
-        return;
+        throw new Error("error")
     }
     setFriendList([])
     setFriendList(await result.json()); // different than method friendRequestListLoader, because this endpoint returns an object of users, the friendRequestListLoader returns an array of usernames
+    return
 }
 
 export function getUniqueTestID(prefix) {

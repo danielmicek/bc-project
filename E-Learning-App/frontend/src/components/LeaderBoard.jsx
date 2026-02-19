@@ -13,7 +13,7 @@ export default function LeaderBoard({title, friends, user, userScore}){
     users.sort((a, b) => b.score - a.score);
 
     return (
-        <ul className="relative list h-[300px] bg-base-100 rounded-box shadow-md w-[80%] mt-30 overflow-auto">
+        <ul className="relative list h-[285px] bg-base-100 rounded-box shadow-md w-[80%] mt-30">
 
             <li className="p-4 pb-2 text-4xl font-bold opacity-60 tracking-wide">{title}</li>
             <Divider className="bg-gray-300"/>
@@ -24,19 +24,22 @@ export default function LeaderBoard({title, friends, user, userScore}){
                     Žiadny priatelia
                 </div>
                 :
-                users.map((user, i) => {
-                return (
-                    <li className="list-row" key = {i}>
-                        <div className="text-4xl font-thin opacity-30 tabular-nums">{String(i+1).padStart(2, "0")}</div>
-                        <div><img className="size-10 rounded-box" src={user.imgUrl} alt = {"avatar"}/></div>
-                        <div className="list-col-grow flex items-center">
-                            <div>{user.friendName}</div>
-                        </div>
-                        <p className="flex items-center text-xl font-thin opacity-30 tabular-nums ml-8">{user.score}</p>
-                    </li>
-                )
-
-            })}
+                <div className="overflow-auto">
+                    {
+                        users.map((user, i) => {
+                            return (
+                                <li className="list-row" key = {i}>
+                                    <div className="text-4xl font-thin opacity-30 tabular-nums">{String(i+1).padStart(2, "0")}</div>
+                                    <div><img className="size-10 rounded-box" src={user.imgUrl} alt = {"avatar"}/></div>
+                                    <div className="list-col-grow flex items-center">
+                                        <div>{user.friendName}</div>
+                                    </div>
+                                    <p className="flex items-center text-xl font-thin opacity-30 tabular-nums ml-8">{user.score}</p>
+                                </li>
+                            )
+                        })
+                    }
+                </div>}
         </ul>
     )
 }

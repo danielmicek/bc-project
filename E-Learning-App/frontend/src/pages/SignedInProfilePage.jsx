@@ -29,10 +29,19 @@ async function listInitializer(userId,
                                setFriendList,
                                setFriendRequestList,
                                setIsLoading) {
-    await Promise.all([
-        friendRequestListLoader(userId, setFriendRequestList, setIsLoading),
-        friendListLoader(userId, setFriendList, setIsLoading)
-    ]);
+
+    try{
+        setIsLoading(true)
+        await Promise.all([
+            friendRequestListLoader(userId, setFriendRequestList, setIsLoading),
+            friendListLoader(userId, setFriendList, setIsLoading)
+        ]);
+    }
+    catch(error){}
+    finally {
+        setIsLoading(false);
+        toast.success('Aktualizované');
+    }
 }
 
 export default function SignedInProfilePage() {
@@ -58,8 +67,10 @@ export default function SignedInProfilePage() {
     useEffect(() => {
         if(!userTests) return
         function isCertificateEnabled() {
+            setIsLoading(true)
             const tmp = findGoldMedal(userTests.tests)
             setCertificateStatus(tmp);
+            setIsLoading(false)
         }
 
         void isCertificateEnabled();
@@ -233,7 +244,18 @@ export default function SignedInProfilePage() {
 
                     <Button className="bg-(--main-color-orange) font-bold absolute bottom-0 right-0"
                             onPress={async () => {
-                                await Promise.all([friendRequestListLoader(user.id, setFriendRequestList, setIsLoading), friendListLoader(user.id, setUserFriendList, setIsLoading)]);
+                                try{
+                                    setIsLoading(true)
+                                    await Promise.all([
+                                        friendRequestListLoader(user.id, setFriendRequestList),
+                                        friendListLoader(user.id, setUserFriendList)
+                                    ]);
+                                }
+                                catch(error){}
+                                finally {
+                                    setIsLoading(false);
+                                    toast.success('Aktualizované');
+                                }
                             }}>Aktualizovať ⟳</Button>
                 </div>
 
