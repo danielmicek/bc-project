@@ -237,3 +237,26 @@ h2{
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
 }
+
+.profilePageGridElement {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+    color: white;
+    font-weight: 700; /* font-bold */
+    font-size: 1.5rem; /* text-2xl */
+
+    border: 2px solid white;
+    border-radius: 0.5rem; /* rounded-lg */
+
+    box-shadow: 5px 10px 30px rgba(255, 255, 255, 0.2);
+    transition: box-shadow 0.3s ease;
+    padding: 10px;
+    z-index: 5;
+}
+
+.profilePageGridElement:hover {
+    box-shadow: 5px 15px 35px rgba(255, 255, 255, 0.5);
+}

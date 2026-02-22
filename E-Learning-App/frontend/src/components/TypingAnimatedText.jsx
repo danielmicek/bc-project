@@ -1,5 +1,6 @@
-import { motion, useAnimationControls } from "framer-motion";
-import { useEffect, useState } from "react";
+import {motion, useAnimationControls} from "framer-motion";
+import {useEffect, useState} from "react";
+
 function TypingText({
                         words = ["Your Journey", "Starts Here.", "Now."],
                         typingSpeed = 50,

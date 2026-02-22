@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/styles.css';
 import {Button, useDisclosure} from "@heroui/react";
-import {SignedOut, SignInButton} from "@clerk/clerk-react";
+import {SignedOut, SignInButton, useUser} from "@clerk/clerk-react";
 import BigStatCard from "../components/BigStatCard.jsx";
 import {Link} from "react-router-dom";
 import LightRays from "../components/LightRays.jsx";
@@ -13,6 +13,7 @@ function Home() {
         console.log("popstate");
     });*/
     const {isOpen: isOpenVerifyCertModal, onOpen: onOpenVerifyCertModal, onClose: onCloseVerifyCertModal} = useDisclosure();
+    const {isSignedIn} = useUser();
 
     return (
         <>
@@ -50,16 +51,18 @@ function Home() {
                         </h2>
                     </div>
 
-                    <div className="flex gap-10 items-end h-fit z-5">
+                    {!isSignedIn && <div className="flex gap-10 items-end h-fit z-5 mt-10">
                         <Link to="/courseInfoPage">
-
+                            <Button variant="light" className="bg-gray-500 font-bold">
+                                Kurz
+                            </Button>
                         </Link>
                         <SignedOut>
-                            <SignInButton className = "bg-(--main-color-orange) font-bold" mode={"modal"}>
-                                <Button className = "w-full h-full">Prihlásiť sa</Button>
+                            <SignInButton className="bg-(--main-color-orange) font-bold" mode={"modal"}>
+                                <Button className="w-full h-full">Prihlásiť sa</Button>
                             </SignInButton>
                         </SignedOut>
-                    </div>
+                    </div>}
 
                     <div id = "WHAT_IS_ELEONORE" className = "shadow-[5px_10px_30px_rgba(255,255,255,0.5)] z-5 flex flex-col items-center border-2 my-50 mx-20 text-white rounded-lg p-10">
                         <div className=" flex sm:gap-8 gap-3 w-full justify-center items-center">

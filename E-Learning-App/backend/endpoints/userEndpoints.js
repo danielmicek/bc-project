@@ -47,7 +47,6 @@ router.get("/getUserScore/:userId", (request, response)=> {
 
     pool.query(getQuery, [userId])
         .then((result) => {
-            console.log("------------------------");
             console.log(result);
             if (result.rows.length === 0) {
                 response.status(404).send({});
