@@ -9,7 +9,7 @@ export async function POST_user(clerk_id, email, username, imageUrl) {
         body: JSON.stringify({
             user_id: clerk_id,
             username: username,
-            email: email, //"test" + randn(2) + "@gmail.com"
+            email: email,
             image_url: imageUrl
         })
     })
@@ -43,12 +43,10 @@ export async function PUT_user(username, email, imageUrl, userId){
 }
 
 export async function GET_UserScore(userId){
-    //setIsLoading(true);
     const response = await fetch(`http://localhost:3000/api/user/getUserScore/${userId}`, {
         method: "GET",
         cache: "no-store"
     })
-    //setIsLoading(false);
     return await response.json();
 }
 /*----------------------------------------------------------------------------------------------*/
@@ -77,7 +75,7 @@ export async function POST_friendship(userUsername, friendUsername, userId, frie
     return await response.text();
 }
 
-export async function GET_friendship(user_id, friend_id){         // check if friendship with particular user exists (the state does not matter)
+export async function GET_friendship(user_id, friend_id){         // check if friendship with a particular user exists (the state does not matter)
     return await fetch(`http://localhost:3000/api/friendship/getFriendship/${user_id}/${friend_id}`, {
         method: "GET"
     })
@@ -97,8 +95,8 @@ export async function GET_allFriends(userId){
     });
 }
 
-export async function PATCH_acceptFriendRequest(userId, friendId){    // accepting frined request by updating status PENDING to ACCEPTED
-    return await fetch(`http://localhost:3000/api/friendship/getFriendship/${userId}/${friendId}`, {
+export async function PATCH_acceptFriendRequest(userId, friendId){    // accepting a friend request by updating status PENDING to ACCEPTED
+    return await fetch(`http://localhost:3000/api/friendship/acceptFriendRequest/${userId}/${friendId}`, {
         method: "PATCH"
     })
 }
@@ -126,12 +124,10 @@ export async function POST_getBestTestScore(tests) {
 }
 
 export async function GET_getTestByTestId(testId){
-    //setIsLoading(true);
     const response = await fetch(`http://localhost:3000/api/test/getTestByTestId/${testId}`, {
         method: "GET",
         cache: "no-store"
     })
-    //setIsLoading(false);
     return await response.json();
 }
 
@@ -194,7 +190,7 @@ export async function GET_createdTest(testDifficulty) {
 }
 /*----------------------------------------------------------------------------------------------*/
 
-/*-------------GET NOTION ID CALL----------------------------------------------------------------*/
+/*-------------GET NOTION-ID C------------------------------------------------------------------*/
 export async function GET_notionId(chapter) {
     const response = await fetch(`http://localhost:3000/api/chapters/getNotionId/${chapter}`, {
         method: "GET",
@@ -202,7 +198,7 @@ export async function GET_notionId(chapter) {
     })
     return await response.json();
 }
-/*----------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------*/
 
 /*-------------GET ALL CHAPTERS----------------------------------------------------------------*/
 export async function GET_allChapters() {
@@ -212,4 +208,4 @@ export async function GET_allChapters() {
     })
     return await response.json();
 }
-/*----------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------*/

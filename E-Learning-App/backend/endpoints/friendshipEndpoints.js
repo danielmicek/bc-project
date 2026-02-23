@@ -43,7 +43,7 @@ router.get("/getAllFriends/:userId", (request, response)=> {
 });
 
 // ------------------PATCH REQUEST - UPDATE STATUS PENDING TO ACCEPTED--------------------------------------------------
-router.patch("/getFriendship/:userId/:friendId", (request, response)=> {
+router.patch("/acceptFriendRequest/:userId/:friendId", (request, response)=> {
     const { userId, friendId } = request.params;
 
     const getQuery = "UPDATE friendship SET status = 'ACCEPTED' WHERE (user_id = $1 OR user_id = $2) AND (friend_id = $2 OR friend_id = $1) AND status = 'PENDING'";
@@ -97,7 +97,7 @@ router.get("/getAllFriendRequests/:userId", (request, response)=> {
 });
 
 // ------------------GET REQUEST - GET FRIENDSHIP---------------------------------------------------------------
-router.get("/:userId/:friendId", (request, response)=> {
+router.get("/getFriendship/:userId/:friendId", (request, response)=> {
     const { userId, friendId } = request.params;
 
     const getQuery = "SELECT status FROM friendship WHERE user_id = $1 AND friend_id = $2";
@@ -105,12 +105,12 @@ router.get("/:userId/:friendId", (request, response)=> {
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
-                return response.status(404).send("Friendship among users: " + userId + " and " + friendId + " does not exist.  Status code: " + response.statusCode);
+                return response.status(400).send("Friendship among users: " + userId + " and " + friendId + " does not exist.  Status code: " + response.statusCode);
             }
             else{
-                const foundFrinedshipStatus = result.rows[0]
+                const foundFriendshipStatus = result.rows[0]
                 return response.status(200).send({
-                    status: foundFrinedshipStatus.status
+                    status: foundFriendshipStatus.status
                 });
             }
 

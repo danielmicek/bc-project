@@ -14,7 +14,7 @@ router.get("/getUser/:username", (request, response)=> {
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
-                response.status(404).send("user_id: " + username + " not found.  Status code: " + response.statusCode);
+                response.status(400).send("user_id: " + username + " not found.  Status code: " + response.statusCode);
             }
             else{
                 const foundUser = result.rows[0]

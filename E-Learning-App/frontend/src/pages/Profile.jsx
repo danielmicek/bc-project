@@ -68,9 +68,9 @@ export function Profile() {
                             />
                         </div>
                         <SlidingCircle/>
-                        <div id = "GRID_CONTAINER" className="relative grid gap-10 px-10 md:mb-30 mt-10 md:mt-0 md:pb-0 pb-[30vh] overflow-auto grid-cols-1 md:grid-cols-2">
+                        <div id = "GRID_CONTAINER" className="relative grid gap-10 px-10 md:mb-30 mt-10 pt-10 md:mt-0 md:pb-10 pb-[30vh] overflow-auto grid-cols-1 md:grid-cols-2">
                             <div className="profilePageGridElement flex items-center justify-center text-white font-bold text-2xl gap-5 md:col-span-2">
-                                <TypingAnimatedText words={["Tvoja cesta", "Začína tu", "Teraz"]}/>
+                                <TypingAnimatedText words={["Tvoja cesta", "začína tu", "a teraz."]}/>
                             </div>
                             <div className= "profilePageGridElement gap-5">
                                 <img src="/learning-icon.png" alt="learning-icon" className="justify-self-center h-8"/>

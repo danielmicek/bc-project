@@ -36,13 +36,13 @@ export default function SlidingCircle() {
 
 
     return (
-        <div id="CIRCLE1" ref = {ref} className="absolute top-0 z-10 grid grid-cols-3 grid-rows-3
-    border-[6px] border-(--main-color-orange)
+        <div id="CIRCLE" ref = {ref} className="absolute top-0 z-10 grid grid-cols-3 grid-rows-3
+    border-[6px] border-(--main-color-orange) border-b-none
     rounded-tr-[1000%] rounded-tl-[1000%]
     shadow-[0px_-10px_30px_rgba(252,147,40,0.5)]
     h-[calc(100vh-65px)] w-[30cm] top-[75vh] self-center
     bg-white transition-[top,background-color]
-    duration-800 ease-in-out"  style={{ top: isOpen ? "5vh" : "75vh" }}>
+    duration-800 ease-in-out"  style={{ top: isOpen ? "10vh" : "75vh" }}>
             <img src="/tap.png" alt="tap" className="absolute top-3 justify-self-center h-8 z-100 text-black text-5xl hover:scale-110 transition-transform duration-200"
                  onClick={prev => setIsOpen(prev => !prev)}/>
             <p id="NOT_SIGNED_YET" className="flex items-center justify-center relative left-5 text-[2rem] font-medium col-start-2 mb-20 row-start-1">Nový používateľ?</p>

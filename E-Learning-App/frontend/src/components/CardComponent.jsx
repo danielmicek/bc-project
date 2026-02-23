@@ -1,11 +1,13 @@
 import {Button, Card, CardBody, CardFooter, CardHeader, Divider, Image, useDisclosure} from "@heroui/react";
 import React from "react";
+import "../styles/index.css"
 import {Link, useNavigate} from "react-router-dom";
 import {useUser} from "@clerk/clerk-react";
 import ModalComponent from "./ModalComponent.jsx";
 import {goToPage} from "../methods/methodsClass.js";
 import DetailsModal from "./DetailsModal.jsx";
 import {chaptersDetails, testsAndLearningDetails} from "../methods/details.jsx";
+import SpotlightCard from "@/components/SpotlightCard.jsx";
 
 // renders the orange button in each CardComponent according to its type
 // Learning -> "Zobraziť kapitoly" button
@@ -103,58 +105,60 @@ export default function CardComponent({
 
             <Card className={`${testColumn} ${type === "Chapter" ? "sm:w-[400px] w-full" : "w-full"} h-[230px] pt-3 px-3 rounded-lg shadow-[5px_10px_30px_rgba(252,147,40,0.5)]
             bg-gradient-to-br from-[#2a2a2a] to-[#1f1f1f] border-2 border-(--main-color-orange)`}>
-                <CardHeader className="flex gap-3">
-                    <Image
-                        alt="heroui logo"
-                        height={40}
-                        radius="sm"
-                        src={imgPath}
-                        width={40}
-                    />
-                    <div className="flex flex-col">
-                        <p className="flex ml-4 text-xl font-bold text-white">{title}</p>
-                        {/* META INFO */}
-                        <div className="mt-4 flex gap-4 text-sm text-foreground/70 items-center">
+                <SpotlightCard className="custom-spotlight-card">
+                    <CardHeader className="flex gap-3">
+                        <Image
+                            alt="heroui logo"
+                            height={40}
+                            radius="sm"
+                            src={imgPath}
+                            width={40}
+                        />
+                        <div className="flex flex-col">
+                            <p className="flex ml-4 text-xl font-bold text-white">{title}</p>
+                            {/* META INFO */}
+                            <div className="mt-4 flex gap-4 text-sm text-foreground/70 items-center">
                       <span>
                         <b className="text-gray-400">{questions === 0 ? "" : `${questions} otázok`}</b>
                       </span>
-                            <span>
+                                <span>
                             {type === "Chapter" && <b className="text-gray-400">Odhadovaný čas: {time} hod</b>}
-                                {type !== "Chapter" &&
-                                    <b className="text-gray-400">{time === 0 ? "Neobmedzený čas" : `${time} min`}</b>}
+                                    {type !== "Chapter" &&
+                                        <b className="text-gray-400">{time === 0 ? "Neobmedzený čas" : `${time} min`}</b>}
                         </span>
-                            {/* DIFFICULTY BADGE */}
-                            <span
-                                className={`rounded-lg text-center border px-3 py-1 text-xs font-semibold ${difficultyStyles[difficulty]}`}>
+                                {/* DIFFICULTY BADGE */}
+                                <span
+                                    className={`rounded-lg text-center border px-3 py-1 text-xs font-semibold ${difficultyStyles[difficulty]}`}>
                         {difficulty}
                     </span>
+                            </div>
                         </div>
-                    </div>
-                </CardHeader>
+                    </CardHeader>
 
-                <Divider className="bg-gray-500"/>
+                    <Divider className="bg-gray-500"/>
 
-                <CardBody className="flex justify-center h-fit overflow-hidden">
-                    <p className="text-white whitespace-pre-line ">{description}</p>
-                </CardBody>
+                    <CardBody className="flex justify-center h-fit overflow-hidden">
+                        <p className="text-white whitespace-pre-line ">{description}</p>
+                    </CardBody>
 
-                <Divider className="bg-gray-500"/>
+                    <Divider className="bg-gray-500"/>
 
-                <CardFooter>
-                    {/* ACTIONS */}
-                    <div className="flex justify-end gap-2 w-full">
-                        <Button variant="light" className="bg-gray-500 font-bold" onPress={onOpenDetailModal}>
-                            Detaily
-                        </Button>
-                        {// orange button
-                        switchRender(
-                            type,
-                            title.split(" ")[1],  // chapter number
-                            isSignedIn,
-                            onOpenTest_Chapter_Modal)
-                        }
-                    </div>
-                </CardFooter>
+                    <CardFooter>
+                        {/* ACTIONS */}
+                        <div className="flex justify-end gap-2 w-full">
+                            <Button variant="light" className="bg-gray-500 font-bold" onPress={onOpenDetailModal}>
+                                Detaily
+                            </Button>
+                            {// orange button
+                                switchRender(
+                                    type,
+                                    title.split(" ")[1],  // chapter number
+                                    isSignedIn,
+                                    onOpenTest_Chapter_Modal)
+                            }
+                        </div>
+                    </CardFooter>
+                </SpotlightCard>
             </Card>
         </>
     );

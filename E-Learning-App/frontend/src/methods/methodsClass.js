@@ -58,8 +58,8 @@ export async function sendFriendRequest(userUsername, user_id, friendUniqueIdent
     }
 
     let responseObject = await GET_user(friendUsername);
-    if(responseObject.status === 404){
-        toast.error("User not found");
+    if(responseObject.status === 400){
+        toast.error("Používateľ nenájdený");
         return;
     }
 
@@ -67,7 +67,7 @@ export async function sendFriendRequest(userUsername, user_id, friendUniqueIdent
 
     responseObject = await GET_friendship(user_id, friend_id)
     if(responseObject.status === 200){
-        toast.success("Friendship already exists");
+        toast.success("Akcia už bola vykonaná");
     }
     else{
         try {
@@ -140,7 +140,6 @@ export async function friendRequestListLoader(userId, setFriendRequestList){
             setFriendRequestList(prevList => [...prevList, {friendName: friendName, friendId: result.userId, imgUrl: result.userImgUrl, email: result.userEmail}]);
         })
     }
-    //toast.success('Friend requests loaded!');
 }
 
 export async function friendListLoader(userId, setFriendList){
@@ -152,7 +151,6 @@ export async function friendListLoader(userId, setFriendList){
     }
     setFriendList([])
     setFriendList(await result.json()); // different than method friendRequestListLoader, because this endpoint returns an object of users, the friendRequestListLoader returns an array of usernames
-    return
 }
 
 export function getUniqueTestID(prefix) {

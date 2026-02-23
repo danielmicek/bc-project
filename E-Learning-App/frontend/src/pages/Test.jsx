@@ -137,7 +137,7 @@ export default function Test() {
                         </Link>
                         <SwiperComponent questions={questions}/>
                     </div>
-                : // testStatus === "submitted" -> timer ended
+                : // testStatus === "ended" -> timer ended
                         <div className="mt-10">
                             {/*TEST RESULTS MODAL*/}
                             <ModalComponent title={"Čas vypršal"}

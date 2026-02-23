@@ -22,7 +22,7 @@ function handleClick(selectedArray, setSelectedArray, index, difficulty, answers
             const newSelectedArray = [...prevSelectedArray];
             newSelectedArray[index] = !newSelectedArray[index];
             // single-select
-            if(multiselect === false){
+            if(difficulty !== "hard" && multiselect === false){ // in hard test all the questions can be selected regardless of the multiselect
                 return newSelectedArray.map((value, i) => {
                     return i === index; // return true if the index is selected, false otherwise
                 });
@@ -96,7 +96,6 @@ export default function Question({activeIndex, question, setQuestions}) {
         saveSelectedAnswersIntoTest(selectedArray, setQuestions, activeIndex)
     }, [selectedArray]); //pri zakliknuti odpovede ulozim zaznacene odpovede do skutocnej struktury testu (cely JSON -> cely vygenerovany test)
 
-    let i = 0
     return <>
         <div className="pb-8 justify-self-center self-center flex flex-col gap-0 overflow-hidden max-[750px]:w-[70vw]  mb-5">
 
