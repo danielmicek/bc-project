@@ -13,6 +13,7 @@ export default function SwiperComponent({questions, setQuestions = null}) {
             return '<span class="' + className + '">' + (index + 1) + '</span>';
         },
     };
+    console.log(questions);
 
     const refSwiper = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);

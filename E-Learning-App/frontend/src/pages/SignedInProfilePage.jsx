@@ -227,7 +227,7 @@ export default function SignedInProfilePage() {
                     }
 
                 <div className="flex min-[900px]:flex-row flex-col items-center h-fit w-[90%] mt-30 relative
-                    min-[900px]:gap-30 gap-10 pb-18 ">
+                    lg:gap-30 gap-10 pb-18 ">
                     <SpotlightCard className="custom-spotlight-card flex relative flex-col h-[400px] max-[900px]:h-[300px]
                                     min-[900px]:w-[50%] w-full rounded-lg border-1 border-white shadow-[5px_10px_30px_rgba(255,255,255,0.5)]">
                         <FriendList type="friendList"

@@ -98,7 +98,7 @@ function generateList({
                 <ListItemAvatar>
                     <Avatar src={friend.imgUrl} alt="Avatar"/>
                 </ListItemAvatar>
-                <ListItemText
+                <ListItemText sx={{display: "flex", flexDirection: "column", gap: "8px"}}
                     primary={friend.friendName}
                     secondary={friend.email}
                 />

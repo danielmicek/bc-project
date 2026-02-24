@@ -19,12 +19,15 @@ export default function Test() {
     const [isLoading, setIsLoading] = useState( true);
     const [timerGoing, setTimerGoing] = useState( false);
     const [testStatus, setTestStatus] = useState("ongoing"); // "ongoing" / "paused" / "submitted" / "ended"
+    const [finishedTest, setFinishedTest] = useState(null)
     const {isOpen: isOpenEndTestModal, onOpen: onOpenEndTestModal, onClose: onCloseEndTestModal} = useDisclosure();
     const {isOpen: isOpenSubmitTestModal, onOpen: onOpenSubmitTestModal, onClose: onCloseSubmitTestModal} = useDisclosure();
     const {isOpen: isOpenTestResultsModal, onOpen: onOpenTestResultsModal, onClose: onCloseTestResultsModal} = useDisclosure();
+    const {isOpen: isOpenTimeOutModal, onOpen: onOpenTimeOutModal, onClose: onCloseTimeOutModal} = useDisclosure();
     const TEST_DIFFICULTY = searchParams.get("testDifficulty")
-    const TEST_ID = searchParams.get("testID")
+    const [TEST_ID] = useState(() => searchParams.get("testID"));
     const READ_ONLY = searchParams.get("readOnly") === "true"
+
 
     // if READ_ONLY = false -> create test
     // if READ_ONLY = true -> get test from db
@@ -34,7 +37,8 @@ export default function Test() {
         async function loadQuestions() {
             try{
                 const tmp = READ_ONLY ? await GET_getTestByTestId(TEST_ID) : await GET_createdTest(TEST_DIFFICULTY)
-                setQuestions(READ_ONLY ? tmp.test.structure : tmp.createdTest)
+                console.log(tmp);
+                setQuestions(READ_ONLY ? tmp.test : tmp.createdTest)
             }
             catch (error) {
                 toast.error("Error. Skús znova neskôr")
@@ -52,7 +56,27 @@ export default function Test() {
         setTimerGoing(prev => !prev)
     }, [isOpenSubmitTestModal, isOpenEndTestModal])
 
+    /*// load finished test by testId after the timer ends to get results
+    useEffect(() => {
+        if(testStatus === "paused") return;
 
+        async function loadFinishedTest() {
+            try{
+                const tmp = READ_ONLY ? await GET_getTestByTestId(TEST_ID) : await GET_createdTest(TEST_DIFFICULTY)
+                setQuestions(READ_ONLY ? tmp.test.structure : tmp.createdTest)
+            }
+            catch (error) {
+                toast.error("Error. Skús znova neskôr")
+            }
+            finally {
+                setIsLoading(false)
+                setTimerGoing(true)
+            }
+        }
+        void loadFinishedTest()
+    }, [testStatus])*/
+
+    console.log(questions);
     return <>
         {/*END TEST MODAL*/}
         <ModalComponent title={"Naozaj chceš ukončiť test?"}
@@ -73,7 +97,7 @@ export default function Test() {
                         declineButtonText = {"Nie"}
                         confirmButtonclickHandler={async () => {
                             const result = await POST_submitTest(questions, TEST_DIFFICULTY, user.id, TEST_ID, setIsLoading)
-                            setQuestions(result.testStructure)
+                            setQuestions(result)
                             onCloseSubmitTestModal()
                             onOpenTestResultsModal()
                             setTestStatus("submitted")
@@ -121,8 +145,10 @@ export default function Test() {
                     <div className="mt-10">
                         {/*TEST RESULTS MODAL*/}
                         <ModalComponent title={"Výsledky"}
-                                        mainText={"xxx"}
-                                        secondaryText={"yyy"}
+                                        mainText={"Dosiahnutý počet bodov: " + questions.points}
+                                        secondaryText1={"Výsledok v % : " + questions.percentage}
+                                        secondaryText2={"Známka: " + questions.grade}
+                                        secondaryText3={"Medaila: " + (questions.medal === "none" ? "Žiadna" : questions.medal)}
                                         isOpen={isOpenTestResultsModal}
                                         onClose={onCloseTestResultsModal}
                                         confirmButtonText = {"Pozrieť vyhodnotený test"}
@@ -135,19 +161,32 @@ export default function Test() {
                                 Späť do menu
                             </Button>
                         </Link>
-                        <SwiperComponent questions={questions}/>
+                        <SwiperComponent questions={questions.structure}/>
                     </div>
                 : // testStatus === "ended" -> timer ended
                         <div className="mt-10">
                             {/*TEST RESULTS MODAL*/}
+                            <ModalComponent title={"Výsledky"}
+                                            mainText={"Dosiahnutý počet bodov: " + questions.points}
+                                            secondaryText1={"Výsledok v % : " + questions.percentage}
+                                            secondaryText2={"Známka: " + questions.grade}
+                                            secondaryText3={"Medaila: " + (questions.medal === "none" ? "Žiadna" : questions.medal)}
+                                            isOpen={isOpenTestResultsModal}
+                                            onClose={onCloseTestResultsModal}
+                                            confirmButtonText = {"Prezerať test"}
+                                            declineButtonText = {"Späť do menu"}
+                                            confirmButtonclickHandler = {onCloseTestResultsModal}
+                                            declineButtonclickHandler = {() => goToPage("/courseInfoPage", navigate)}
+                            />
+                            {/*TIME OUT MODAL*/}
                             <ModalComponent title={"Čas vypršal"}
                                             mainText={"Zaznačené odpovede boli vyhodnotené,za nezaznačené boli strhnuté body."}
                                             secondaryText={"yyy"}
-                                            isOpen={isOpenTestResultsModal}
-                                            onClose={onCloseTestResultsModal}
+                                            isOpen={isOpenTimeOutModal}
+                                            onClose={onCloseTimeOutModal}
                                             confirmButtonText = {"Pozrieť vyhodnotený test"}
                                             declineButtonText = {"Späť do menu"}
-                                            confirmButtonclickHandler = {onCloseTestResultsModal}
+                                            confirmButtonclickHandler = {onCloseTimeOutModal}
                                             declineButtonclickHandler = {() => goToPage("/courseInfoPage", navigate)}
                             />
                             <Link to="/courseInfoPage">
@@ -155,7 +194,10 @@ export default function Test() {
                                     Späť do menu
                                 </Button>
                             </Link>
-                            <SwiperComponent questions={questions}/>
+                            <Button variant="light" className="bg-gray-500 font-bold absolute top-20 left-7" onPress={onOpenTestResultsModal}>
+                                Výsledky
+                            </Button>
+                            <SwiperComponent questions={questions.structure}/>
                         </div>
             }
         </div>

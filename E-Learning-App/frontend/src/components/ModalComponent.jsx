@@ -4,7 +4,9 @@ import {SignedOut, SignInButton} from "@clerk/clerk-react";
 
 export default function ModalComponent({title,
                                        mainText,
-                                       secondaryText = null,
+                                       secondaryText1 = null,
+                                       secondaryText2 = null,
+                                       secondaryText3 = null,
                                        isOpen,
                                        onClose,
                                        confirmButtonclickHandler = ()=>{},
@@ -22,7 +24,9 @@ export default function ModalComponent({title,
 
                         <ModalBody>
                             <p>{mainText}</p>
-                            {secondaryText && <p>{secondaryText}</p>}
+                            {secondaryText1 && <p>{secondaryText1}</p>}
+                            {secondaryText2 && <p>{secondaryText2}</p>}
+                            {secondaryText3 && <p>{secondaryText3}</p>}
                         </ModalBody>
 
                         <ModalFooter>

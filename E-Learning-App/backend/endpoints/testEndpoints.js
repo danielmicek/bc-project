@@ -49,7 +49,7 @@ router.get("/getAllUsersTests/:userId", (request, response)=> {
 // ------------------GET REQUEST - GET TEST BY TEST ID-----------------------------------------------------------------
 router.get("/getTestByTestId/:testId", (request, response)=> {
     let testId = request.params.testId;
-
+    console.log("aaaaaaaaaaaaaaaaaaaa: " + testId);
     const getQuery = "SELECT * FROM tests WHERE test_id = $1 ORDER BY timestamp";
     pool.query(getQuery, [testId])
         .then((result) => {
@@ -204,15 +204,22 @@ router.post("/submitTest", (request, response)=> {
     console.log(testStructure[0].answers);
 
     const calculatedResult = calculateTestScore(testStructure, testDifficulty)
-    const calculatedResultPercentagentage = ((calculatedResult/fullPoints) * 100).toFixed(2)
-    const grade = getGrade(calculatedResultPercentagentage)
+    const calculatedResultPercentage = ((calculatedResult/fullPoints) * 100).toFixed(2)
+    const grade = getGrade(calculatedResultPercentage)
+    const medal = getMedal(grade, testDifficulty)
 
-    if(addTest(testId, calculatedResult, calculatedResultPercentagentage, getCurrentTimestamp(), grade, getMedal(grade, testDifficulty), userId, testStructure, testDifficulty) === false){
+    if(addTest(testId, calculatedResult, calculatedResultPercentage, getCurrentTimestamp(), grade, medal, userId, testStructure, testDifficulty) === false){
         response.status(500).send("Error posting test to database.");
     }
 
     try {
-        response.status(200).send({testResult: calculatedResultPercentagentage, testStructure: testStructure});
+        response.status(200).send({
+            percentage: calculatedResultPercentage,
+            points: calculatedResult,
+            medal: medal,
+            grade: grade,
+            testStructure: testStructure
+        });
     }
     catch(error) {
         response.status(500).send("Error during calculating test results.");
