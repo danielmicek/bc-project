@@ -103,8 +103,8 @@ export default function CardComponent({
                 />
             }
 
-            <Card className={`${testColumn} ${type === "Chapter" ? "sm:w-[400px] w-full" : "w-full"} h-[230px] pt-3 px-3 rounded-lg shadow-[5px_10px_30px_rgba(252,147,40,0.5)]
-            bg-gradient-to-br from-[#2a2a2a] to-[#1f1f1f] border-2 border-(--main-color-orange)`}>
+            <Card className={`${testColumn} ${type === "Chapter" ? "sm:w-[400px] w-full" : "w-full"} h-[230px]  px-3 rounded-lg shadow-[5px_10px_30px_rgba(255,255,255,0.5)]
+            bg-gradient-to-br from-[#3B3B3B] to-[#1f1f1f] border-1 border-white`}>
                 <SpotlightCard className="custom-spotlight-card">
                     <CardHeader className="flex gap-3">
                         <Image

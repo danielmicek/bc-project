@@ -21,6 +21,7 @@ import PieChartComponent from "../components/PieChartComponent.jsx";
 import BasicSparkLineComponent from "../components/SparkLineChartComponent.jsx";
 import ExportCertificateContainer from "../components/ExportCertificateContainer.jsx";
 import HistoryTable from "../components/HistoryTable.jsx";
+import SpotlightCard from "@/components/SpotlightCard.jsx";
 
 
 // initialize both friendList and list of FR by calling endpoints to get all friends and another one to get all FR
@@ -140,43 +141,46 @@ export default function SignedInProfilePage() {
             reverseOrder={false}
         />
         <div id="BLACK_BACKGROUND"
-             className="relative flex flex-col min-h-screen justify-center shadow-xl bg-[#050505]">
+             className="relative flex w-full flex-col min-h-screen justify-center shadow-xl bg-[#050505]">
             {userTests === null ? <></> :
-                <div className="container pb-20 h-full flex flex-col items-center mt-20">
-                <div id="MAIN_CONTAINER_WITH_PROFILE_PIC"
-                     className="shadow-[5px_10px_30px_rgba(255,255,255,0.5)]
-                    w-[90%] flex flex-col min-[900px]:flex-row items-center max-[900px]:justify-center max-[900px]:pt-5
-                    max-[480px]:px-3 min-[900px]:pl-20 h-fit rounded-lg bg-linear-to-br from-[#2a2a2a] to-[#1f1f1f]
-                    border-2 border-white relative">
-                    <SignedIn>
-                        <UserAvatar/>
-                    </SignedIn>
-                    <div id="GRID_CONTAINER_LOGGED_PROFILE_PAGE"
-                         className="flex flex-col relative min-[900px]:ml-20
-                        my-12.5 min-[900px]:border-l-2 min-[900px]:border-l-[#545454] max-[1024px]:items-center
-                        max-[900px]:border-t-2 max-[900px]:border-t-[#545454] max-[900px]:pt-20 lg:pl-10">
-                        <div id="USERNAME"
-                             className="sm:text-4xl text-3xl font-bold mb-3.75 text-shadow-md max-[900px]:text-center
-                             text-white">{user.username}
-                        </div>
-                        <div id="EMAIL"
-                             className="relative sm:text-xl text-lg text-[#BFBBBB] max-[900px]:text-center">
-                            {user.primaryEmailAddress.emailAddress}
-                        </div>
-                        <div id="MEMBER_SICNE"
-                             className="relative sm:text-lg text-mf text-[#BFBBBB] max-[900px]:text-center">Profil vytvorený: {new Date(user.createdAt).toLocaleDateString()}
-                        </div>
+                <div className="container pb-20 h-full w-full flex flex-col items-center mt-20">
+                    <SpotlightCard className="custom-spotlight-card relative shadow-[5px_5px_17px_4px_rgba(149,_157,_165,_0.3)]
+                        w-[90%] h-fit rounded-lg bg-linear-to-br from-[#3B3B3B] to-[#1f1f1f]">
+                        <div id="MAIN_CONTAINER_WITH_PROFILE_PIC"
+                             className="relative shadow-[5px_10px_30px_rgba(255,255,255,0.5)]
+                                w-full h-full flex flex-col min-[900px]:flex-row items-center max-[900px]:justify-center max-[900px]:pt-5
+                                max-[480px]:px-3 min-[900px]:pl-20 rounded-lg">
+                                <SignedIn>
+                                    <UserAvatar/>
+                                </SignedIn>
+                                <div id="GRID_CONTAINER_LOGGED_PROFILE_PAGE"
+                                     className="flex flex-col relative min-[900px]:ml-20
+                                my-12.5 min-[900px]:border-l-2 min-[900px]:border-l-[#545454] max-[1024px]:items-center
+                                max-[900px]:border-t-2 max-[900px]:border-t-[#545454] max-[900px]:pt-20 lg:pl-10">
+                                    <div id="USERNAME"
+                                         className="sm:text-4xl text-3xl font-bold mb-3.75 text-shadow-md max-[900px]:text-center
+                                     text-white">{user.username}
+                                    </div>
+                                    <div id="EMAIL"
+                                         className="relative sm:text-xl text-lg text-[#BFBBBB] max-[900px]:text-center">
+                                        {user.primaryEmailAddress.emailAddress}
+                                    </div>
+                                    <div id="MEMBER_SICNE"
+                                         className="relative sm:text-lg text-mf text-[#BFBBBB] max-[900px]:text-center">Profil vytvorený: {new Date(user.createdAt).toLocaleDateString()}
+                                    </div>
 
-                        <div id="SQUARES"
-                             className="flex items-center flex-wrap min-[700px]:items-start justify-center mt-15 gap-5
-                             max-[600px]:px-5">
-                            <StatCard text="Priatelia" imgPath="/friends.png" value={userFriendList.length}/>
-                            <StatCard text="Testy" imgPath="/test.png" value={userTests.tests.length}/>
-                            <StatCard text="Celkové body" imgPath="/score.png" value={userScore}/>
-                        </div>
-                    </div>
-                </div>
+                                    <div id="SQUARES"
+                                         className="flex items-center flex-wrap min-[700px]:items-start justify-center mt-15 gap-5
+                                     max-[600px]:px-5">
+                                        <StatCard text="Priatelia" imgPath="/friends.png" value={userFriendList.length}/>
+                                        <StatCard text="Testy" imgPath="/test.png" value={userTests.tests.length}/>
+                                        <StatCard text="Celkové body" imgPath="/score.png" value={userScore}/>
+                                    </div>
+                                </div>
 
+
+                        </div>
+                </SpotlightCard>
                 <div id="SEND_FR_AND_COPY_PROFILE_LINK_CONTAINER"
                      className="flex min-[800px]:flex-row flex-col gap-3 mt-[25px] items-center w-[90%]">
                     <div className="flex relativ min-[1100px]:w-[50%] w-full">
@@ -224,23 +228,30 @@ export default function SignedInProfilePage() {
 
                 <div className="flex min-[900px]:flex-row flex-col items-center h-fit w-[90%] mt-30 relative
                     min-[900px]:gap-30 gap-10 pb-18 ">
-                    <FriendList type="friendList"
-                                list={userFriendList}
-                                setRequestList={setFriendRequestList}
-                                setFriendsList={setUserFriendList}
-                                userUsername={user.username}
-                                userId={user.id}
-                                isLoading={isLoading}
-                    />
+                    <SpotlightCard className="custom-spotlight-card flex relative flex-col h-[400px] max-[900px]:h-[300px]
+                                    min-[900px]:w-[50%] w-full rounded-lg border-1 border-white shadow-[5px_10px_30px_rgba(255,255,255,0.5)]">
+                        <FriendList type="friendList"
+                                    list={userFriendList}
+                                    setRequestList={setFriendRequestList}
+                                    setFriendsList={setUserFriendList}
+                                    userUsername={user.username}
+                                    userId={user.id}
+                                    isLoading={isLoading}
+                        />
+                    </SpotlightCard>
 
-                    <FriendList type="friendRequestList"
-                                list={friendRequestsList}
-                                setRequestList={setFriendRequestList}
-                                setFriendsList={setUserFriendList}
-                                userUsername={user.username}
-                                userId={user.id}
-                                isLoading={isLoading}
-                    />
+                    <SpotlightCard className="custom-spotlight-card flex relative flex-col h-[400px] max-[900px]:h-[300px]
+                                    min-[900px]:w-[50%] w-full rounded-lg border-1 border-white shadow-[5px_10px_30px_rgba(255,255,255,0.5)]">
+                        <FriendList type="friendRequestList"
+                                    list={friendRequestsList}
+                                    setRequestList={setFriendRequestList}
+                                    setFriendsList={setUserFriendList}
+                                    userUsername={user.username}
+                                    userId={user.id}
+                                    isLoading={isLoading}
+                        />
+                    </SpotlightCard>
+
 
                     <Button className="bg-(--main-color-orange) font-bold absolute bottom-0 right-0"
                             onPress={async () => {

@@ -122,7 +122,7 @@ export default function FriendList({
 
     return (
 
-        <div className="flex relative flex-col h-[400px] max-[900px]:h-[300px] min-[900px]:w-[50%] w-full rounded-lg bg-gradient-to-br from-[#2a2a2a] to-[#1f1f1f] pt-10 px-5 shadow-[5px_10px_30px_rgba(255,255,255,0.5)] border-2 border-white">
+        <div className="w-full h-full bg-gradient-to-br from-[#3B3B3B] to-[#1f1f1f] pt-10 px-5">
             <div className = "flex relative w-full gap-5 items-center mb-3 pb-3">
                 <img className="shrink-0 w-[40px] h-[40px] aspect-square relative" src ={type === "friendList" ? "/friends-white.png" : "/add-user-white.png"} alt = {title}/>
                 <h1 className = "font-bold min-w-0 max-[500px]:text-3xl text-4xl text-white">{title}</h1>
