@@ -1,5 +1,5 @@
 import {Button, Card, CardBody, CardFooter, CardHeader, Divider, Image, useDisclosure} from "@heroui/react";
-import React from "react";
+import React, {useEffect} from "react";
 import "../styles/index.css"
 import {Link, useNavigate} from "react-router-dom";
 import {useUser} from "@clerk/clerk-react";
@@ -8,6 +8,7 @@ import {goToPage} from "../methods/methodsClass.js";
 import DetailsModal from "./DetailsModal.jsx";
 import {chaptersDetails, testsAndLearningDetails} from "../methods/details.jsx";
 import SpotlightCard from "@/components/SpotlightCard.jsx";
+import ScrollReveal from "scrollreveal";
 
 // renders the orange button in each CardComponent according to its type
 // Learning -> "Zobraziť kapitoly" button
@@ -76,6 +77,11 @@ export default function CardComponent({
     const {isOpen: isOpenTest_Chapter_Modal, onOpen: onOpenTest_Chapter_Modal, onClose: onCloseTest_Chapter_Modal} = useDisclosure();
     const {isOpen: isOpenDetailModal, onOpen: onOpenDetailModal, onClose: onCloseDetailModal} = useDisclosure();
 
+    // scroll reveal
+    useEffect(() => {
+        ScrollReveal().reveal("#CARD", {reset: true});
+    }, []);
+
     return (
         <>
             <DetailsModal textArray={type === "Chapter" ? chaptersDetails[title] : testsAndLearningDetails[difficulty]}
@@ -103,7 +109,7 @@ export default function CardComponent({
                 />
             }
 
-            <Card className={`${testColumn} ${type === "Chapter" ? "sm:w-[400px] w-full" : "w-full"} h-[230px]  px-3 rounded-lg shadow-[5px_10px_30px_rgba(255,255,255,0.5)]
+            <Card id = "CARD" className={`${testColumn} ${type === "Chapter" ? "sm:w-[400px] w-full" : "w-full"} h-[230px]  px-3 rounded-lg shadow-[5px_10px_30px_rgba(255,255,255,0.5)]
             bg-gradient-to-br from-[#3B3B3B] to-[#1f1f1f] border-1 border-white`}>
                 <SpotlightCard className="custom-spotlight-card">
                     <CardHeader className="flex gap-3">

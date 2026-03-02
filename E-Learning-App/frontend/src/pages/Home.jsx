@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import '../styles/styles.css';
 import {Button, useDisclosure} from "@heroui/react";
 import {SignedOut, SignInButton, useUser} from "@clerk/clerk-react";
@@ -6,6 +6,7 @@ import BigStatCard from "../components/BigStatCard.jsx";
 import {Link} from "react-router-dom";
 import LightRays from "../components/LightRays.jsx";
 import VerifyCertificateModal from "../components/VerifyCertificateModal.jsx";
+import ScrollReveal from "scrollreveal";
 
 function Home() {
 
@@ -14,6 +15,16 @@ function Home() {
     });*/
     const {isOpen: isOpenVerifyCertModal, onOpen: onOpenVerifyCertModal, onClose: onCloseVerifyCertModal} = useDisclosure();
     const {isSignedIn} = useUser();
+
+    // scroll reveal
+    useEffect(() => {
+        const sr = ScrollReveal();
+        sr.reveal("#MAIN_TITLE", {reset: true});
+        sr.reveal("#QUOTE", {reset: true});
+        sr.reveal("#WHAT_IS_ELEONORE", {reset: true});
+        sr.reveal(".BIG_STAT_CARD", {reset: true, interval: 80});
+        sr.reveal("#BOTTOM_CONTAINER", {reset: true});
+    }, []);
 
     return (
         <>
@@ -46,8 +57,8 @@ function Home() {
                     </div>
 
                     <div className= "text-center mt-30 z-5">
-                        <h1 className="font-[1000] text-7xl text-white pb-4">eleonore</h1>
-                        <h2 className = "text-gray-500 relative">“Any fool can know.<br/>The point is to understand.”
+                        <h1 id = "MAIN_TITLE" className="font-[1000] text-7xl text-white pb-4">eleonore</h1>
+                        <h2 id = "QUOTE" className = "text-gray-500 relative">“Any fool can know.<br/>The point is to understand.”
                         </h2>
                     </div>
 
@@ -94,7 +105,7 @@ function Home() {
                         />
 
                     </div>
-                    <div className="flex md:flex-row flex-col items-center justify-center z-5 mt-40 w-[100%] pr-10">
+                    <div id = "BOTTOM_CONTAINER" className="flex md:flex-row flex-col items-center justify-center z-5 mt-40 w-[100%] pr-10">
                         <img src="/laptop.png" alt="laptop" className="md:w-[500px] min-[1300px]:w-[800px] lg:w-[700px] w-[450px]"/>
                         <ul className="list-disc flex flex-col list-inside text-white mt-10 md:mt-0 pl-10">
                             <li className="mb-8 font-extrabold text-gray-400 text-xl">Získaj medailu po úspechu v teste</li>

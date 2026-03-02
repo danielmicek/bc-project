@@ -22,6 +22,7 @@ import BasicSparkLineComponent from "../components/SparkLineChartComponent.jsx";
 import ExportCertificateContainer from "../components/ExportCertificateContainer.jsx";
 import HistoryTable from "../components/HistoryTable.jsx";
 import SpotlightCard from "@/components/SpotlightCard.jsx";
+import ScrollReveal from "scrollreveal";
 
 
 // initialize both friendList and list of FR by calling endpoints to get all friends and another one to get all FR
@@ -134,6 +135,14 @@ export default function SignedInProfilePage() {
 
         if (userTests !== null) loadHardTests()
     }, [userTests])
+
+    // scroll reveal
+    useEffect(() => {
+        ScrollReveal().reveal("#MAIN_CONTAINER_WITH_PROFILE_PIC", {reset: true});
+        ScrollReveal().reveal("#SEND_FR_AND_COPY_PROFILE_LINK_CONTAINER", {reset: true});
+        ScrollReveal().reveal("#FOOTER", {reset: true});
+        ScrollReveal().reveal("#STATS_TITLE", {reset: true});
+    })
 
     return (<>
         <Toaster
@@ -274,7 +283,7 @@ export default function SignedInProfilePage() {
                 <div id="STATS_CONTAINER"
                      className="flex min-[900px]:flex-row flex-col items-center justify-center h-fit w-[90%] mt-30
                      lg:pt-0 pt-15 mb-25 relative min-[900px]:gap-10 gap-5">
-                    <h1 className="absolute top-0 left-0 text-white font-bold text-5xl">Štatistiky</h1>
+                    <h1 id = "STATS_TITLE" className="absolute top-0 left-0 text-white font-bold text-5xl">Štatistiky</h1>
 
                     <Stats userTests={userTests}
                            userScore={userScore}

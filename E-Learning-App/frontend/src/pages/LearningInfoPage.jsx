@@ -3,9 +3,15 @@ import CardComponent from "../components/CardComponent.jsx";
 import {Button} from "@heroui/react";
 import {Link} from "react-router-dom";
 import {GET_allChapters} from "../methods/fetchMethods.js";
+import ScrollReveal from "scrollreveal";
 
 export default function LearningInfoPage() {
     const [notionPages, setNotionPages] = useState([]);
+
+    // scroll reveal
+    useEffect(() => {
+        ScrollReveal().reveal("#FOOTER", {reset: true});
+    }, []);
 
     useEffect(() => {
         async function loadChapters() {

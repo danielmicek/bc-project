@@ -1,7 +1,12 @@
-import React from "react";
+import React, {useEffect} from "react";
 import CardComponent from "../components/CardComponent.jsx";
+import ScrollReveal from "scrollreveal";
 
 export function CourseInfoPage(){
+// scroll reveal
+    useEffect(() => {
+        ScrollReveal().reveal("#FOOTER", {reset: true});
+    }, []);
 
     return(
         <div id = "BLACK_BACKGROUND" className="flex flex-col p-5 w-full h-fit justify-center border-500-red border-2 shadow-xl relative"

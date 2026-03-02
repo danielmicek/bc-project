@@ -1,5 +1,7 @@
 import {Divider} from "@heroui/react";
 import * as React from "react";
+import {useEffect} from "react";
+import ScrollReveal from "scrollreveal";
 
 
 export default function LeaderBoard({title, friends, user, userScore}){
@@ -12,8 +14,13 @@ export default function LeaderBoard({title, friends, user, userScore}){
     }]
     users.sort((a, b) => b.score - a.score);
 
+    // scroll reveal
+    useEffect(() => {
+        ScrollReveal().reveal("#LEADERBOARD", {reset: true});
+    }, []);
+
     return (
-        <ul className="relative list h-[285px] bg-base-100 rounded-box shadow-md w-[80%] mt-30">
+        <ul id = "LEADERBOARD" className="relative list h-[285px] bg-base-100 rounded-box shadow-md w-[80%] mt-30">
 
             <li className="p-4 pb-2 text-4xl font-bold opacity-60 tracking-wide">{title}</li>
             <Divider className="bg-gray-300"/>

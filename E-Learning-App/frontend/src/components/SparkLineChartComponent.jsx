@@ -3,6 +3,7 @@ import {useEffect, useState} from 'react';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import {SparkLineChart} from '@mui/x-charts/SparkLineChart';
+import ScrollReveal from "scrollreveal";
 
 export default function BasicSparkLineComponent({tests, title}) {
     const [allPointsArray, setAllPointsArray] = useState([]);
@@ -24,11 +25,17 @@ export default function BasicSparkLineComponent({tests, title}) {
         ]);
     }, [tests])
 
+    // scroll reveal
+    useEffect(() => {
+        ScrollReveal().reveal("#SPARKLINE_CHART_TITLE", {reset: true});
+        ScrollReveal().reveal("#SPARKLINE_CHART", {reset: true});
+    }, []);
+
     return (
         <>
-            <h1 className = "text-white font-bold text-3xl mb-10">{title}</h1>
+            <h1 id = "SPARKLINE_CHART_TITLE" className = "text-white font-bold text-3xl mb-10">{title}</h1>
             {NO_TESTS && <h3 className = "text-gray-500 font-bold text-md mb-10">Žiadne testy. Graf je ilustračný</h3>}
-            <Stack direction="column" sx={{ width: '80%' }}>
+            <Stack direction="column" sx={{ width: '80%' }} id = "SPARKLINE_CHART">
                 <Stack direction="column" sx={{ width: '100%' }}>
                     <Box sx={{ flexGrow: 1 }}>
                         <SparkLineChart

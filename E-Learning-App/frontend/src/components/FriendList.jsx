@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useEffect} from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
@@ -12,6 +13,7 @@ import {acceptFriendRequest, deleteFriend} from "../methods/methodsClass.js";
 import {Link} from "react-router-dom";
 import Loader from "./Loader.jsx";
 import {Divider} from "@heroui/react";
+import ScrollReveal from "scrollreveal";
 
 
 function handleClick({
@@ -76,7 +78,7 @@ function generateList({
                                 </IconButton>
                             </Link>
                         }
-
+                        {/*show in both tables*/}
                         <IconButton edge="end" aria-label="delete" color="warning"
                                     onClick={() => handleClick({
                                         decision: "reject_or_delete",
@@ -120,9 +122,14 @@ export default function FriendList({
                                    }) {
     const title = type === "friendList" ? "Priatelia" : "Žiadosti";
 
+    // scroll reveal
+    useEffect(() => {
+        ScrollReveal().reveal("#FRIEND_OR_FR_LIST", {reset: true});
+    }, []);
+
     return (
 
-        <div className="w-full h-full bg-gradient-to-br from-[#3B3B3B] to-[#1f1f1f] pt-10 px-5">
+        <div id = "FRIEND_OR_FR_LIST" className="w-full h-full bg-gradient-to-br from-[#3B3B3B] to-[#1f1f1f] pt-10 px-5">
             <div className = "flex relative w-full gap-5 items-center mb-3 pb-3">
                 <img className="shrink-0 w-[40px] h-[40px] aspect-square relative" src ={type === "friendList" ? "/friends-white.png" : "/add-user-white.png"} alt = {title}/>
                 <h1 className = "font-bold min-w-0 max-[500px]:text-3xl text-4xl text-white">{title}</h1>

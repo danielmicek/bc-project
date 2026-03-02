@@ -161,7 +161,7 @@ export default function Test() {
                                 Späť do menu
                             </Button>
                         </Link>
-                        <SwiperComponent questions={questions.structure}/>
+                        <SwiperComponent questions={questions.testStructure}/>
                     </div>
                 : // testStatus === "ended" -> timer ended
                         <div className="mt-10">
@@ -197,7 +197,7 @@ export default function Test() {
                             <Button variant="light" className="bg-gray-500 font-bold absolute top-20 left-7" onPress={onOpenTestResultsModal}>
                                 Výsledky
                             </Button>
-                            <SwiperComponent questions={questions.structure}/>
+                            <SwiperComponent questions={questions.testStructure}/>
                         </div>
             }
         </div>
