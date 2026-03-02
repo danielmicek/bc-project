@@ -34,7 +34,7 @@ function handleClick(selectedArray, setSelectedArray, index, difficulty, answers
     }
 }
 
-function styleSetter(selectedArray, index, readOnly, answer, question){
+function styleSetter(selectedArray, index, readOnly, answer){
 
     if(readOnly){
         // correctly selected answer
@@ -97,9 +97,9 @@ export default function Question({activeIndex, question, setQuestions}) {
     }, [selectedArray]); //pri zakliknuti odpovede ulozim zaznacene odpovede do skutocnej struktury testu (cely JSON -> cely vygenerovany test)
 
     return <>
-        <div className="pb-8 justify-self-center self-center flex flex-col gap-0 overflow-hidden max-[750px]:w-[70vw]  mb-5">
+        <div className="pb-8 justify-self-center flex flex-col gap-0 overflow-hidden max-[750px]:w-[70vw] mb-5">
 
-            <div id = "BODY" className="flex items-center justify-center text-center text-white font-bold text-xl w-[600px] pb-3">{question.body}</div>
+            <div id = "BODY" className="flex items-center justify-center text-center text-white font-bold text-xl w-full pb-3">{question.body}</div>
             {<p className="text-sm font-light text-gray-500">
                  Body: {points} {testDifficulty === "medium" ? (question.multiselect === true ? "| Multi-select" : "| Single-select") : ""}</p>}
 
@@ -107,7 +107,7 @@ export default function Question({activeIndex, question, setQuestions}) {
         <ul id = "ANSWERS" className="relative flex flex-col gap-[20px] mb-[50px] justify-self-center self-center w-[550px] h-fit text-white max-[750px]:w-[60vw] mt-3 ">
             {question.answers.map((answer, i) => (
                     <li key = {i} className = "ans a"
-                        style = {styleSetter(selectedArray, i, READ_ONLY, answer, question)}
+                        style = {styleSetter(selectedArray, i, READ_ONLY, answer)}
                         onClick={() => READ_ONLY ? undefined : handleClick(selectedArray, setSelectedArray, i, testDifficulty, question.answers, question.multiselect)}>{question.answers[i].text}
                     </li>
                 )

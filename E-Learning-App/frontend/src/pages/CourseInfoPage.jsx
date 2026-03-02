@@ -15,7 +15,7 @@ export function CourseInfoPage(){
                 <div className = "columnContainer">
                     <CardComponent title = "Študovanie"
                                    imgPath = "/book.png"
-                                   description = "Osvoj si teóriu a až potom si prever svoje schopnosti v teste."
+                                   description = "Osvoj si teóriu, až potom si prever svoje schopnosti v teste."
                                    type = "Learning"
                                    time = {0}
                                    testColumn = "learnColumn"

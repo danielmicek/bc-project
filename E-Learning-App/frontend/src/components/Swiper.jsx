@@ -6,14 +6,13 @@ import 'swiper/css/pagination';
 import {Navigation, Pagination} from 'swiper/modules';
 import Question from "./Question.jsx";
 
-export default function SwiperComponent({questions, setQuestions = null}) {
+export default function SwiperComponent({questions, setQuestions = ()=>{}}) {
     const pagination = {
         clickable: true,
         renderBullet: function (index, className) {
             return '<span class="' + className + '">' + (index + 1) + '</span>';
         },
     };
-    console.log(questions);
 
     const refSwiper = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -33,7 +32,7 @@ export default function SwiperComponent({questions, setQuestions = null}) {
                 }}
             >
                 {questions.map((question, index) => {
-                    return <SwiperSlide className="swiper">
+                    return <SwiperSlide className="swiper ">
                         <Question activeIndex = {activeIndex}
                                   question = {question}
                                   setQuestions = {setQuestions}

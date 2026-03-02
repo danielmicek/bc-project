@@ -49,7 +49,7 @@ router.get("/getAllUsersTests/:userId", (request, response)=> {
 // ------------------GET REQUEST - GET TEST BY TEST ID-----------------------------------------------------------------
 router.get("/getTestByTestId/:testId", (request, response)=> {
     let testId = request.params.testId;
-    console.log("aaaaaaaaaaaaaaaaaaaa: " + testId);
+
     const getQuery = "SELECT * FROM tests WHERE test_id = $1 ORDER BY timestamp";
     pool.query(getQuery, [testId])
         .then((result) => {
@@ -214,11 +214,13 @@ router.post("/submitTest", (request, response)=> {
 
     try {
         response.status(200).send({
-            percentage: calculatedResultPercentage,
-            points: calculatedResult,
-            medal: medal,
-            grade: grade,
-            testStructure: testStructure
+            results: {
+                percentage: calculatedResultPercentage,
+                points: calculatedResult,
+                medal: medal,
+                grade: grade
+            },
+            structure: testStructure
         });
     }
     catch(error) {
