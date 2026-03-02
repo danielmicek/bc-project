@@ -157,7 +157,7 @@ export async function getCertificateById(certId){
     return await response.json();
 }
 
-export async function POST_postCertificate(certId) {
+export async function POST_postCertificate(certId, username) {
     const response = await fetch(`http://localhost:3000/api/test/postCertificate`, {
         method: "POST",
         headers: {
@@ -165,6 +165,7 @@ export async function POST_postCertificate(certId) {
         },
         body: JSON.stringify({
             certId: certId,
+            username: username
         })
     })
     return await response.json();

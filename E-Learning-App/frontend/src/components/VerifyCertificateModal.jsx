@@ -26,8 +26,15 @@ export default function VerifyCertificateModal({title,
                                 <form className="flex h-[55px] px-1 gap-3"
                                       onSubmit={async (event) => {
                                           event.preventDefault(); // prevent page reload
-                                          const certificateFound = await getCertificateById(inputRef.current.value)
-                                          if(certificateFound.certificateFound) toast.success("Platný certifikát");
+                                          const foundCertificate = await getCertificateById(inputRef.current.value)
+                                          if(foundCertificate.certificateFound) toast.success(
+                                              "Platný certifikát používateľa " + foundCertificate.certificateOwner,
+                                              {
+                                                  style: {
+                                                      textAlign: "center",
+                                                  },
+                                              }
+                                          );
                                           else toast.error("Neplatný certifikát")
                                           inputRef.current.value = "";
                                       }}

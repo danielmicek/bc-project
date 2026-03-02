@@ -101,7 +101,7 @@ function Home() {
                         />
                         <BigStatCard iconPath="/friends-white.png"
                                      mainText="Priatelia"
-                                     secondText="Spoj sa s priateľmi, porovnaj si výsledky a motivujte sa navzájom k lepším výkonom."
+                                     secondText="Spoj sa s priateľmi, porovnaj si výsledky a vzájomne sa motivujte k lepším výkonom."
                         />
 
                     </div>

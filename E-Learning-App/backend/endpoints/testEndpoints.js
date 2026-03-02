@@ -88,7 +88,7 @@ router.get("/getCertificateById/:certId", (request, response)=> {
                 response.status(404).send({certificateFound: false});
             }
             else{
-                response.status(200).send({certificateFound: true});
+                response.status(200).send({certificateFound: true, certificateOwner: result.rows[0].username});
             }
         })
         .catch((error) => {
@@ -100,16 +100,17 @@ router.get("/getCertificateById/:certId", (request, response)=> {
 // -------------------------POST REQUEST - POST CERTIFICATE TO DB----------------------------------------------------
 router.post("/postCertificate", async (request, response) => {
     const certId = request.body["certId"];
+    const username = request.body["username"];
 
-    const insertQuery = "INSERT INTO certificates VALUES ($1)";
-    pool.query(insertQuery, [certId])
+    const insertQuery = "INSERT INTO certificates VALUES ($1, $2)";
+    pool.query(insertQuery, [certId, username])
         .then((result) => {
             console.log(result);
             response.status(200).send({message: "CertificateID added successfully."});
         })
         .catch((error) => {
-            response.status(500).send({error: "Error adding certificateID"})
             console.log(error);
+            response.status(500).send({error: "Error adding certificateID"})
         })
 })
 

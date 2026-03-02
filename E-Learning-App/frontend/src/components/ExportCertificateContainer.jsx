@@ -23,7 +23,7 @@ export default function ExportCertificateContainer({
         py-3 hover:shadow-[5px_10px_30px_rgba(252,147,40,0.8)]">
             <p className="font-bold text-white">{text}</p>
             <Button isDisabled = {!certificateStatus.enabled} variant="light" className="bg-(--main-color-orange) font-bold px-15"
-                    onPress={() => {void POST_postCertificate(certificateId)}}>
+                    onPress={() => {void POST_postCertificate(certificateId, userName)}}>
                 <PDFDownloadLink document={
                     <Certificate userName={userName}
                                  percentage={certificateStatus.percentage}
