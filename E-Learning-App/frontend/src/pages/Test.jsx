@@ -75,7 +75,8 @@ export default function Test() {
             try{
 
                 const tmp = READ_ONLY ? await GET_getTestByTestId(TEST_ID) : await GET_createdTest(TEST_DIFFICULTY)
-                setQuestions(READ_ONLY ? tmp.test.structure : tmp.createdTest)
+                setQuestions(READ_ONLY ? tmp.structure : tmp.createdTest)
+                if(READ_ONLY) setTestResults(tmp.results)
             }
             catch (error) {
                 toast.error("Error. Skús znova neskôr")
@@ -142,7 +143,7 @@ export default function Test() {
                         declineButtonText = {"Späť do menu"}
                         confirmButtonclickHandler={async () => {
                             const tmp = await GET_getTestByTestId(TEST_ID);
-                            setQuestions(tmp.test.structure);
+                            setQuestions(tmp.structure);
                             onCloseTestResultsModal();
                         }}
                         declineButtonclickHandler = {() => goToPage("/courseInfoPage", navigate)}

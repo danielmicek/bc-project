@@ -49,6 +49,7 @@ router.get("/getAllUsersTests/:userId", (request, response)=> {
 // ------------------GET REQUEST - GET TEST BY TEST ID-----------------------------------------------------------------
 router.get("/getTestByTestId/:testId", (request, response)=> {
     let testId = request.params.testId;
+    console.log("iiiiiiiiiiiiiiiiiiiiiiiii");
 
     const getQuery = "SELECT * FROM tests WHERE test_id = $1 ORDER BY timestamp";
     pool.query(getQuery, [testId])
@@ -58,7 +59,15 @@ router.get("/getTestByTestId/:testId", (request, response)=> {
                 response.status(404).send({error: "Test not found", tests: result.rows, bestScore: 0});
             }
             else{
-                response.status(200).send({test: result.rows[0]});
+                response.status(200).send({
+                    results: {
+                        percentage: result.rows[0].percentage,
+                        points: result.rows[0].points,
+                        medal: result.rows[0].medal,
+                        grade: result.rows[0].grade
+                    },
+                    structure: result.rows[0].structure
+                });
             }
         })
         .catch((error) => {
