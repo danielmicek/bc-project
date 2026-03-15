@@ -6,8 +6,10 @@
     "start": "nodemon server.js"
   },
   "dependencies": {
+    "@clerk/clerk-sdk-node": "^4.13.23",
+    "@clerk/express": "^2.0.4",
     "@google/genai": "^1.38.0",
-    "@notionhq/client": "^5.9.0",
+    "@notionhq/client": "^5.13.0",
     "cors": "^2.8.5",
     "dotenv": "^17.0.1",
     "express": "^5.1.0",

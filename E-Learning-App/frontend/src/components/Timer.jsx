@@ -23,7 +23,8 @@ export default function Timer({
                                   setIsLoading,
                                   onCloseSubmitTestModal,
                                   onOpenTestResultsModal,
-                                  setTestStatus}) {
+                                  setTestStatus,
+                                  getToken}) {
     const [searchParams, setSearchParams] = useSearchParams();
     return (
         <div className="flex w-fit m-[20px] mt-15 gap-[10px] max-[750px]:justify-self-center">
@@ -36,7 +37,7 @@ export default function Timer({
                 duration={minutes*60}
                 initialRemainingTime={minutes*60-1}
                 onComplete={async (totalElapsedTime) => {
-                    const result = await POST_submitTest(questions, TEST_DIFFICULTY, userId, TEST_ID, setIsLoading)
+                    const result = await POST_submitTest(questions, TEST_DIFFICULTY, userId, TEST_ID, setIsLoading, getToken)
                     setQuestions(result.testStructure)
                     onCloseSubmitTestModal()
                     onOpenTestResultsModal()

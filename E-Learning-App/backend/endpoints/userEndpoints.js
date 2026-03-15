@@ -1,10 +1,11 @@
 import express from "express";
 import pool from "../database.js";
+import {ClerkExpressRequireAuth} from "@clerk/clerk-sdk-node";
 
 const router = express.Router();
 
 // ------------------GET REQUEST - GET USER---------------------------------------------------------------
-router.get("/getUser/:username", (request, response)=> {
+router.get("/getUser/:username", ClerkExpressRequireAuth(), (request, response)=> {
     let username = request.params.username;
 
 
@@ -34,7 +35,7 @@ router.get("/getUser/:username", (request, response)=> {
 });
 
 // ------------------GET REQUEST - GET USER's SCORE -> SUM OF TESTS POINTS----------------------------------------------
-router.get("/getUserScore/:userId", (request, response)=> {
+router.get("/getUserScore/:userId", ClerkExpressRequireAuth(), (request, response)=> {
     let userId = request.params.userId;
 
     const getQuery = `
@@ -67,7 +68,7 @@ router.get("/getUserScore/:userId", (request, response)=> {
 });
 
 // ------------------POST REQUEST - POST USER TO DBS---------------------------------------------------------------
-router.post("/addUser", async (request, response) => {
+router.post("/addUser", ClerkExpressRequireAuth(), async (request, response) => {
     const user_id = request.body["user_id"];
     const username = request.body["username"];
     const email = request.body["email"];
@@ -87,7 +88,7 @@ router.post("/addUser", async (request, response) => {
 })
 
 // ------------------PUT REQUEST - SAVE ALL USER's INFO TO DB AFTER HE CHANGES IT--------------------------------------------------
-router.put("/putUser", (request, response)=> {
+router.put("/putUser", ClerkExpressRequireAuth(), (request, response)=> {
     const { user_username, user_email, user_imageUrl, clerk_user_id } = request.body;
 
     const putQuery = "UPDATE users SET username = $1, email = $2, image_url = $3 WHERE user_id = $4";

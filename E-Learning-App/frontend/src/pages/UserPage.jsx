@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useSearchParams} from "react-router-dom";
+import {useAuth} from "@clerk/clerk-react";
 import {filterTestsByDifficulty, getUser_object} from "../methods/methodsClass.js";
 import Loader from "../components/Loader.jsx";
 import Stats from "../components/Stats.jsx";
@@ -14,6 +15,7 @@ import {GET_allUsersTests, GET_UserScore} from "../methods/fetchMethods.js";
 // can be seen by other users by sharing the profile url or by adding them as friends
 export default function UserPage() {
     const [searchParams] = useSearchParams();
+    const { getToken } = useAuth();
     const [easyTests, setEasyTests] = useState([]);
     const [mediumTests, setMediumTests] = useState([]);
     const [hardTests, setHardTests] = useState([]);
@@ -25,7 +27,7 @@ export default function UserPage() {
     // load user
     useEffect(() => {
         async function outterGetUser() {
-            const tmp = await getUser_object(username);
+            const tmp = await getUser_object(username, getToken);
             setUser(tmp);
         }
 
@@ -35,7 +37,7 @@ export default function UserPage() {
     // load userScore
     useEffect(() => {
         async function loadUserScore() {
-            const tmp = await GET_UserScore(user.userId)
+            const tmp = await GET_UserScore(user.userId, getToken)
             setUserScore(tmp.score);
         }
 
@@ -45,7 +47,7 @@ export default function UserPage() {
     // load all user's tests
     useEffect(() => {
         async function load() {
-            const tests = await GET_allUsersTests(user.userId)
+            const tests = await GET_allUsersTests(user.userId, getToken)
             setUserTests(tests)
         }
 

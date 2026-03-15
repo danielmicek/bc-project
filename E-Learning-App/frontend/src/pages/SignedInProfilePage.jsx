@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {SignedIn, UserAvatar, useUser} from "@clerk/clerk-react";
+import {SignedIn, useAuth, UserAvatar, useUser} from "@clerk/clerk-react";
 import '../styles/index.css';
 import {
     filterTestsByDifficulty,
@@ -30,13 +30,14 @@ import ScrollReveal from "scrollreveal";
 async function listInitializer(userId,
                                setFriendList,
                                setFriendRequestList,
-                               setIsLoading) {
+                               setIsLoading,
+                               getToken) {
 
     try{
         setIsLoading(true)
         await Promise.all([
-            friendRequestListLoader(userId, setFriendRequestList, setIsLoading),
-            friendListLoader(userId, setFriendList, setIsLoading)
+            friendRequestListLoader(userId, setFriendRequestList, getToken),
+            friendListLoader(userId, setFriendList, getToken)
         ]);
     }
     catch(error){}
@@ -58,11 +59,12 @@ export default function SignedInProfilePage() {
     const [certificateStatus, setCertificateStatus] = useState(false);
     const inputRef = useRef(null);
     const {isSignedIn, user, isLoaded} = useUser();
+    const { getToken } = useAuth();
     const [userScore, setUserScore] = useState(0);
 
     // only call this when the user is signed, isLoaded changes, and the user already exists
     useEffect(() => {
-        if (isSignedIn && user !== undefined) void listInitializer(user.id, setUserFriendList, setFriendRequestList, setIsLoading)
+        if (isSignedIn && user !== undefined) void listInitializer(user.id, setUserFriendList, setFriendRequestList, setIsLoading, getToken)
     }, [isLoaded])
 
     //set certificateStatus - {enabled, percentage} - enabled if the user received a gold medal
@@ -82,7 +84,7 @@ export default function SignedInProfilePage() {
     useEffect(() => {
         async function run() {
             try {
-                await PUT_user(user.username, user.emailAddresses[0].emailAddress, user.imageUrl, user.id)
+                await PUT_user(user.username, user.emailAddresses[0].emailAddress, user.imageUrl, user.id, getToken)
             } catch (e) {}
         }
 
@@ -92,7 +94,7 @@ export default function SignedInProfilePage() {
     // load userScore
     useEffect(() => {
         async function loadUserScore() {
-            const tmp = await GET_UserScore(user.id)
+            const tmp = await GET_UserScore(user.id, getToken)
             setUserScore(tmp.score);
         }
 
@@ -102,7 +104,7 @@ export default function SignedInProfilePage() {
     // load all user's tests
     useEffect(() => {
         async function load() {
-            const tests = await GET_allUsersTests(user.id)
+            const tests = await GET_allUsersTests(user.id, getToken)
             setUserTests(tests)
         }
 
@@ -199,7 +201,7 @@ export default function SignedInProfilePage() {
                     <form className="flex h-[55px] min-[1100px]:w-[50%] w-full gap-3"
                           onSubmit={(event) => {
                               event.preventDefault(); // prevent page reload
-                              void sendFriendRequest(user.username, user.id, inputRef.current.value);
+                              void sendFriendRequest(user.username, user.id, inputRef.current.value, getToken);
                               inputRef.current.value = "";
                           }}
                     >
@@ -267,8 +269,8 @@ export default function SignedInProfilePage() {
                                 try{
                                     setIsLoading(true)
                                     await Promise.all([
-                                        friendRequestListLoader(user.id, setFriendRequestList),
-                                        friendListLoader(user.id, setUserFriendList)
+                                        friendRequestListLoader(user.id, setFriendRequestList, getToken),
+                                        friendListLoader(user.id, setUserFriendList, getToken)
                                     ]);
                                 }
                                 catch(error){}

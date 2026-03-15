@@ -1,4 +1,4 @@
-import {useUser} from "@clerk/clerk-react";
+import {useAuth, useUser} from "@clerk/clerk-react";
 import SignedInProfilePage from "./SignedInProfilePage.jsx";
 import '../styles/styles.css';
 import React, {useEffect} from "react";
@@ -13,6 +13,7 @@ import LightRays from "@/components/LightRays.jsx";
 export function Profile() {
 
     const {isSignedIn, user, isLoaded} = useUser();
+    const { getToken } = useAuth();
 
     if (isSignedIn && user) {
         if (user.username === null || user.username === undefined) {
@@ -22,7 +23,7 @@ export function Profile() {
     // Call the postRequest function when the user state changes to save the user's information to the database
     useEffect(() => {
         if (isSignedIn && user) {
-            void getUser_info(user);
+            void getUser_info(user, getToken);
         }
     }, [isSignedIn, user]);
 

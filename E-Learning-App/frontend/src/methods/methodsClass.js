@@ -18,15 +18,15 @@ import {toast} from "react-hot-toast";
  *
  */
 
-export async function getUser_info(user){ // only find if a user exists
-    const responseObject = await GET_user(user.username);
+export async function getUser_info(user, getToken){ // only find if a user exists
+    const responseObject = await GET_user(user.username, getToken);
     if(responseObject.status !== 200){
-        await POST_user(user.id, user.emailAddresses[0].emailAddress, user.username, user.imageUrl);
+        await POST_user(user.id, user.emailAddresses[0].emailAddress, user.username, user.imageUrl, getToken);
     }
 }
 
-export async function getUser_object(username){ //async function always returns promise -> this function returns the actual user object
-    const responseObject = await GET_user(username);
+export async function getUser_object(username, getToken){ //async function always returns promise -> this function returns the actual user object
+    const responseObject = await GET_user(username, getToken);
     if(responseObject.status !== 200){
         return responseObject.status;
     }
@@ -44,7 +44,7 @@ export async function getUser_object(username){ //async function always returns 
 // then we find out if the user we want to send the FR even exists,
 // then we find out if the friendship relation between the 2 users exists already
 // if no, we call POST request and create the friendship relation => send post-request to friend
-export async function sendFriendRequest(userUsername, user_id, friendUniqueIdentifier){
+export async function sendFriendRequest(userUsername, user_id, friendUniqueIdentifier, getToken){
 
     let friendUsername;
 
@@ -57,7 +57,7 @@ export async function sendFriendRequest(userUsername, user_id, friendUniqueIdent
         friendUsername = friendUniqueIdentifier;
     }
 
-    let responseObject = await GET_user(friendUsername);
+    let responseObject = await GET_user(friendUsername, getToken);
     if(responseObject.status === 400){
         toast.error("Používateľ nenájdený");
         return;
@@ -65,14 +65,14 @@ export async function sendFriendRequest(userUsername, user_id, friendUniqueIdent
 
     const friend_id = (await responseObject.json()).userId;
 
-    responseObject = await GET_friendship(user_id, friend_id)
+    responseObject = await GET_friendship(user_id, friend_id, getToken)
     if(responseObject.status === 200){
         toast.success("Akcia už bola vykonaná");
     }
     else{
         try {
             await toast.promise(
-                POST_friendship(userUsername, friendUsername, user_id, friend_id),
+                POST_friendship(userUsername, friendUsername, user_id, friend_id, getToken),
                 {
                     loading: "Sending friend request...",
                     success: (responseText) => responseText,
@@ -84,9 +84,9 @@ export async function sendFriendRequest(userUsername, user_id, friendUniqueIdent
 }
 
 // accept the friend-request from friend_username user
-export async function acceptFriendRequest(user_username, friend_username, userId, friendId, setUserFriendsList, setUserFriendRequestList, imgUrl){
+export async function acceptFriendRequest(user_username, friend_username, userId, friendId, setUserFriendsList, setUserFriendRequestList, imgUrl, getToken){
 
-    let friendshipResponseObject = await PATCH_acceptFriendRequest(userId, friendId); // update friendship status to "ACCEPTED"
+    let friendshipResponseObject = await PATCH_acceptFriendRequest(userId, friendId, getToken); // update friendship status to "ACCEPTED"
 
     if(friendshipResponseObject.status === 200){
         setUserFriendsList(prevList => { // add friend to friendsList
@@ -106,8 +106,8 @@ export async function acceptFriendRequest(user_username, friend_username, userId
 // reject the friend-request from friend_username user
 // flag: FR = "friend request" => delete friend request from db and update userFriendRequestList
 //       F = "friend" => delete friend from db and update userFriendList"
-export async function deleteFriend(flag, user_username, friend_username, userId, friendId, setUserFriendList, setUserFriendRequestList){
-    let friendshipResponseObject = await DELETE_deleteFriend(userId, friendId);
+export async function deleteFriend(flag, user_username, friend_username, userId, friendId, setUserFriendList, setUserFriendRequestList, getToken){
+    let friendshipResponseObject = await DELETE_deleteFriend(userId, friendId, getToken);
 
     if(friendshipResponseObject.status === 200){
         if(flag === "FR"){
@@ -126,8 +126,8 @@ export async function deleteFriend(flag, user_username, friend_username, userId,
     }
 }
 
-export async function friendRequestListLoader(userId, setFriendRequestList){
-    const result = await GET_allFriendRequests(userId)
+export async function friendRequestListLoader(userId, setFriendRequestList, getToken){
+    const result = await GET_allFriendRequests(userId, getToken)
     // first ↑ we get all friend-requests from the database, then we add each FR to the list so we can display it on the page
     if(result.status === 404){
         setFriendRequestList([]);
@@ -136,14 +136,14 @@ export async function friendRequestListLoader(userId, setFriendRequestList){
     const friendRequests = await result.json();
     setFriendRequestList([]); // reset the list so everytime we get fresh FR from the db
     for(let friendName of friendRequests){
-        getUser_object(friendName).then(result => {
+        getUser_object(friendName, getToken).then(result => {
             setFriendRequestList(prevList => [...prevList, {friendName: friendName, friendId: result.userId, imgUrl: result.userImgUrl, email: result.userEmail}]);
         })
     }
 }
 
-export async function friendListLoader(userId, setFriendList){
-    const result = await GET_allFriends(userId)
+export async function friendListLoader(userId, setFriendList, getToken){
+    const result = await GET_allFriends(userId, getToken)
     // first ↑ we get all friends from the database, then we add each FRIEND to the list so we can display it on the page
     if(result.status === 404){
         setFriendList([])

@@ -100,7 +100,7 @@ export default function CardComponent({
                 />
                 :
                 <ModalComponent title={"Nie si prihlásený"}
-                                mainText={"Na otestovanie sa je potrebné byt prihlásený."}
+                                mainText={"Na túto sekciu je potrebné byt prihlásený."}
                                 isOpen={isOpenTest_Chapter_Modal}
                                 onClose={onCloseTest_Chapter_Modal}
                                 signInFlag={true}

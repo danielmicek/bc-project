@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import Timer from "../components/Timer.jsx";
-import {useUser} from "@clerk/clerk-react";
+import {useAuth, useUser} from "@clerk/clerk-react";
 import {Link, useNavigate, useSearchParams} from "react-router-dom";
 import {GET_createdTest, GET_getTestByTestId, POST_submitTest} from "../methods/fetchMethods.js";
 import SwiperComponent from "../components/Swiper.jsx";
@@ -28,6 +28,7 @@ export default function Test() {
     const TEST_DIFFICULTY = searchParams.get("testDifficulty")
     const [TEST_ID] = useState(() => searchParams.get("testID"));
     const READ_ONLY = searchParams.get("readOnly") === "true"
+    const { getToken } = useAuth()
 
     // browser back button
     useEffect(() => {
@@ -74,7 +75,7 @@ export default function Test() {
         async function loadQuestions() {
             try{
 
-                const tmp = READ_ONLY ? await GET_getTestByTestId(TEST_ID) : await GET_createdTest(TEST_DIFFICULTY)
+                const tmp = READ_ONLY ? await GET_getTestByTestId(TEST_ID, getToken) : await GET_createdTest(TEST_DIFFICULTY, getToken)
                 setQuestions(READ_ONLY ? tmp.structure : tmp.createdTest)
                 if(READ_ONLY) setTestResults(tmp.results)
             }
@@ -125,7 +126,7 @@ export default function Test() {
                         confirmButtonText = {"Pozrieť vyhodnotený test"}
                         declineButtonText = {"Späť do menu"}
                         confirmButtonclickHandler = {async () => {
-                            const tmp = await GET_getTestByTestId(TEST_ID);
+                            const tmp = await GET_getTestByTestId(TEST_ID, getToken);
                             setQuestions(tmp.test.structure);
                             onCloseTimeOutModal()
                         }}
@@ -142,7 +143,7 @@ export default function Test() {
                         confirmButtonText = {"Pozrieť vyhodnotený test"}
                         declineButtonText = {"Späť do menu"}
                         confirmButtonclickHandler={async () => {
-                            const tmp = await GET_getTestByTestId(TEST_ID);
+                            const tmp = await GET_getTestByTestId(TEST_ID, getToken);
                             setQuestions(tmp.structure);
                             onCloseTestResultsModal();
                         }}
@@ -179,7 +180,7 @@ export default function Test() {
                         confirmButtonText = {"Áno"}
                         declineButtonText = {"Nie"}
                         confirmButtonclickHandler={async () => {
-                            const result = await POST_submitTest(questions, TEST_DIFFICULTY, user.id, TEST_ID, setIsLoading)
+                            const result = await POST_submitTest(questions, TEST_DIFFICULTY, user.id, TEST_ID, setIsLoading, getToken)
                             setQuestions(result.structure)
                             setTestResults(result.results);
                             onCloseSubmitTestModal()
@@ -208,6 +209,7 @@ export default function Test() {
                                    onCloseSubmitTestModal = {onCloseSubmitTestModal}
                                    onOpenTestResultsModal = {onOpenTestResultsModal}
                                    setTestStatus = {setTestStatus}
+                                   getToken = {getToken}
                             />
 
                                 <>

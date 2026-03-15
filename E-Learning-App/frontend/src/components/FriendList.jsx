@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {useEffect} from 'react';
+import {useAuth} from "@clerk/clerk-react";
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
@@ -25,12 +26,13 @@ function handleClick({
                      friendName,
                      friendId,
                      setFriendsList,
-                     imgUrl}) {
+                     imgUrl,
+                     getToken}) {
 
     if (decision === "accept") {
-        void acceptFriendRequest(userUsername, friendName, userId, friendId, setFriendsList, setRequestList, imgUrl);
+        void acceptFriendRequest(userUsername, friendName, userId, friendId, setFriendsList, setRequestList, imgUrl, getToken);
     } else {
-        void deleteFriend(type === "friendRequestList"? "FR" : "F", userUsername, friendName, userId, friendId, setFriendsList, setRequestList);
+        void deleteFriend(type === "friendRequestList"? "FR" : "F", userUsername, friendName, userId, friendId, setFriendsList, setRequestList, getToken);
     }
 }
 
@@ -40,7 +42,8 @@ function generateList({
                           setRequestList,
                           userUsername,
                           userId,
-                          setFriendsList
+                          setFriendsList,
+                          getToken
                       }) {
 
     return list.map((friend) => {
@@ -65,7 +68,8 @@ function generateList({
                                             friendName: friend.friendName,
                                             friendId: friend.friendId,
                                             setFriendsList,
-                                            imgUrl: friend.imgUrl
+                                            imgUrl: friend.imgUrl,
+                                            getToken
                                         })
                                         }>
                                 <CheckCircleIcon/>
@@ -89,7 +93,8 @@ function generateList({
                                         friendName: friend.friendName,
                                         friendId: friend.friendId,
                                         setFriendsList,
-                                        imgUrl: friend.imgUrl
+                                        imgUrl: friend.imgUrl,
+                                        getToken
                                     })
                                     }>
                             <DeleteIcon/>
@@ -120,6 +125,7 @@ export default function FriendList({
                                        userId,
                                        isLoading
                                    }) {
+    const { getToken } = useAuth();
     const title = type === "friendList" ? "Priatelia" : "Žiadosti";
 
     // scroll reveal
@@ -154,7 +160,8 @@ export default function FriendList({
                                 setRequestList,
                                 userUsername,
                                 userId,
-                                setFriendsList
+                                setFriendsList,
+                                getToken
                             }
                         )}
                     </List>

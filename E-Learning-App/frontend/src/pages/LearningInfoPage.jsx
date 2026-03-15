@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import {useAuth} from "@clerk/clerk-react";
 import CardComponent from "../components/CardComponent.jsx";
 import {Button} from "@heroui/react";
 import {Link} from "react-router-dom";
@@ -7,6 +8,7 @@ import ScrollReveal from "scrollreveal";
 
 export default function LearningInfoPage() {
     const [notionPages, setNotionPages] = useState([]);
+    const { getToken } = useAuth();
 
     // scroll reveal
     useEffect(() => {
@@ -15,7 +17,7 @@ export default function LearningInfoPage() {
 
     useEffect(() => {
         async function loadChapters() {
-            const data = await GET_allChapters();
+            const data = await GET_allChapters(getToken);
             setNotionPages(data);
         }
         void loadChapters();
@@ -31,7 +33,8 @@ export default function LearningInfoPage() {
                 <div id = "CARDS_CONTAINER" className="flex flex-wrap justify-center gap-10">
                     {notionPages.map(page => {
                         return (
-                            <CardComponent title={"Kapitola " + page.chapter}
+                            <CardComponent key={page.notionPageId}
+                                           title={"Kapitola " + page.chapter}
                                            notionNotesId={page.notionPageId}
                                            imgPath={page.imgPath}
                                            description={page.description}

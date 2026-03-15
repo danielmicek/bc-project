@@ -11,12 +11,14 @@ import {
     getRandomElementsFromArray,
     shuffleArray
 } from "../steps/testSteps.js";
+import 'dotenv/config';
+import {ClerkExpressRequireAuth} from "@clerk/clerk-sdk-node";
 
 const router = express.Router();
 
 // ------------------GET REQUEST - GET ALL USER's TESTS-----------------------------------------------------------------
 // sending back an object of: {all tests, best test score}
-router.get("/getAllUsersTests/:userId", (request, response)=> {
+router.get("/getAllUsersTests/:userId", ClerkExpressRequireAuth(), (request, response)=> {
     let userId = request.params.userId;
 
     const getQuery = "SELECT * FROM tests WHERE fk_user_id = $1 ORDER BY timestamp";
@@ -47,9 +49,8 @@ router.get("/getAllUsersTests/:userId", (request, response)=> {
 });
 
 // ------------------GET REQUEST - GET TEST BY TEST ID-----------------------------------------------------------------
-router.get("/getTestByTestId/:testId", (request, response)=> {
+router.get("/getTestByTestId/:testId", ClerkExpressRequireAuth(), (request, response)=> {
     let testId = request.params.testId;
-    console.log("iiiiiiiiiiiiiiiiiiiiiiiii");
 
     const getQuery = "SELECT * FROM tests WHERE test_id = $1 ORDER BY timestamp";
     pool.query(getQuery, [testId])
@@ -77,7 +78,7 @@ router.get("/getTestByTestId/:testId", (request, response)=> {
 });
 
 // ------------------GET REQUEST - GET CERTIFICATE BY ID--------------------------------------------------------------------
-router.get("/getCertificateById/:certId", (request, response)=> {
+router.get("/getCertificateById/:certId", ClerkExpressRequireAuth(), (request, response)=> {
     const certId = request.params.certId;
 
     const getQuery = "SELECT * FROM certificates WHERE certificate_id = $1";
@@ -98,7 +99,7 @@ router.get("/getCertificateById/:certId", (request, response)=> {
 });
 
 // -------------------------POST REQUEST - POST CERTIFICATE TO DB----------------------------------------------------
-router.post("/postCertificate", async (request, response) => {
+router.post("/postCertificate", ClerkExpressRequireAuth(), async (request, response) => {
     const certId = request.body["certId"];
     const username = request.body["username"];
 
@@ -116,7 +117,7 @@ router.post("/postCertificate", async (request, response) => {
 
 //----------------------------GET REQUEST - CREATE TEST-----------------------------------------------------------------
 // create test based on testDifficulty
-router.get("/createTest/:testDifficulty", async (request, response)=> {
+router.get("/createTest/:testDifficulty", ClerkExpressRequireAuth(), async (request, response)=> {
     let testDifficulty = request.params.testDifficulty;
     const EASY = "easy"
     const MEDIUM = "medium"
@@ -205,7 +206,7 @@ router.get("/createTest/:testDifficulty", async (request, response)=> {
 // first calculate TEST SCORE
 // then save the test to db
 // eventually send the calculated score to frontend
-router.post("/submitTest", (request, response)=> {
+router.post("/submitTest", ClerkExpressRequireAuth(), (request, response)=> {
     const userId = request.body["userId"];
     const testStructure = request.body["testStructure"];
     const testDifficulty = request.body["testDifficulty"];

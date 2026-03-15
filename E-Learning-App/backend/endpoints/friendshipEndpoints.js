@@ -1,11 +1,12 @@
 import express from "express";
 import pool from "../database.js";
+import {ClerkExpressRequireAuth} from "@clerk/clerk-sdk-node";
 
 const router = express.Router();
 
 // ------------------GET REQUEST - GET ALL USER'S FRIENDS---------------------------------------------------------------
 // get friend's name from friends table, then join users table and get friends image_url
-router.get("/getAllFriends/:userId", (request, response)=> {
+router.get("/getAllFriends/:userId", ClerkExpressRequireAuth(), (request, response)=> {
     const userId = request.params.userId;
 
     const getQuery = `
@@ -43,7 +44,7 @@ router.get("/getAllFriends/:userId", (request, response)=> {
 });
 
 // ------------------PATCH REQUEST - UPDATE STATUS PENDING TO ACCEPTED--------------------------------------------------
-router.patch("/acceptFriendRequest/:userId/:friendId", (request, response)=> {
+router.patch("/acceptFriendRequest/:userId/:friendId", ClerkExpressRequireAuth(), (request, response)=> {
     const { userId, friendId } = request.params;
 
     const getQuery = "UPDATE friendship SET status = 'ACCEPTED' WHERE (user_id = $1 OR user_id = $2) AND (friend_id = $2 OR friend_id = $1) AND status = 'PENDING'";
@@ -59,7 +60,7 @@ router.patch("/acceptFriendRequest/:userId/:friendId", (request, response)=> {
 });
 
 // ------------------DELETE REQUEST - DELETE FRIEND AFTER DECLINING FRIEND REQUEST OR REMOVING FRIEND FROM THE LIST---------------------
-router.delete("/deleteFriend/:userId/:friendId", (request, response)=> {
+router.delete("/deleteFriend/:userId/:friendId", ClerkExpressRequireAuth(), (request, response)=> {
     const { userId, friendId } = request.params;
 
     const getQuery = "DELETE FROM friendship WHERE (user_id = $1 AND friend_id = $2) OR (user_id = $2 AND friend_id = $1)";
@@ -75,7 +76,7 @@ router.delete("/deleteFriend/:userId/:friendId", (request, response)=> {
 });
 
 // ------------------GET REQUEST - GET ALL USER'S FRIEND REQUESTS---------------------------------------------------------------
-router.get("/getAllFriendRequests/:userId", (request, response)=> {
+router.get("/getAllFriendRequests/:userId", ClerkExpressRequireAuth(), (request, response)=> {
     const userId = request.params.userId;
     const getQuery = "SELECT friend_username FROM friendship WHERE user_id = $1 AND from_user_id != $1 AND status = 'PENDING'";
     pool.query(getQuery, [userId])
@@ -97,7 +98,7 @@ router.get("/getAllFriendRequests/:userId", (request, response)=> {
 });
 
 // ------------------GET REQUEST - GET FRIENDSHIP---------------------------------------------------------------
-router.get("/getFriendship/:userId/:friendId", (request, response)=> {
+router.get("/getFriendship/:userId/:friendId", ClerkExpressRequireAuth(), (request, response)=> {
     const { userId, friendId } = request.params;
 
     const getQuery = "SELECT status FROM friendship WHERE user_id = $1 AND friend_id = $2";
@@ -122,7 +123,7 @@ router.get("/getFriendship/:userId/:friendId", (request, response)=> {
 });
 
 // ------------------POST REQUEST - POST FRIEND_REQUEST TO DBS---------------------------------------------------------------
-router.post("/sendFriendRequest", async (request, response) => {
+router.post("/sendFriendRequest", ClerkExpressRequireAuth(), async (request, response) => {
     const userUsername = request.body["user_username"];
     const friendUsername = request.body["friend_username"];
     const status = request.body["status"];

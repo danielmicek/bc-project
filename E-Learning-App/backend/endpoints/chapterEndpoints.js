@@ -1,10 +1,11 @@
 import express from "express";
 import pool from "../database.js";
+import {ClerkExpressRequireAuth} from "@clerk/clerk-sdk-node";
 
 const router = express.Router();
 
 // ------------------GET REQUEST - GET CHAPTER's NOTION ID---------------------------------------------------------------
-router.get("/getNotionId/:chapter_number", (request, response)=> {
+router.get("/getNotionId/:chapter_number", ClerkExpressRequireAuth(), (request, response)=> {
     const { chapter_number } = request.params;
 
     const getQuery = 'SELECT notion_page_id FROM chapters WHERE chapter = $1';
@@ -30,7 +31,7 @@ router.get("/getNotionId/:chapter_number", (request, response)=> {
 });
 
 // ------------------GET REQUEST - GET ALL CHAPTERS---------------------------------------------------------------
-router.get("/getAllChapters", (request, response)=> {
+router.get("/getAllChapters", ClerkExpressRequireAuth(), (request, response)=> {
     const getQuery = 'SELECT * FROM chapters ORDER BY chapter';
     pool.query(getQuery)
         .then((result) => {
