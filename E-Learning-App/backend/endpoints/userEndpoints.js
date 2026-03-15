@@ -74,6 +74,13 @@ router.post("/addUser", ClerkExpressRequireAuth(), async (request, response) => 
     const email = request.body["email"];
     const image_url = request.body["image_url"];
 
+    const { userId: loggedInUserId } = request.auth;
+
+    // check whether user calling this endpoint is the one logged in
+    if (loggedInUserId !== user_id) {
+        return response.status(403).json({ error: "Forbidden" });
+    }
+
 
     const insertQuery = "INSERT INTO users (user_id, username, email, image_url) VALUES ($1, $2, $3, $4)";
     pool.query(insertQuery, [user_id, username, email, image_url])
@@ -90,6 +97,13 @@ router.post("/addUser", ClerkExpressRequireAuth(), async (request, response) => 
 // ------------------PUT REQUEST - SAVE ALL USER's INFO TO DB AFTER HE CHANGES IT--------------------------------------------------
 router.put("/putUser", ClerkExpressRequireAuth(), (request, response)=> {
     const { user_username, user_email, user_imageUrl, clerk_user_id } = request.body;
+
+    const { userId: loggedInUserId } = request.auth;
+
+    // check whether user calling this endpoint is the one logged in
+    if (loggedInUserId !== clerk_user_id) {
+        return response.status(403).json({ error: "Forbidden" });
+    }
 
     const putQuery = "UPDATE users SET username = $1, email = $2, image_url = $3 WHERE user_id = $4";
     pool.query(putQuery, [user_username, user_email, user_imageUrl, clerk_user_id])

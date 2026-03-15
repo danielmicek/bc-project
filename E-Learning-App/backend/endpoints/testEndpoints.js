@@ -19,10 +19,10 @@ const router = express.Router();
 // ------------------GET REQUEST - GET ALL USER's TESTS-----------------------------------------------------------------
 // sending back an object of: {all tests, best test score}
 router.get("/getAllUsersTests/:userId", ClerkExpressRequireAuth(), (request, response)=> {
-    let userId = request.params.userId;
+    let requestedUserId = request.params.userId;
 
     const getQuery = "SELECT * FROM tests WHERE fk_user_id = $1 ORDER BY timestamp";
-    pool.query(getQuery, [userId])
+    pool.query(getQuery, [requestedUserId])
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
@@ -49,8 +49,15 @@ router.get("/getAllUsersTests/:userId", ClerkExpressRequireAuth(), (request, res
 });
 
 // ------------------GET REQUEST - GET TEST BY TEST ID-----------------------------------------------------------------
-router.get("/getTestByTestId/:testId", ClerkExpressRequireAuth(), (request, response)=> {
+router.get("/getTestByTestId/:testId/:userId", ClerkExpressRequireAuth(), (request, response)=> {
     let testId = request.params.testId;
+    let requestedUserId = request.params.userId;
+    const { userId: loggedInUserId } = request.auth;
+
+    // check whether is the user calling for his own tests
+    if (loggedInUserId !== requestedUserId) {
+        return response.status(403).json({ error: "Forbidden" });
+    }
 
     const getQuery = "SELECT * FROM tests WHERE test_id = $1 ORDER BY timestamp";
     pool.query(getQuery, [testId])

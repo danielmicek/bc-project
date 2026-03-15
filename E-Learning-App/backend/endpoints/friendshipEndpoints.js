@@ -131,6 +131,14 @@ router.post("/sendFriendRequest", ClerkExpressRequireAuth(), async (request, res
     const userId = request.body["user_id"];
     const friendId = request.body["friend_id"];
 
+    const { userId: loggedInUserId } = request.auth;
+
+    // check whether user calling this endpoint is the one logged in
+    if (loggedInUserId !== userId) {
+        return response.status(403).json({ error: "Forbidden" });
+    }
+
+
     if(userUsername === friendUsername) return response.status(400).send("Zakázaná akcia!")
 
     try{
