@@ -1,16 +1,22 @@
 // -----------------------------CALCULATION OF TEST SCORE---------------------------------------------------------------
 import pool from "../database.js";
+import {aiCorrectFreeAnswerQuestions} from "./geminiSteps.js";
 
-export function calculateTestScore(test, testDifficulty){
+export async function calculateTestScore(test, testDifficulty){
     const EASY_QUESTION_POINTS = 1
     const MEDIUM_QUESTION_POINTS = 3
     const HARD_QUESTION_POINTS = 5
     const PENALTY = testDifficulty === "medium" ? 0.2 : testDifficulty === "hard" ? 0.3 : 0.1  // percentage; 0.1 penalty for easy test is used in case when a user does not select all the answers in the given time
     let points = 0
     let notAnsweredCount = 0
+    const freeAnswerQuestions = []
 
     for(const question of test){ // single question of test
-        if(question.answers.at(-1).selected) continue;  // if option "neodpovedat" is selected - the last option, nothing happens -> +0 points
+        if(question.answers.at(-1).selected) continue  // if option "neodpovedat" is selected - the last option, nothing happens -> +0 points
+        if(question.free_answer){
+            freeAnswerQuestions.push(question)
+            continue;
+        }
         for(const answer of question.answers.slice(0, -1)){  // single answer of question - not working with the last one, it is handled above
             // EASY QUESTION - SINGLESELECT ONLY
             if(question.difficulty === "easy"){  // single question
@@ -46,6 +52,33 @@ export function calculateTestScore(test, testDifficulty){
         // in case all 5 answers are NOT selected -> - points
         if(notAnsweredCount === 5) points -= question.difficulty === "easy" ? 1 : question.difficulty === "medium" ? 2 : 3
         notAnsweredCount = 0
+    }
+
+    if(freeAnswerQuestions.length > 0){
+        const aiFreeAnswersCorrection = await aiCorrectFreeAnswerQuestions(
+            "Return only a raw JSON array. No markdown. No code fences. No explanations. " +
+            "For each input item, evaluate whether free_answer_text correctly answers body. " +
+            "Be very lenient: accept paraphrases, minor mistakes, and partial correctness if core meaning is correct. " +
+            "Return false only if clearly wrong, irrelevant, empty, nonsense, or missing the essential point. " +
+            "Use only body, difficulty, free_answer_text. " +
+            'Return objects exactly in this form: {"aiResponse":true|false,"free_answer_text":"...","difficulty":"..."} ' +
+            "Preserve input order and array length. Input: " +
+            JSON.stringify(freeAnswerQuestions)
+        )
+
+        if(aiFreeAnswersCorrection){
+            const parsedAiResults = JSON.parse(aiFreeAnswersCorrection)
+            for(let i = 0; i < parsedAiResults.length; i++){
+                const result = parsedAiResults[i]
+                const originalQuestion = freeAnswerQuestions[i]
+                if(originalQuestion){
+                    originalQuestion.aiResponse = result.aiResponse === true
+                }
+
+                if(result.aiResponse && result.difficulty === "medium") points += 3
+                if(result.aiResponse && result.difficulty === "hard") points += 5
+            }
+        }
     }
 
     if(points < 0) points = 0

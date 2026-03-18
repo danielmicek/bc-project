@@ -23,4 +23,20 @@ export async function getAiResponse(prompt) {
     }
 }
 
+// ------------------GET - CORRECT ALL THE FREE_ANSWER QUESTIONS--------------------------------------------------------
+export async function aiCorrectFreeAnswerQuestions(prompt) {
+    try {
+        const ai_result = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: prompt
+        });
+        // all the way to the actual response we need in the RESPONSE object (check JSON parser to understand)
+        return ai_result.candidates[0].content.parts[0].text;
+    }
+    catch (error) {
+        console.log(error);
+        return null
+    }
+}
+
 

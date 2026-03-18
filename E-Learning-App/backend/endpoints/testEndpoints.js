@@ -132,15 +132,23 @@ router.get("/createTest/:testDifficulty", ClerkExpressRequireAuth(), async (requ
     let easyQuestions
     let mediumQuestions
     let hardQuestions
+    let mediumFreeAnswerQuestions
+    let hardFreeAnswerQuestions
     let generatedTestQuestions = [];
     let NUM_OF_EASY_QUESTIONS;
     let NUM_OF_MEDIUM_QUESTIONS;
-    let NUM_OF_HARD_QUESTIONS
+    let NUM_OF_HARD_QUESTIONS;
+    let NUM_OF_MEDIUM_FREE_ANSWER_QUESTIONS;
+    let NUM_OF_HARD_FREE_ANSWER_QUESTIONS;
 
     try{
         easyQuestions = await getQuestionsBasedOnDifficulty(EASY, testDifficulty)
         mediumQuestions = await getQuestionsBasedOnDifficulty(MEDIUM, testDifficulty)
-        if(testDifficulty === "medium" || testDifficulty === "hard") hardQuestions = await getQuestionsBasedOnDifficulty(HARD, testDifficulty)
+        if(testDifficulty === "medium" || testDifficulty === "hard") {
+            hardQuestions = await getQuestionsBasedOnDifficulty(HARD, testDifficulty)
+            mediumFreeAnswerQuestions = await getQuestionsBasedOnDifficulty(MEDIUM, testDifficulty, true)
+            hardFreeAnswerQuestions = await getQuestionsBasedOnDifficulty(HARD, testDifficulty, true)
+        }
 
         switch (testDifficulty) {
             case "easy":
@@ -149,24 +157,33 @@ router.get("/createTest/:testDifficulty", ClerkExpressRequireAuth(), async (requ
                 break
             case "medium":
                 NUM_OF_EASY_QUESTIONS = 5
-                NUM_OF_MEDIUM_QUESTIONS = 10
+                NUM_OF_MEDIUM_QUESTIONS = 8
                 NUM_OF_HARD_QUESTIONS = 5
+                NUM_OF_MEDIUM_FREE_ANSWER_QUESTIONS = 1;
+                NUM_OF_HARD_FREE_ANSWER_QUESTIONS = 1;
                 break
             case "hard":
                 NUM_OF_EASY_QUESTIONS = 5
-                NUM_OF_MEDIUM_QUESTIONS = 10
-                NUM_OF_HARD_QUESTIONS = 15
+                NUM_OF_MEDIUM_QUESTIONS = 8
+                NUM_OF_HARD_QUESTIONS = 13
+                NUM_OF_MEDIUM_FREE_ANSWER_QUESTIONS = 2;
+                NUM_OF_HARD_FREE_ANSWER_QUESTIONS = 2;
         }
 
         // add easy questions
         getRandomElementsFromArray(easyQuestions, generatedTestQuestions, NUM_OF_EASY_QUESTIONS)
         // add medium questions
         getRandomElementsFromArray(mediumQuestions, generatedTestQuestions, NUM_OF_MEDIUM_QUESTIONS)
-        // add hard questions (medium and hard test)
-        if(testDifficulty === "medium" || testDifficulty === "hard") getRandomElementsFromArray(hardQuestions, generatedTestQuestions, NUM_OF_HARD_QUESTIONS)
+        // add hard and free_answer questions (medium and hard test)
+        if(testDifficulty === "medium" || testDifficulty === "hard") {
+            getRandomElementsFromArray(hardQuestions, generatedTestQuestions, NUM_OF_HARD_QUESTIONS)
+            getRandomElementsFromArray(mediumFreeAnswerQuestions, generatedTestQuestions, NUM_OF_MEDIUM_FREE_ANSWER_QUESTIONS)
+            getRandomElementsFromArray(hardFreeAnswerQuestions, generatedTestQuestions, NUM_OF_HARD_FREE_ANSWER_QUESTIONS)
+        }
 
         //shuffle each question's answers (from a,b,c,d,e to e.g. c,a,d,b,e  -> e is always last)
         for(const question of generatedTestQuestions){
+            if(question.free_answer) continue;
             const lastElement = question.answers[question.answers.length - 1]
             const allElementsExceptLast = question.answers.slice(0, -1)
 
@@ -213,25 +230,36 @@ router.get("/createTest/:testDifficulty", ClerkExpressRequireAuth(), async (requ
 // first calculate TEST SCORE
 // then save the test to db
 // eventually send the calculated score to frontend
-router.post("/submitTest", ClerkExpressRequireAuth(), (request, response)=> {
+router.post("/submitTest", ClerkExpressRequireAuth(), async (request, response)=> {
     const userId = request.body["userId"];
     const testStructure = request.body["testStructure"];
     const testDifficulty = request.body["testDifficulty"];
     const testId = request.body["testId"];
     const fullPoints = testDifficulty === "easy" ? 13 : testDifficulty === "medium" ? 40 : 70
-    console.log(testStructure[0].answers);
 
-    const calculatedResult = calculateTestScore(testStructure, testDifficulty)
+    const calculatedResult = await calculateTestScore(testStructure, testDifficulty)
     const calculatedResultPercentage = ((calculatedResult/fullPoints) * 100).toFixed(2)
     const grade = getGrade(calculatedResultPercentage)
     const medal = getMedal(grade, testDifficulty)
 
-    if(addTest(testId, calculatedResult, calculatedResultPercentage, getCurrentTimestamp(), grade, medal, userId, testStructure, testDifficulty) === false){
-        response.status(500).send("Error posting test to database.");
-    }
-
     try {
-        response.status(200).send({
+        const inserted = await addTest(
+            testId,
+            calculatedResult,
+            calculatedResultPercentage,
+            getCurrentTimestamp(),
+            grade,
+            medal,
+            userId,
+            testStructure,
+            testDifficulty
+        );
+
+        if (!inserted) {
+            return response.status(500).send("Error posting test to database.");
+        }
+
+        return response.status(200).send({
             results: {
                 percentage: calculatedResultPercentage,
                 points: calculatedResult,
@@ -241,9 +269,12 @@ router.post("/submitTest", ClerkExpressRequireAuth(), (request, response)=> {
             structure: testStructure
         });
     }
-    catch(error) {
-        response.status(500).send("Error during calculating test results.");
+    catch (error) {
+        console.error(error);
+        return response.status(500).send("Error during calculating test results.");
     }
 });
 
+
 export default router;
+
