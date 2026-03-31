@@ -8,7 +8,7 @@ const router = express.Router();
 router.get("/getNotionId/:chapter_number", ClerkExpressRequireAuth(), (request, response)=> {
     const { chapter_number } = request.params;
 
-    const getQuery = 'SELECT notion_page_id FROM chapters WHERE chapter = $1';
+    const getQuery = 'SELECT notion_page_id FROM "Chapters" WHERE chapter = $1';
     pool.query(getQuery, [chapter_number])
         .then((result) => {
             console.log(result);
@@ -32,7 +32,7 @@ router.get("/getNotionId/:chapter_number", ClerkExpressRequireAuth(), (request, 
 
 // ------------------GET REQUEST - GET ALL CHAPTERS---------------------------------------------------------------
 router.get("/getAllChapters", ClerkExpressRequireAuth(), (request, response)=> {
-    const getQuery = 'SELECT * FROM chapters ORDER BY chapter';
+    const getQuery = 'SELECT * FROM "Chapters" ORDER BY chapter';
     pool.query(getQuery)
         .then((result) => {
             console.log(result);

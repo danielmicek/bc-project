@@ -4,6 +4,8 @@ import getQuestionsBasedOnDifficulty from "../steps/questionsSteps.js";
 import {
     addTest,
     calculateTestScore,
+    decreaseAiLimit,
+    getAiLimit,
     getBestTestScore,
     getCurrentTimestamp,
     getGrade,
@@ -21,7 +23,7 @@ const router = express.Router();
 router.get("/getAllUsersTests/:userId", ClerkExpressRequireAuth(), (request, response)=> {
     let requestedUserId = request.params.userId;
 
-    const getQuery = "SELECT * FROM tests WHERE fk_user_id = $1 ORDER BY timestamp";
+    const getQuery = "SELECT * FROM \"Tests\" WHERE fk_user_id = $1 ORDER BY timestamp";
     pool.query(getQuery, [requestedUserId])
         .then((result) => {
             console.log(result);
@@ -59,7 +61,7 @@ router.get("/getTestByTestId/:testId/:userId", ClerkExpressRequireAuth(), (reque
         return response.status(403).json({ error: "Forbidden" });
     }
 
-    const getQuery = "SELECT * FROM tests WHERE test_id = $1 ORDER BY timestamp";
+    const getQuery = "SELECT * FROM \"Tests\" WHERE test_id = $1 ORDER BY timestamp";
     pool.query(getQuery, [testId])
         .then((result) => {
             console.log(result);
@@ -88,7 +90,7 @@ router.get("/getTestByTestId/:testId/:userId", ClerkExpressRequireAuth(), (reque
 router.get("/getCertificateById/:certId", ClerkExpressRequireAuth(), (request, response)=> {
     const certId = request.params.certId;
 
-    const getQuery = "SELECT * FROM certificates WHERE certificate_id = $1";
+    const getQuery = "SELECT * FROM \"Certificates\" WHERE certificate_id = $1";
     pool.query(getQuery, [certId])
         .then((result) => {
             console.log(result);
@@ -110,7 +112,7 @@ router.post("/postCertificate", ClerkExpressRequireAuth(), async (request, respo
     const certId = request.body["certId"];
     const username = request.body["username"];
 
-    const insertQuery = "INSERT INTO certificates VALUES ($1, $2)";
+    const insertQuery = "INSERT INTO \"Certificates\" VALUES ($1, $2)";
     pool.query(insertQuery, [certId, username])
         .then((result) => {
             console.log(result);
@@ -125,6 +127,13 @@ router.post("/postCertificate", ClerkExpressRequireAuth(), async (request, respo
 //----------------------------GET REQUEST - CREATE TEST-----------------------------------------------------------------
 // create test based on testDifficulty
 router.get("/createTest/:testDifficulty", ClerkExpressRequireAuth(), async (request, response)=> {
+    //first check if there is enough AI requests left for generation and for evaluation
+    const ai_limit = await getAiLimit()
+    if(ai_limit <= 1) {
+        response.status(429).send({error: "AI limit vyčerpaný, skúste znova neskôr."});
+        return
+    }
+
     let testDifficulty = request.params.testDifficulty;
     const EASY = "easy"
     const MEDIUM = "medium"
@@ -218,6 +227,9 @@ router.get("/createTest/:testDifficulty", ClerkExpressRequireAuth(), async (requ
             return
         }*/
 
+        // decrease ai requests limit
+        await decreaseAiLimit()
+        console.log("decreased");
         response.status(200).send({createdTest: generatedTestQuestions});
     }
     catch(err){
@@ -275,6 +287,30 @@ router.post("/submitTest", ClerkExpressRequireAuth(), async (request, response)=
     }
 });
 
+// ------------------GET REQUEST - GET AI LIMIT OF REMAINING REQUESTS FOR THE DAY---------------------------------------
+router.get("/getAiLimit", ClerkExpressRequireAuth(), (request, response)=> {
+
+    const getQuery = "SELECT * FROM \"AI_limit\"";
+
+    pool.query(getQuery)
+        .then((result) => {
+            console.log(result);
+            if (result.rows.length === 0) {
+                response.status(400).send("AI LIMIT not found");
+            }
+            else{
+                const foundLimit = result.rows[0]
+                response.status(200).send({
+                    aiLimit: foundLimit.ai_limit
+                });
+            }
+
+        })
+        .catch((error) => {
+            response.status(500);
+            console.log(error);
+        })
+});
 
 export default router;
 

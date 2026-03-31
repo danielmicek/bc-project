@@ -65,8 +65,11 @@ export async function calculateTestScore(test, testDifficulty){
             "Preserve input order and array length. Input: " +
             JSON.stringify(freeAnswerQuestions)
         )
-
+        console.log(aiFreeAnswersCorrection);
         if(aiFreeAnswersCorrection){
+            // decrease ai requests limit
+            await decreaseAiLimit()
+
             const parsedAiResults = JSON.parse(aiFreeAnswersCorrection)
             for(let i = 0; i < parsedAiResults.length; i++){
                 const result = parsedAiResults[i]
@@ -93,9 +96,26 @@ function getNumberOfCorrectAnswers(answers) {
 
 // post test to db
 export async function addTest(test_id, points, percentage, timestamp, grade, medal, fk_user_id, structure, difficulty) {
-    const insertQuery = "INSERT INTO tests (test_id, points, percentage, timestamp, grade, medal, fk_user_id, structure, difficulty) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)";
+    const insertQuery = "INSERT INTO \"Tests\" (test_id, points, percentage, timestamp, grade, medal, fk_user_id, structure, difficulty) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)";
     const result = await pool.query(insertQuery, [test_id, points, percentage, timestamp, grade, medal, fk_user_id, JSON.stringify(structure), difficulty]);
     return result.rowCount > 0 // if INSERT was successful, rows are of length at least 1 (in this case it is = 1)
+}
+
+//get AI limit
+export async function getAiLimit() {
+    const selectQuery = "SELECT ai_limit FROM \"AI_limit\"";
+    const result = await pool.query(selectQuery);
+    return result.rows[0].ai_limit;
+}
+
+// decrease AI limit
+export async function decreaseAiLimit() {
+    try{
+        const updateQuery = "UPDATE \"AI_limit\" SET ai_limit = ai_limit - 1";
+        await pool.query(updateQuery);
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 // get the best score of all user's tests

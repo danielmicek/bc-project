@@ -20,7 +20,7 @@ async function tmp() {
         for (const q of jsonQuestions) {
             // insert question
             const questionResult = await pool.query(
-                `INSERT INTO questions (body, multiselect, difficulty, id)
+                `INSERT INTO "Questions" (body, multiselect, difficulty, id)
                  VALUES ($1, $2, $3, $4)
                  RETURNING id`,
                 [q.body, q.multiselect, q.difficulty, q.id]
@@ -35,7 +35,7 @@ async function tmp() {
                 const text = ans[key];
 
                 await pool.query(
-                    `INSERT INTO answers (text, correct, question_id, id)
+                    `INSERT INTO "Answers" (text, correct, question_id, id)
                      VALUES ($1, $2, $3, $4)`,
                     [text, ans.correct, questionId, a++]
                 );

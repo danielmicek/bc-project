@@ -9,7 +9,7 @@ router.get("/getUser/:username", ClerkExpressRequireAuth(), (request, response)=
     let username = request.params.username;
 
 
-    const getQuery = "SELECT user_id, username, email, image_url FROM users WHERE username = $1";
+    const getQuery = "SELECT user_id, username, email, image_url FROM \"Users\" WHERE username = $1";
 
     pool.query(getQuery, [username])
         .then((result) => {
@@ -40,8 +40,8 @@ router.get("/getUserScore/:userId", ClerkExpressRequireAuth(), (request, respons
 
     const getQuery = `
         SELECT SUM(ts.points)
-        FROM users AS us
-        LEFT JOIN tests AS ts
+        FROM "Users" AS us
+        LEFT JOIN "Tests" AS ts
           ON us.user_id = ts.fk_user_id
         WHERE us.user_id = $1;
     `;
@@ -82,7 +82,7 @@ router.post("/addUser", ClerkExpressRequireAuth(), async (request, response) => 
     }
 
 
-    const insertQuery = "INSERT INTO users (user_id, username, email, image_url) VALUES ($1, $2, $3, $4)";
+    const insertQuery = "INSERT INTO \"Users\" (user_id, username, email, image_url) VALUES ($1, $2, $3, $4)";
     pool.query(insertQuery, [user_id, username, email, image_url])
         .then((result) => {
             console.log(result);
@@ -105,7 +105,7 @@ router.put("/putUser", ClerkExpressRequireAuth(), (request, response)=> {
         return response.status(403).json({ error: "Forbidden" });
     }
 
-    const putQuery = "UPDATE users SET username = $1, email = $2, image_url = $3 WHERE user_id = $4";
+    const putQuery = "UPDATE \"Users\" SET username = $1, email = $2, image_url = $3 WHERE user_id = $4";
     pool.query(putQuery, [user_username, user_email, user_imageUrl, clerk_user_id])
         .then((result) => {
             response.status(200).send("Dáta úspešne zmenené");

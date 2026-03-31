@@ -9,16 +9,35 @@ const router = express.Router();
 router.get("/getAllFriends/:userId", ClerkExpressRequireAuth(), (request, response)=> {
     const userId = request.params.userId;
 
+    const { userId: loggedInUserId } = request.auth;
+
+    // check whether user calling this endpoint is the one logged in
+    if (loggedInUserId !== userId) {
+        return response.status(403).json({ error: "Forbidden" });
+    }
+
     const getQuery = `
-        SELECT fr.friend_username, us.image_url, fr.friend_id, SUM(ts.points), us.email
-        FROM friendship AS fr
-                 LEFT JOIN tests AS ts
-                           ON fr.friend_id = ts.fk_user_id
-                 JOIN users AS us
-                      ON fr.friend_id = us.user_id
-        WHERE fr.user_id = $1
-          AND fr.status = 'ACCEPTED'
-        GROUP BY fr.friend_id, us.image_url, fr.friend_username, us.email;
+        WITH relations AS (
+            SELECT
+                CASE
+                    WHEN fr.user_id = $1 THEN fr.friend_id
+                    ELSE fr.user_id
+                END AS friend_id
+            FROM "Friendships" AS fr
+            WHERE fr.user_id = $1 OR fr.friend_id = $1
+        )
+        SELECT
+            r.friend_id,
+            us.username AS friend_name,
+            us.image_url,
+            us.email,
+            COALESCE(SUM(ts.points), 0) AS score
+        FROM relations AS r
+                 JOIN "Users" AS us
+                      ON us.user_id = r.friend_id
+                 LEFT JOIN "Tests" AS ts
+                           ON ts.fk_user_id = r.friend_id
+        GROUP BY r.friend_id, us.username, us.image_url, us.email;
     `;
     pool.query(getQuery, [userId])
         .then((result) => {
@@ -28,11 +47,11 @@ router.get("/getAllFriends/:userId", ClerkExpressRequireAuth(), (request, respon
             }
             else{
                 let foundFriends = result.rows.map(row => ({
-                    friendName: row.friend_username,
+                    friendName: row.friend_name,
                     friendId: row.friend_id,
                     imgUrl: row.image_url,
                     email: row.email,
-                    score: row.sum === null ? 0 : parseInt(row.sum)
+                    score: parseInt(row.score)
                 })); // returns an array of user's friends
                 return response.status(200).send(foundFriends);
             }
@@ -43,27 +62,47 @@ router.get("/getAllFriends/:userId", ClerkExpressRequireAuth(), (request, respon
         })
 });
 
-// ------------------PATCH REQUEST - UPDATE STATUS PENDING TO ACCEPTED--------------------------------------------------
-router.patch("/acceptFriendRequest/:userId/:friendId", ClerkExpressRequireAuth(), (request, response)=> {
+// ------------------POST REQUEST - ACCEPT FR --------------------------------------------------------------------------
+// remove FR from Friend_requests
+// add FR to Friendships
+router.post("/acceptFriendRequest/:userId/:friendId", ClerkExpressRequireAuth(), (request, response)=> {
     const { userId, friendId } = request.params;
 
-    const getQuery = "UPDATE friendship SET status = 'ACCEPTED' WHERE (user_id = $1 OR user_id = $2) AND (friend_id = $2 OR friend_id = $1) AND status = 'PENDING'";
-    pool.query(getQuery, [userId, friendId])
+    const { userId: loggedInUserId } = request.auth;
+
+    // check whether user calling this endpoint is the one logged in
+    if (loggedInUserId !== userId) {
+        return response.status(403).json("Zakázaná akcia!");
+    }
+
+    const deleteQuery = "DELETE FROM \"Friend_requests\" WHERE (to_user_id = $1 OR from_user_id = $2)";
+    const deleteResult = pool.query(deleteQuery, [userId, friendId]);
+    if (deleteResult.rowCount === 0) return response.status(404).send("Priateľstvo nenájdené!");
+
+    const insertQuery = "INSERT INTO \"Friendships\" (user_id, friend_id) VALUES ($1, $2)";
+    pool.query(insertQuery, [userId, friendId])
         .then((result) => {
             console.log(result);
-            return response.status(200).send(friendId);
+            return response.status(200).send("Žiadosť akceptovaná!");
         })
         .catch((error) => {
             console.log(error);
-            return response.status(500).send({error: "error"});
+            return response.status(500).send("Error. Skús znova neskôr");
         })
 });
 
-// ------------------DELETE REQUEST - DELETE FRIEND AFTER DECLINING FRIEND REQUEST OR REMOVING FRIEND FROM THE LIST---------------------
-router.delete("/deleteFriend/:userId/:friendId", ClerkExpressRequireAuth(), (request, response)=> {
+// ------------------DELETE FR - DELETE FR AFTER DECLINING OR ACCEPTING FR ---------------------------------------------
+router.delete("/deleteFriendRequest/:userId/:friendId", ClerkExpressRequireAuth(), (request, response)=> {
     const { userId, friendId } = request.params;
 
-    const getQuery = "DELETE FROM friendship WHERE (user_id = $1 AND friend_id = $2) OR (user_id = $2 AND friend_id = $1)";
+    const { userId: loggedInUserId } = request.auth;
+
+    // check whether user calling this endpoint is the one logged in
+    if (loggedInUserId !== userId) {
+        return response.status(403).json({ error: "Forbidden" });
+    }
+
+    const getQuery = "DELETE FROM \"Friend_requests\" WHERE (to_user_id = $1 AND from_user_id = $2)";
     pool.query(getQuery, [userId, friendId])
         .then((result) => {
             console.log(result);
@@ -71,19 +110,55 @@ router.delete("/deleteFriend/:userId/:friendId", ClerkExpressRequireAuth(), (req
         })
         .catch((error) => {
             console.log(error);
-            return response.status(500).send({error: "error"});
+            return response.status(500).send("Error, skús znova neskôr.");
+        })
+});
+
+// ------------------ DELETE FRIENDSHIP --------------------------------------------------------------------------------
+router.delete("/deleteFriendship/:userId/:friendId", ClerkExpressRequireAuth(), (request, response)=> {
+    const { userId, friendId } = request.params;
+
+    const { userId: loggedInUserId } = request.auth;
+
+    // check whether user calling this endpoint is the one logged in
+    if (loggedInUserId !== userId) {
+        return response.status(403).json("Zakázaná akcia!");
+    }
+
+    const getQuery = "DELETE FROM \"Friendships\" WHERE (user_id = $1 AND friend_id = $2) OR (user_id = $2 AND friend_id = $1)";
+    pool.query(getQuery, [userId, friendId])
+        .then((result) => {
+            console.log(result);
+            return response.status(200).send("Akcia prebehla úspešne");
+        })
+        .catch((error) => {
+            console.log(error);
+            return response.status(500).send("Error, skús znova neskôr.");
         })
 });
 
 // ------------------GET REQUEST - GET ALL USER'S FRIEND REQUESTS---------------------------------------------------------------
 router.get("/getAllFriendRequests/:userId", ClerkExpressRequireAuth(), (request, response)=> {
     const userId = request.params.userId;
-    const getQuery = "SELECT friend_username FROM friendship WHERE user_id = $1 AND from_user_id != $1 AND status = 'PENDING'";
+
+    const { userId: loggedInUserId } = request.auth;
+
+    // check whether user calling this endpoint is the one logged in
+    if (loggedInUserId !== userId) {
+        return response.status(403).json({ error: "Forbidden" });
+    }
+    const getQuery = `
+        SELECT u.username AS friend_username
+        FROM "Friend_requests" AS fr
+                 JOIN "Users" AS u
+                      ON fr.from_user_id = u.user_id
+        WHERE fr.to_user_id = $1
+    `;
     pool.query(getQuery, [userId])
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
-                return response.status(200).send("No friend requests"); // .status doesnt send anything, so the response.status is then undefined
+                return response.status(200).send([]);
             }
             else{
                 let foundFriends = result.rows.map(row => row.friend_username); // returns an array of user's friend requests
@@ -101,18 +176,22 @@ router.get("/getAllFriendRequests/:userId", ClerkExpressRequireAuth(), (request,
 router.get("/getFriendship/:userId/:friendId", ClerkExpressRequireAuth(), (request, response)=> {
     const { userId, friendId } = request.params;
 
-    const getQuery = "SELECT status FROM friendship WHERE user_id = $1 AND friend_id = $2";
+    const { userId: loggedInUserId } = request.auth;
+
+    // check whether user calling this endpoint is the one logged in
+    if (loggedInUserId !== userId) {
+        return response.status(403).json({ error: "Forbidden" });
+    }
+
+    const getQuery = "SELECT * FROM \"Friendships\" WHERE (user_id = $1 AND friend_id = $2) OR (user_id = $2 AND friend_id = $1)";
     pool.query(getQuery, [userId, friendId])
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
-                return response.status(400).send("Friendship among users: " + userId + " and " + friendId + " does not exist.  Status code: " + response.statusCode);
+                return response.status(400).send("Žiadosť úspešne odoslaná!");
             }
             else{
-                const foundFriendshipStatus = result.rows[0]
-                return response.status(200).send({
-                    status: foundFriendshipStatus.status
-                });
+                return response.status(200).send("Priateľstvo už existuje!");
             }
 
         })
@@ -124,35 +203,28 @@ router.get("/getFriendship/:userId/:friendId", ClerkExpressRequireAuth(), (reque
 
 // ------------------POST REQUEST - POST FRIEND_REQUEST TO DBS---------------------------------------------------------------
 router.post("/sendFriendRequest", ClerkExpressRequireAuth(), async (request, response) => {
-    const userUsername = request.body["user_username"];
-    const friendUsername = request.body["friend_username"];
-    const status = request.body["status"];
     const from = request.body["from"];
-    const userId = request.body["user_id"];
-    const friendId = request.body["friend_id"];
+    const to = request.body["friend_id"];
 
     const { userId: loggedInUserId } = request.auth;
 
     // check whether user calling this endpoint is the one logged in
-    if (loggedInUserId !== userId) {
+    if (loggedInUserId !== from) {
         return response.status(403).json({ error: "Forbidden" });
     }
 
 
-    if(userUsername === friendUsername) return response.status(400).send("Zakázaná akcia!")
+    if(from === to) return response.status(400).send("Zakázaná akcia!")
 
     try{
-        const insertQuery_user_to_friend = "INSERT INTO friendship (user_username, friend_username, status, from_user_id, user_id, friend_id) VALUES ($1, $2, $3, $4, $5, $6)";
-        await pool.query(insertQuery_user_to_friend, [userUsername, friendUsername, status, from, userId, friendId])
-
-        const insertQuery_friend_to_user = "INSERT INTO friendship (friend_username, user_username, status, from_user_id, friend_id, user_id) VALUES ($1, $2, $3, $4, $5, $6)";
-        await pool.query(insertQuery_friend_to_user, [userUsername, friendUsername, status, from, userId, friendId])
+        const insertQuery = "INSERT INTO \"Friend_requests\" (from_user_id, to_user_id) VALUES ($1, $2)";
+        await pool.query(insertQuery, [from, to])
 
         return response.status(200).send("Žiadosť odoslaná");
     }
     catch (error) {
         console.log(error);
-        return response.status(500).send({error: "error"});
+        return response.status(500).send("Error, skús znova neskôr.");
     }
 })
 

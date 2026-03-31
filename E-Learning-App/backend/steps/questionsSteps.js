@@ -9,11 +9,11 @@ export default async function getQuestionsBasedOnDifficulty(questionDifficulty, 
     const multiselectFlag = testDifficulty !== "easy";
     const finalList = []
 
-    const getQuestionsQuery = freeQuestion === true ? "SELECT * FROM questions WHERE difficulty = $1 AND free_answer = true;"
+    const getQuestionsQuery = freeQuestion === true ? "SELECT * FROM \"Questions\" WHERE difficulty = $1 AND free_answer = true;"
         :
-        "SELECT * FROM questions WHERE difficulty = $1  AND free_answer = false " + (multiselectFlag === false ? "AND multiselect = false;" : ";")
+        "SELECT * FROM \"Questions\" WHERE difficulty = $1  AND free_answer = false " + (multiselectFlag === false ? "AND multiselect = false;" : ";")
 
-    const getAnswersQuery = "SELECT * FROM answers WHERE question_id = $1;"
+    const getAnswersQuery = "SELECT * FROM \"Answers\" WHERE question_id = $1;"
 
     const result1 = await pool.query(getQuestionsQuery, [questionDifficulty]);
     if (result1.rowCount === 0) return null
