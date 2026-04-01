@@ -13,7 +13,7 @@ router.get("/getAllFriends/:userId", ClerkExpressRequireAuth(), (request, respon
 
     // check whether user calling this endpoint is the one logged in
     if (loggedInUserId !== userId) {
-        return response.status(403).json({ error: "Forbidden" });
+        return response.status(403).send("Zakázaná akcia!");
     }
 
     const getQuery = `
@@ -43,7 +43,7 @@ router.get("/getAllFriends/:userId", ClerkExpressRequireAuth(), (request, respon
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
-                return response.status(404).send({});
+                return response.status(404).send("Žiadny priatelia");
             }
             else{
                 let foundFriends = result.rows.map(row => ({
@@ -58,7 +58,7 @@ router.get("/getAllFriends/:userId", ClerkExpressRequireAuth(), (request, respon
         })
         .catch((error) => {
             console.log(error);
-            return response.status(500).send({error: "error"});
+            return response.status(500).send("Chyba na strane servera");
         })
 });
 
@@ -72,7 +72,7 @@ router.post("/acceptFriendRequest/:userId/:friendId", ClerkExpressRequireAuth(),
 
     // check whether user calling this endpoint is the one logged in
     if (loggedInUserId !== userId) {
-        return response.status(403).json("Zakázaná akcia!");
+        return response.status(403).send("Zakázaná akcia!");
     }
 
     const deleteQuery = "DELETE FROM \"Friend_requests\" WHERE (to_user_id = $1 OR from_user_id = $2)";
@@ -87,7 +87,7 @@ router.post("/acceptFriendRequest/:userId/:friendId", ClerkExpressRequireAuth(),
         })
         .catch((error) => {
             console.log(error);
-            return response.status(500).send("Error. Skús znova neskôr");
+            return response.status(500).send("Chyba na strane servera");
         })
 });
 
@@ -99,7 +99,7 @@ router.delete("/deleteFriendRequest/:userId/:friendId", ClerkExpressRequireAuth(
 
     // check whether user calling this endpoint is the one logged in
     if (loggedInUserId !== userId) {
-        return response.status(403).json({ error: "Forbidden" });
+        return response.status(403).send("Zakázaná akcia!");
     }
 
     const getQuery = "DELETE FROM \"Friend_requests\" WHERE (to_user_id = $1 AND from_user_id = $2)";
@@ -110,7 +110,7 @@ router.delete("/deleteFriendRequest/:userId/:friendId", ClerkExpressRequireAuth(
         })
         .catch((error) => {
             console.log(error);
-            return response.status(500).send("Error, skús znova neskôr.");
+            return response.status(500).send("Chyba na strane servera");
         })
 });
 
@@ -122,7 +122,7 @@ router.delete("/deleteFriendship/:userId/:friendId", ClerkExpressRequireAuth(), 
 
     // check whether user calling this endpoint is the one logged in
     if (loggedInUserId !== userId) {
-        return response.status(403).json("Zakázaná akcia!");
+        return response.status(403).send("Zakázaná akcia!");
     }
 
     const getQuery = "DELETE FROM \"Friendships\" WHERE (user_id = $1 AND friend_id = $2) OR (user_id = $2 AND friend_id = $1)";
@@ -133,7 +133,7 @@ router.delete("/deleteFriendship/:userId/:friendId", ClerkExpressRequireAuth(), 
         })
         .catch((error) => {
             console.log(error);
-            return response.status(500).send("Error, skús znova neskôr.");
+            return response.status(500).send("Chyba na strane servera");
         })
 });
 
@@ -145,7 +145,7 @@ router.get("/getAllFriendRequests/:userId", ClerkExpressRequireAuth(), (request,
 
     // check whether user calling this endpoint is the one logged in
     if (loggedInUserId !== userId) {
-        return response.status(403).json({ error: "Forbidden" });
+        return response.status(403).send("Zakázaná akcia!");
     }
     const getQuery = `
         SELECT u.username AS friend_username
@@ -168,7 +168,7 @@ router.get("/getAllFriendRequests/:userId", ClerkExpressRequireAuth(), (request,
         })
         .catch((error) => {
             console.log(error);
-            return response.status(500).send({error: "error"});
+            return response.status(500).send("Chyba na strane servera");
         })
 });
 
@@ -180,7 +180,7 @@ router.get("/getFriendship/:userId/:friendId", ClerkExpressRequireAuth(), (reque
 
     // check whether user calling this endpoint is the one logged in
     if (loggedInUserId !== userId) {
-        return response.status(403).json({ error: "Forbidden" });
+        return response.status(403).send("Zakázaná akcia!");
     }
 
     const getQuery = "SELECT * FROM \"Friendships\" WHERE (user_id = $1 AND friend_id = $2) OR (user_id = $2 AND friend_id = $1)";
@@ -197,7 +197,7 @@ router.get("/getFriendship/:userId/:friendId", ClerkExpressRequireAuth(), (reque
         })
         .catch((error) => {
             console.log(error);
-            return response.status(500).send({error: "error"});
+            return response.status(500).send("Chyba na strane servera");
         })
 });
 
@@ -210,7 +210,7 @@ router.post("/sendFriendRequest", ClerkExpressRequireAuth(), async (request, res
 
     // check whether user calling this endpoint is the one logged in
     if (loggedInUserId !== from) {
-        return response.status(403).json({ error: "Forbidden" });
+        return response.status(403).send("Zakázaná akcia!");
     }
 
 
@@ -224,7 +224,7 @@ router.post("/sendFriendRequest", ClerkExpressRequireAuth(), async (request, res
     }
     catch (error) {
         console.log(error);
-        return response.status(500).send("Error, skús znova neskôr.");
+        return response.status(500).send("Chyba na strane servera");
     }
 })
 

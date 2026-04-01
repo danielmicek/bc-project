@@ -28,7 +28,7 @@ router.get("/getAllUsersTests/:userId", ClerkExpressRequireAuth(), (request, res
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
-                response.status(404).send({error: "No tests found", tests: result.rows, bestScore: 0});
+                response.status(404).send({error: "Žiadne testy", tests: result.rows, bestScore: 0});
             }
             else{
                 let foundTests = result.rows.map(test => ({
@@ -45,7 +45,7 @@ router.get("/getAllUsersTests/:userId", ClerkExpressRequireAuth(), (request, res
             }
         })
         .catch((error) => {
-            response.status(500);
+            response.status(500).send("Chyba na strane servera");
             console.log(error);
         })
 });
@@ -58,7 +58,7 @@ router.get("/getTestByTestId/:testId/:userId", ClerkExpressRequireAuth(), (reque
 
     // check whether is the user calling for his own tests
     if (loggedInUserId !== requestedUserId) {
-        return response.status(403).json({ error: "Forbidden" });
+        return response.status(403).json("Zakázaná akcia!");
     }
 
     const getQuery = "SELECT * FROM \"Tests\" WHERE test_id = $1 ORDER BY timestamp";
@@ -66,7 +66,7 @@ router.get("/getTestByTestId/:testId/:userId", ClerkExpressRequireAuth(), (reque
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
-                response.status(404).send({error: "Test not found", tests: result.rows, bestScore: 0});
+                response.status(404).send({error: "Test nenájdený", tests: result.rows, bestScore: 0});
             }
             else{
                 response.status(200).send({
@@ -81,7 +81,7 @@ router.get("/getTestByTestId/:testId/:userId", ClerkExpressRequireAuth(), (reque
             }
         })
         .catch((error) => {
-            response.status(500);
+            response.status(500).send("Chyba na strane servera");
             console.log(error);
         })
 });
@@ -102,7 +102,7 @@ router.get("/getCertificateById/:certId", ClerkExpressRequireAuth(), (request, r
             }
         })
         .catch((error) => {
-            response.status(500);
+            response.status(500).send("Chyba na strane servera");
             console.log(error);
         })
 });
@@ -120,7 +120,7 @@ router.post("/postCertificate", ClerkExpressRequireAuth(), async (request, respo
         })
         .catch((error) => {
             console.log(error);
-            response.status(500).send({error: "Error adding certificateID"})
+            response.status(500).send("Chyba na strane servera")
         })
 })
 
@@ -130,7 +130,7 @@ router.get("/createTest/:testDifficulty", ClerkExpressRequireAuth(), async (requ
     //first check if there is enough AI requests left for generation and for evaluation
     const ai_limit = await getAiLimit()
     if(ai_limit <= 1) {
-        response.status(429).send({error: "AI limit vyčerpaný, skúste znova neskôr."});
+        response.status(429).send("AI limit vyčerpaný, skúste znova neskôr.");
         return
     }
 
@@ -234,7 +234,7 @@ router.get("/createTest/:testDifficulty", ClerkExpressRequireAuth(), async (requ
     }
     catch(err){
         console.log("Error during crating the test");
-        response.status(500).send({errorMessage: "Error during crating the test"});
+        response.status(500).send("Chyba na strane servera");
     }
 })
 
@@ -268,7 +268,7 @@ router.post("/submitTest", ClerkExpressRequireAuth(), async (request, response)=
         );
 
         if (!inserted) {
-            return response.status(500).send("Error posting test to database.");
+            return response.status(500).send("Chyba na strane servera");
         }
 
         return response.status(200).send({
@@ -283,7 +283,7 @@ router.post("/submitTest", ClerkExpressRequireAuth(), async (request, response)=
     }
     catch (error) {
         console.error(error);
-        return response.status(500).send("Error during calculating test results.");
+        return response.status(500).send("Chyba na strane servera");
     }
 });
 
@@ -296,7 +296,7 @@ router.get("/getAiLimit", ClerkExpressRequireAuth(), (request, response)=> {
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
-                response.status(400).send("AI LIMIT not found");
+                response.status(400).send("AI limit nenájdený");
             }
             else{
                 const foundLimit = result.rows[0]
@@ -307,7 +307,7 @@ router.get("/getAiLimit", ClerkExpressRequireAuth(), (request, response)=> {
 
         })
         .catch((error) => {
-            response.status(500);
+            response.status(500).send("Chyba na strane servera");
             console.log(error);
         })
 });

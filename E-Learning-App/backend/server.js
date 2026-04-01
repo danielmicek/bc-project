@@ -38,7 +38,7 @@ app.use("/api/chapters", chapterRouter)
 
 // ------------------UNAUTHENTICATED USER ERROR HANDLER---------------------------------------------------------------
 app.use((err, req, res, next) => {
-    res.status(401).json({ error: 'Neprihlásený používateľ.' });
+    res.status(401).send('Neprihlásený používateľ.');
 });
 
 

@@ -13,8 +13,7 @@ router.get("/getNotionId/:chapter_number", ClerkExpressRequireAuth(), (request, 
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
-                response.status(404);
-                response.send("Notion ID not found");
+                response.status(404).send("Notion ID nenájdené");
             }
             else{
                 response.status(200);
@@ -25,7 +24,7 @@ router.get("/getNotionId/:chapter_number", ClerkExpressRequireAuth(), (request, 
 
         })
         .catch((error) => {
-            response.status(500);
+            response.status(500).send("Chyba na strane servera");
             console.log(error);
         })
 });
@@ -52,7 +51,7 @@ router.get("/getAllChapters", ClerkExpressRequireAuth(), (request, response)=> {
 
         })
         .catch((error) => {
-            response.status(500);
+            response.status(500).send("Chyba na strane servera");
             console.log(error);
         })
 });

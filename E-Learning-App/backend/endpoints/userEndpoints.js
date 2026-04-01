@@ -15,7 +15,7 @@ router.get("/getUser/:username", ClerkExpressRequireAuth(), (request, response)=
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
-                response.status(400).send("user_id: " + username + " not found.  Status code: " + response.statusCode);
+                response.status(404).send("Používateľ nenájdený");
             }
             else{
                 const foundUser = result.rows[0]
@@ -29,7 +29,7 @@ router.get("/getUser/:username", ClerkExpressRequireAuth(), (request, response)=
 
         })
         .catch((error) => {
-            response.status(500);
+            response.status(500).send("Chyba na strane servera");
             console.log(error);
         })
 });
@@ -50,7 +50,7 @@ router.get("/getUserScore/:userId", ClerkExpressRequireAuth(), (request, respons
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
-                response.status(404).send({});
+                response.status(404).send("Používateľské skkóre nenájdené");
             }
             else{
                 const foundScore = result.rows[0]
@@ -62,7 +62,7 @@ router.get("/getUserScore/:userId", ClerkExpressRequireAuth(), (request, respons
 
         })
         .catch((error) => {
-            response.status(500);
+            response.status(500).send("Chyba na strane servera");
             console.log(error);
         })
 });
@@ -78,7 +78,7 @@ router.post("/addUser", ClerkExpressRequireAuth(), async (request, response) => 
 
     // check whether user calling this endpoint is the one logged in
     if (loggedInUserId !== user_id) {
-        return response.status(403).json({ error: "Forbidden" });
+        return response.status(403).json("Zakázaná akcia");
     }
 
 
@@ -89,7 +89,7 @@ router.post("/addUser", ClerkExpressRequireAuth(), async (request, response) => 
             response.status(200).send("User added: " + username + "  Status code: " + response.statusCode);
         })
         .catch((error) => {
-            response.status(500);
+            response.status(500).send("Chyba na strane servera");
             console.log(error);
         })
 })
@@ -102,7 +102,7 @@ router.put("/putUser", ClerkExpressRequireAuth(), (request, response)=> {
 
     // check whether user calling this endpoint is the one logged in
     if (loggedInUserId !== clerk_user_id) {
-        return response.status(403).json({ error: "Forbidden" });
+        return response.status(403).json("Zakázaná akcia!");
     }
 
     const putQuery = "UPDATE \"Users\" SET username = $1, email = $2, image_url = $3 WHERE user_id = $4";
@@ -112,7 +112,7 @@ router.put("/putUser", ClerkExpressRequireAuth(), (request, response)=> {
             console.log(result);
         })
         .catch((error) => {
-            response.status(500).send("Error: Skús znova neskôr");
+            response.status(500).send("Chyba na strane servera");
             console.log(error);
         })
 });
