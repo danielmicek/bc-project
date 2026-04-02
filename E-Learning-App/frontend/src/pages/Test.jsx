@@ -4,7 +4,8 @@ import {useAuth, useUser} from "@clerk/clerk-react";
 import {Link, useNavigate, useSearchParams} from "react-router-dom";
 import {GET_createdTest, GET_getTestByTestId, POST_submitTest} from "../methods/fetchMethods.js";
 import SwiperComponent from "../components/Swiper.jsx";
-import {Button, useDisclosure} from "@heroui/react";
+import {Button} from "@heroui/react";
+import {useDisclosure} from "@heroui/use-disclosure";
 import Loader from "../components/Loader.jsx";
 import ModalComponent from "../components/ModalComponent.jsx";
 import {getTestLength, goToPage} from "../methods/methodsClass.js";
@@ -74,8 +75,7 @@ export default function Test() {
     useEffect(() => {
         async function loadQuestions() {
             try{
-
-                const tmp = READ_ONLY ? await GET_getTestByTestId(TEST_ID, getToken) : await GET_createdTest(TEST_DIFFICULTY, getToken)
+                const tmp = READ_ONLY ? await GET_getTestByTestId(TEST_ID, getToken, user.id) : await GET_createdTest(TEST_DIFFICULTY, getToken)
                 setQuestions(READ_ONLY ? tmp.structure : tmp.createdTest)
                 if(READ_ONLY) setTestResults(tmp.results)
             }
@@ -89,7 +89,7 @@ export default function Test() {
         }
         void loadQuestions()
 
-    }, [])
+    }, [userIsLoaded])
 
     // stop/resume the timer when modal is opened/closed
     useEffect(() => {
@@ -126,7 +126,7 @@ export default function Test() {
                         confirmButtonText = {"Pozrieť vyhodnotený test"}
                         declineButtonText = {"Späť do menu"}
                         confirmButtonclickHandler = {async () => {
-                            const tmp = await GET_getTestByTestId(TEST_ID, getToken);
+                            const tmp = await GET_getTestByTestId(TEST_ID, getToken, user.id);
                             setQuestions(tmp.test.structure);
                             onCloseTimeOutModal()
                         }}
@@ -134,7 +134,7 @@ export default function Test() {
         />
         {/*TEST RESULTS MODAL*/}
         <ModalComponent title={"Výsledky"}
-                        mainText={"Dosiahnutý počet bodov: " + testResults?.points}
+                        mainText={"Dosiahnutý počet bodov: " + Number(testResults?.points ?? 0).toFixed(2)}
                         secondaryText1={"Výsledok v % : " + testResults?.percentage}
                         secondaryText2={"Známka: " + testResults?.grade}
                         secondaryText3={"Medaila: " + (testResults?.medal === "none" ? "Žiadna" : testResults?.medal)}
@@ -143,7 +143,7 @@ export default function Test() {
                         confirmButtonText = {"Pozrieť vyhodnotený test"}
                         declineButtonText = {"Späť do menu"}
                         confirmButtonclickHandler={async () => {
-                            const tmp = await GET_getTestByTestId(TEST_ID, getToken);
+                            const tmp = await GET_getTestByTestId(TEST_ID, getToken, user.id);
                             setQuestions(tmp.structure);
                             onCloseTestResultsModal();
                         }}
@@ -180,10 +180,10 @@ export default function Test() {
                         confirmButtonText = {"Áno"}
                         declineButtonText = {"Nie"}
                         confirmButtonclickHandler={async () => {
+                            onCloseSubmitTestModal()
                             const result = await POST_submitTest(questions, TEST_DIFFICULTY, user.id, TEST_ID, setIsLoading, getToken)
                             setQuestions(result.structure)
                             setTestResults(result.results);
-                            onCloseSubmitTestModal()
                             onOpenTestResultsModal()
                             setTestStatus("submitted")
                             setSearchParams({testID: TEST_ID, difficulty: TEST_DIFFICULTY, readOnly: "true" });

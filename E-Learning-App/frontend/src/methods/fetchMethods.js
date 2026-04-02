@@ -1,240 +1,251 @@
-/*-------------USER API CALLS----------------------------------------------------------------*/
-const buildAuthHeaders = async (getToken, extraHeaders = {}) => {
-    const token = await getToken();
-    return {
-        ...extraHeaders,
-        Authorization: `Bearer ${token}`,
-    };
+import axios from "axios";
+
+/*-------------COMMON API CLIENT----------------------------------------------------------------*/
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
+
+const asText = (data) => {
+    if (typeof data === "string") return data;
+    if (data === null || data === undefined) return "";
+    return JSON.stringify(data);
 };
 
-export async function POST_user(clerk_id, email, username, imageUrl, getToken) {
+function createApiClient(getToken){
+    const apiClient = axios.create({
+        baseURL: API_BASE_URL,
+    });
 
-    const headers = await buildAuthHeaders(getToken, {"Content-Type": "application/json"});
-    const x = await fetch(`http://localhost:3000/api/user/addUser`, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-            user_id: clerk_id,
-            username: username,
-            email: email,
-            image_url: imageUrl
-        })
-    })
+    apiClient.interceptors.request.use(async (config) => {
+        const token = await getToken();
+
+        config.headers = config.headers ?? {};
+        config.headers.Authorization = `Bearer ${token}`;
+
+        return config;
+    });
+
+    apiClient.interceptors.response.use(
+        (response) => response.data,
+        (error) => {
+            if (!error.response) {
+                return Promise.reject(error);
+            }
+
+            const apiError = new Error(asText(error.response.data) || error.message);
+            apiError.status = error.response.status;
+            /*apiError.data = error.response.data;
+            apiError.statusText = error.response.statusText;*/
+
+            return Promise.reject(apiError);
+        }
+    );
+
+    return apiClient;
+}
+
+// for optimisation -> the same client is used in each method
+// without this, for each call of a method, a new client would be created
+const apiClientCache = new WeakMap();
+function getApiClient(getToken){
+    if (!apiClientCache.has(getToken)) {
+        apiClientCache.set(getToken, createApiClient(getToken));
+    }
+
+    return apiClientCache.get(getToken);
+}
+
+/*-------------USER API CALLS----------------------------------------------------------------*/
+export async function POST_user(clerk_id, email, username, imageUrl, getToken) {
+    const apiClient = getApiClient(getToken);
+
+    await apiClient.post("/api/user/addUser", {
+        user_id: clerk_id,
+        username,
+        email,
+        image_url: imageUrl,
+    });
 }
 
 export async function GET_user(username, getToken){
-    const headers = await buildAuthHeaders(getToken);
-    return await fetch(`http://localhost:3000/api/user/getUser/${username}`, {
-        method: "GET",
-        headers
-    })
+    const apiClient = getApiClient(getToken);
+
+    try {
+        return await apiClient.get(`/api/user/getUser/${username}`);
+    } catch (error) {
+        if (error.status === 400 || error.status === 404) return null; // user not found
+        throw error;
+    }
 }
 
 export async function PUT_user(username, email, imageUrl, userId, getToken){
-    const headers = await buildAuthHeaders(getToken, {"Content-Type": "application/json"});
-    const response = await fetch(`http://localhost:3000/api/user/putUser`, {
-        method: "PUT",
-        headers,
-        body: JSON.stringify({
-            user_username: username,
-            user_email: email,
-            user_imageUrl: imageUrl,
-            clerk_user_id: userId
-        })
-    })
+    const apiClient = getApiClient(getToken);
 
-    if (!response.ok) {
-        throw new Error(await response.text());
-    }
+    const response = await apiClient.put("/api/user/putUser", {
+        user_username: username,
+        user_email: email,
+        user_imageUrl: imageUrl,
+        clerk_user_id: userId,
+    });
 
-    return await response.text();
+    return asText(response);
 }
 
 export async function GET_UserScore(userId, getToken){
-    const headers = await buildAuthHeaders(getToken);
-    const response = await fetch(`http://localhost:3000/api/user/getUserScore/${userId}`, {
-        method: "GET",
-        headers,
-        cache: "no-store"
-    })
-    return await response.json();
+    const apiClient = getApiClient(getToken);
+    return await apiClient.get(`/api/user/getUserScore/${userId}`);
 }
 /*----------------------------------------------------------------------------------------------*/
 
 /*-------------FRIENDSHIP API CALLS----------------------------------------------------------------*/
 export async function POST_friendship(userUsername, friendUsername, userId, friendId, getToken) {
-    const headers = await buildAuthHeaders(getToken, {"Content-Type": "application/json"});
-    const response = await fetch(`http://localhost:3000/api/friendship/sendFriendRequest`, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-            user_username: userUsername,
-            friend_username: friendUsername,
-            status: "PENDING",
-            from: userId,
-            user_id: userId,
-            friend_id: friendId
-        })
-    })
+    const apiClient = getApiClient(getToken);
 
-    if (!response.ok) {
-        throw new Error(await response.text());
-    }
+    const response = await apiClient.post("/api/friendship/sendFriendRequest", {
+        user_username: userUsername,
+        friend_username: friendUsername,
+        status: "PENDING",
+        from: userId,
+        user_id: userId,
+        friend_id: friendId,
+    });
 
-    return await response.text();
+    return asText(response);
 }
 
-export async function GET_friendship(user_id, friend_id, getToken){         // check if friendship with a particular user exists (the state does not matter)
-    const headers = await buildAuthHeaders(getToken);
-    return await fetch(`http://localhost:3000/api/friendship/getFriendship/${user_id}/${friend_id}`, {
-        method: "GET",
-        headers
-    })
+// returns true if friendship exists, false otherwise
+export async function GET_friendship(user_id, friend_id, getToken){
+    const apiClient = getApiClient(getToken);
+
+    try {
+        await apiClient.get(`/api/friendship/getFriendship/${user_id}/${friend_id}`);
+        return true;
+    } catch (error) {
+        if (error.status === 400) return false;
+        throw error;
+    }
 }
 
 export async function GET_allFriendRequests(userId, getToken){
-    const headers = await buildAuthHeaders(getToken);
-    return await fetch(`http://localhost:3000/api/friendship/getAllFriendRequests/${userId}`, {
-        method: "GET",
-        headers,
-        cache: "no-store"
-    });
+    const apiClient = getApiClient(getToken);
+
+    try {
+        return await apiClient.get(`/api/friendship/getAllFriendRequests/${userId}`);
+    } catch (error) {
+        if (error.status === 404) return [];
+        throw error;
+    }
 }
 
 export async function GET_allFriends(userId, getToken){
-    const headers = await buildAuthHeaders(getToken);
-    return await fetch(`http://localhost:3000/api/friendship/getAllFriends/${userId}`, {
-        method: "GET",
-        headers,
-        cache: "no-store"
-    });
+    const apiClient = getApiClient(getToken);
+
+    try {
+        return await apiClient.get(`/api/friendship/getAllFriends/${userId}`);
+    } catch (error) {
+        if (error.status === 404) return [];
+        throw error;
+    }
 }
 
-export async function PATCH_acceptFriendRequest(userId, friendId, getToken){    // accepting a friend request by updating status PENDING to ACCEPTED
-    const headers = await buildAuthHeaders(getToken);
-    return await fetch(`http://localhost:3000/api/friendship/acceptFriendRequest/${userId}/${friendId}`, {
-        method: "PATCH",
-        headers
-    })
+export async function POST_acceptFriendRequest(userId, friendId, getToken){
+    const apiClient = getApiClient(getToken);
+
+    const response = await apiClient.post(`/api/friendship/acceptFriendRequest/${userId}/${friendId}`, null);
+    return asText(response);
 }
 
-export async function DELETE_deleteFriend(userId, friendId, getToken){
-    const headers = await buildAuthHeaders(getToken);
-    return await fetch(`http://localhost:3000/api/friendship/deleteFriend/${userId}/${friendId}`, {
-        method: "DELETE",
-        headers
-    })
+// backend currently exposes one delete route for friendship/request removal
+export async function DELETE_deleteFriendship(userId, friendId, getToken){
+    const apiClient = getApiClient(getToken);
+
+    const response = await apiClient.delete(`/api/friendship/deleteFriend/${userId}/${friendId}`);
+    return asText(response);
+}
+
+export async function DELETE_deleteFriendRequest(userId, friendId, getToken){
+    const apiClient = getApiClient(getToken);
+
+    const response = await apiClient.delete(`/api/friendship/deleteFriend/${userId}/${friendId}`);
+    return asText(response);
 }
 /*----------------------------------------------------------------------------------------------*/
 
 /*-------------TEST API CALLS----------------------------------------------------------------*/
-// POST because we are sending body - recommended not to do so in GET requests
 export async function POST_getBestTestScore(tests, getToken) {
-    const headers = await buildAuthHeaders(getToken, {"Content-Type": "application/json"});
-    const response = await fetch(`http://localhost:3000/api/test/getBestTestScore`, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-            tests: tests
-        })
-    })
-    return await response.text();
+    const apiClient = getApiClient(getToken);
+
+    const response = await apiClient.post("/api/test/getBestTestScore", { tests });
+    return asText(response);
 }
 
-export async function GET_getTestByTestId(testId, getToken){
-    const headers = await buildAuthHeaders(getToken);
-    const response = await fetch(`http://localhost:3000/api/test/getTestByTestId/${testId}`, {
-        method: "GET",
-        headers,
-        cache: "no-store"
-    })
-    return await response.json();
+export async function GET_getTestByTestId(testId, getToken, userId){
+    const apiClient = getApiClient(getToken);
+    return await apiClient.get(`/api/test/getTestByTestId/${testId}/${userId}`);
 }
 
 export async function POST_submitTest(testStructure, testDifficulty, userId, testId, setIsLoading, getToken) {
+    const apiClient = getApiClient(getToken);
     setIsLoading(true);
-    const headers = await buildAuthHeaders(getToken, {"Content-Type": "application/json"});
-    const response = await fetch(`http://localhost:3000/api/test/submitTest`, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-            userId: userId,
-            testId: testId,
-            testStructure: testStructure,
-            testDifficulty: testDifficulty
-        })
-    })
-    setIsLoading(false)
-    return await response.json();
+
+    try {
+        return await apiClient.post("/api/test/submitTest", {
+            userId,
+            testId,
+            testStructure,
+            testDifficulty,
+        });
+    } finally {
+        setIsLoading(false);
+    }
 }
 
 export async function getCertificateById(certId, getToken){
-    const headers = await buildAuthHeaders(getToken);
-    const response = await fetch(`http://localhost:3000/api/test/getCertificateById/${certId}`, {
-        method: "GET",
-        headers,
-        cache: "no-store"
-    })
-    return await response.json();
+    const apiClient = getApiClient(getToken);
+    return await apiClient.get(`/api/test/getCertificateById/${certId}`);
 }
 
 export async function POST_postCertificate(certId, username, getToken) {
-    const headers = await buildAuthHeaders(getToken, {"Content-Type": "application/json"});
-    const response = await fetch(`http://localhost:3000/api/test/postCertificate`, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-            certId: certId,
-            username: username
-        })
-    })
-    return await response.json();
+    const apiClient = getApiClient(getToken);
+
+    return await apiClient.post("/api/test/postCertificate", {
+        certId,
+        username,
+    });
 }
 
 export async function GET_allUsersTests(userId, getToken){
-    const headers = await buildAuthHeaders(getToken);
-    const response = await fetch(`http://localhost:3000/api/test/getAllUsersTests/${userId}`, {
-        method: "GET",
-        headers,
-        cache: "no-store"
-    })
-    return await response.json();
+    const apiClient = getApiClient(getToken);
+    return await apiClient.get(`/api/test/getAllUsersTests/${userId}`);
 }
 
-export async function GET_createdTest(testDifficulty, getToken) {
-    const headers = await buildAuthHeaders(getToken);
-    const response = await fetch(`http://localhost:3000/api/test/createTest/${testDifficulty}`, {
-        headers,
-        method: "GET",
-        cache: "no-store"
-    })
-    if(!response.ok) {
-        throw new Error("AI request failed");
+export async function GET_createdTest(testDifficulty, getToken, onOpenAiLimitModal = null) {
+    const apiClient = getApiClient(getToken);
+
+    try {
+        return await apiClient.get(`/api/test/createTest/${testDifficulty}`);
+    } catch (error) {
+        //if (error.status === 429 && onOpenAiLimitModal) onOpenAiLimitModal();
+        throw error;
     }
-    return await response.json();
 }
 /*----------------------------------------------------------------------------------------------*/
 
-/*-------------GET NOTION-ID C------------------------------------------------------------------*/
+/*-------------GET NOTION-ID--------------------------------------------------------------------*/
 export async function GET_notionId(chapter, getToken) {
-    const headers = await buildAuthHeaders(getToken);
-    const response = await fetch(`http://localhost:3000/api/chapters/getNotionId/${chapter}`, {
-        method: "GET",
-        headers,
-        cache: "no-store"
-    })
-    return await response.json();
+    const apiClient = getApiClient(getToken);
+    return await apiClient.get(`/api/chapters/getNotionId/${chapter}`);
 }
 /*---------------------------------------------------------------------------------------------*/
 
 /*-------------GET ALL CHAPTERS----------------------------------------------------------------*/
 export async function GET_allChapters(getToken) {
-    const headers = await buildAuthHeaders(getToken);
-    const response = await fetch(`http://localhost:3000/api/chapters/getAllChapters`, {
-        method: "GET",
-        headers,
-        cache: "no-store"
-    })
-    return await response.json();
+    const apiClient = getApiClient(getToken);
+    return await apiClient.get("/api/chapters/getAllChapters");
+}
+/*------------------------------------------------------------------------------------------*/
+
+/*-------------GET AI LIMIT----------------------------------------------------------------*/
+export async function GET_aiLimit(getToken) {
+    const apiClient = getApiClient(getToken);
+    return await apiClient.get("/api/test/getAiLimit");
 }
 /*---------------------------------------------------------------------------------------------*/

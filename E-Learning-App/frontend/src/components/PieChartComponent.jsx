@@ -1,7 +1,6 @@
 import Stack from '@mui/material/Stack';
 import {PieChart} from '@mui/x-charts/PieChart';
-import React, {useEffect} from "react";
-import ScrollReveal from "scrollreveal";
+import React from "react";
 
 export default function PieChartComponent({
                                               title = null,
@@ -17,12 +16,6 @@ export default function PieChartComponent({
         { label: 'Silver test', value:  NO_TESTS ? 8 : mediumTests.length, color: '#C0C0C0'},
         { label: 'Gold test', value:  NO_TESTS ? 3 : hardTests.length, color: '#FFD700'}
     ]
-
-    // scroll reveal
-    useEffect(() => {
-        ScrollReveal().reveal("#PIE_CHART_TITLE", {reset: true});
-        ScrollReveal().reveal("#PIE_CHART", {reset: true});
-    }, []);
 
     return (
         <>

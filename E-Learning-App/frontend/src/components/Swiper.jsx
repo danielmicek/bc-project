@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef} from 'react';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -15,7 +15,15 @@ export default function SwiperComponent({questions, setQuestions = ()=>{}}) {
     };
 
     const refSwiper = useRef(null);
-    const [activeIndex, setActiveIndex] = useState(0);
+    const [swiperNavigationVisible, setSwiperNavigationVisible] = React.useState(window.innerWidth > 640);
+    addEventListener("resize", (event) => { })
+
+    // if screen is a mobile-sized, hide navigation arrows in the Swiper component
+    onresize = (event) => {
+        if(window.innerWidth < 640) setSwiperNavigationVisible(false)
+        else setSwiperNavigationVisible(true)
+    }
+
     return (
         <>
             <Swiper
@@ -24,16 +32,13 @@ export default function SwiperComponent({questions, setQuestions = ()=>{}}) {
                 spaceBetween={24}
                 loop={false}
                 pagination={pagination}
-                navigation={true}
+                navigation={swiperNavigationVisible}
                 modules={[Pagination, Navigation]}
                 className="swiper"
-                onSlideChange = {() => {
-                    setActiveIndex(refSwiper.current.activeIndex);
-                }}
             >
                 {questions.map((question, index) => {
-                    return <SwiperSlide className="swiper ">
-                        <Question activeIndex = {activeIndex}
+                    return <SwiperSlide className="swiper" key={question.id ?? index}>
+                        <Question questionIndex = {index}
                                   question = {question}
                                   setQuestions = {setQuestions}
                         />

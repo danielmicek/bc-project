@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {useEffect} from 'react';
 import {useAuth} from "@clerk/clerk-react";
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -10,14 +9,13 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EqualizerOutlinedIcon from '@mui/icons-material/EqualizerOutlined';
-import {acceptFriendRequest, deleteFriend} from "../methods/methodsClass.js";
+import {acceptFriendRequest, deleteFriendRequest, deleteFriendship} from "../methods/methodsClass.js";
 import {Link} from "react-router-dom";
 import Loader from "./Loader.jsx";
 import {Divider} from "@heroui/react";
-import ScrollReveal from "scrollreveal";
 
 
-function handleClick({
+async function handleClick({
                      decision,
                      type,
                      setRequestList,
@@ -32,7 +30,8 @@ function handleClick({
     if (decision === "accept") {
         void acceptFriendRequest(userUsername, friendName, userId, friendId, setFriendsList, setRequestList, imgUrl, getToken);
     } else {
-        void deleteFriend(type === "friendRequestList"? "FR" : "F", userUsername, friendName, userId, friendId, setFriendsList, setRequestList, getToken);
+        if(type === "friendRequestList") await deleteFriendRequest(userUsername, friendName, userId, friendId, setFriendsList, setRequestList, getToken)
+        else await deleteFriendship(userUsername, friendName, userId, friendId, setFriendsList, setRequestList, getToken)
     }
 }
 
@@ -127,11 +126,6 @@ export default function FriendList({
                                    }) {
     const { getToken } = useAuth();
     const title = type === "friendList" ? "Priatelia" : "Žiadosti";
-
-    // scroll reveal
-    useEffect(() => {
-        ScrollReveal().reveal("#FRIEND_OR_FR_LIST", {reset: true});
-    }, []);
 
     return (
 

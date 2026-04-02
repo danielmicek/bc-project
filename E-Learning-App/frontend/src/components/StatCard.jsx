@@ -1,16 +1,9 @@
 import * as React from "react";
-import {useEffect} from "react";
-import ScrollReveal from "scrollreveal";
 
 export default function StatCard({
                                      imgPath,
                                      value,
                                      text}){
-    // scroll reveal
-    useEffect(() => {
-        ScrollReveal().reveal(".STAT_CARD", {reset: true});
-    }, []);
-
     return (
         <div className="STAT_CARD flex flex-col items-center min-[700px]:w-[150px] w-[150px] aspect-square rounded-lg bg-white p-6">
             <div className="h-12">

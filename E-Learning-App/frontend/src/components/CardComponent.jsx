@@ -1,5 +1,6 @@
-import {Button, Card, CardBody, CardFooter, CardHeader, Divider, Image, useDisclosure} from "@heroui/react";
-import React, {useEffect} from "react";
+import {Button, Card, CardBody, CardFooter, CardHeader, Divider, Image} from "@heroui/react";
+import {useDisclosure} from "@heroui/use-disclosure";
+import React from "react";
 import "../styles/index.css"
 import {Link, useNavigate} from "react-router-dom";
 import {useUser} from "@clerk/clerk-react";
@@ -8,7 +9,6 @@ import {goToPage} from "../methods/methodsClass.js";
 import DetailsModal from "./DetailsModal.jsx";
 import {chaptersDetails, testsAndLearningDetails} from "../methods/details.jsx";
 import SpotlightCard from "@/components/SpotlightCard.jsx";
-import ScrollReveal from "scrollreveal";
 
 // renders the orange button in each CardComponent according to its type
 // Learning -> "Zobraziť kapitoly" button
@@ -70,17 +70,14 @@ export default function CardComponent({
                                           questions = 0,
                                           type,
                                           time,
-                                          testColumn = null
+                                          testColumn = null,
+                                          aiLimit = null,
                                       }) {
     const {isSignedIn} = useUser();
     const navigate = useNavigate();
     const {isOpen: isOpenTest_Chapter_Modal, onOpen: onOpenTest_Chapter_Modal, onClose: onCloseTest_Chapter_Modal} = useDisclosure();
     const {isOpen: isOpenDetailModal, onOpen: onOpenDetailModal, onClose: onCloseDetailModal} = useDisclosure();
-
-    // scroll reveal
-    useEffect(() => {
-        ScrollReveal().reveal("#CARD", {reset: true});
-    }, []);
+    const {isOpen: isOpenAiLimitModal, onOpen: onOpenAiLimitModal, onClose: onCloseAiLimitModal} = useDisclosure();
 
     return (
         <>
@@ -89,6 +86,20 @@ export default function CardComponent({
                           onClose = {onCloseDetailModal}
             />
 
+            {/*AI LIMIT GONE*/}
+            <ModalComponent title={"AI limit vyčerpaný"}
+                            mainText={"Na dnešný deň boli vyčerpané všetky AI requesty, otestuj sa znova zajtra."}
+                            secondaryText1={"Medzičasom si oddýchni alebo študuj materiály!"}
+                            isOpen={isOpenAiLimitModal}
+                            onClose={onCloseAiLimitModal}
+                            confirmButtonText = {"Študovať materiály"}
+                            declineButtonText = {"Späť do menu"}
+                            confirmButtonclickHandler = {() => {
+                                onCloseAiLimitModal()
+                                goToPage("/learning", navigate)
+                            }}
+                            declineButtonclickHandler = {() => onCloseAiLimitModal()}
+            />
             {isSignedIn ?
                 <ModalComponent title={"Si pripravený začať test?"}
                                 mainText={"Test sa začne v momente kliknutia na tlačidlo Áno"}
@@ -96,11 +107,15 @@ export default function CardComponent({
                                 onClose={onCloseTest_Chapter_Modal}
                                 confirmButtonText = {"Áno"}
                                 declineButtonText = {"Neskôr"}
-                                confirmButtonclickHandler={() => goToPage("/test", navigate, false, difficultyTransformation[difficulty])}
+                                confirmButtonclickHandler={() => {
+                                    onCloseTest_Chapter_Modal()
+                                    if(aiLimit > 1) goToPage("/test", navigate, false, difficultyTransformation[difficulty])
+                                    else onOpenAiLimitModal()
+                                }}
                 />
                 :
                 <ModalComponent title={"Nie si prihlásený"}
-                                mainText={"Na túto sekciu je potrebné byt prihlásený."}
+                                mainText={"Na vstup to tejto sekcie je potrebné byt prihlásený."}
                                 isOpen={isOpenTest_Chapter_Modal}
                                 onClose={onCloseTest_Chapter_Modal}
                                 signInFlag={true}
@@ -109,7 +124,7 @@ export default function CardComponent({
                 />
             }
 
-            <Card id = "CARD" className={`${testColumn} ${type === "Chapter" ? "sm:w-[400px] w-full" : "w-full"} h-[230px]  px-3 rounded-lg shadow-[5px_10px_30px_rgba(255,255,255,0.5)]
+            <Card id = "CARD" className={`${testColumn} ${type === "Chapter" ? "sm:w-[400px] w-full" : "w-full"} h-[250px] flex justify-center px-3 rounded-lg shadow-[5px_10px_30px_rgba(255,255,255,0.5)]
             bg-gradient-to-br from-[#3B3B3B] to-[#1f1f1f] border-1 border-white`}>
                 <SpotlightCard className="custom-spotlight-card">
                     <CardHeader className="flex gap-3">

@@ -16,7 +16,16 @@ export default function ModalComponent({title,
                                        declineButtonText}) {
 
     return (
-        <Modal backdrop={"blur"} isOpen={isOpen} onClose={onClose} className="">
+        <Modal
+            backdrop={"blur"}
+            isOpen={isOpen}
+            onClose={onClose}
+            classNames={{
+                wrapper: "z-[2000]",
+                backdrop: "z-[1999]",
+                base: "z-[2000]",
+            }}
+        >
             <ModalContent>
                 {(onClose) => (
                     <>

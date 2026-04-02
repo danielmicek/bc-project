@@ -1,10 +1,9 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {Button} from "@heroui/react";
 import {PDFDownloadLink} from "@react-pdf/renderer";
 import Certificate from "./Certificate.jsx";
 import {POST_postCertificate} from "../methods/fetchMethods.js";
 import {getUniqueTestID} from "../methods/methodsClass.js";
-import ScrollReveal from "scrollreveal";
 import {useAuth} from "@clerk/clerk-react";
 
 export default function ExportCertificateContainer({
@@ -13,11 +12,6 @@ export default function ExportCertificateContainer({
                                                        userName}){
     const certificateId = getUniqueTestID("ELC")
     const { getToken } = useAuth();
-
-    // scroll reveal
-    useEffect(() => {
-        ScrollReveal().reveal("#EXPORT_CERT", {reset: true});
-    }, []);
 
     return (
         <div id = "EXPORT_CERT" className = "flex md:flex-row flex-col items-center justify-between mt-20 gap-5 w-[90%]

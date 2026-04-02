@@ -1,10 +1,9 @@
 import {DataGrid} from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
-import React, {useEffect} from "react";
+import React from "react";
 import IconButton from "@mui/material/IconButton";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import {Link} from "react-router-dom";
-import ScrollReveal from "scrollreveal";
 
 const columns = [
     { field: 'id', headerName: 'Poradie', width: 210, sortable: false, headerAlign: 'center', align: 'center'},
@@ -36,11 +35,6 @@ const columns = [
 const paginationModel = { page: 0, pageSize: 5 };
 
 export default function HistoryTable({tests}) {
-    // scroll reveal
-    useEffect(() => {
-        ScrollReveal().reveal("#HISTORY_TABLE", {reset: true});
-    }, []);
-
     return (
         <Paper id = "HISTORY_TABLE" sx={{  width: '80%', position: 'relative', marginTop: 20, borderRadius: "10px", overflowX: "auto" }} >
             <h1 className="text-4xl py-3 pl-5 font-bold opacity-67 tracking-wide">História testov</h1>

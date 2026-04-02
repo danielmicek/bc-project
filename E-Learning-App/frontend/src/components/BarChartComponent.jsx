@@ -1,8 +1,7 @@
 import Box from '@mui/material/Box';
 import {BarChart} from '@mui/x-charts/BarChart';
 import {getMedalCount} from "../methods/methodsClass.js";
-import React, {useEffect} from "react";
-import ScrollReveal from "scrollreveal";
+import React from "react";
 
 const labels = [
     'Easy',
@@ -25,12 +24,6 @@ export default function BarChartComponent({
         NO_TESTS ? 3 : getMedalCount(mediumTests, "silver"),
         NO_TESTS ? 1 : getMedalCount(hardTests, "gold")
     ];
-
-    // scroll reveal
-    useEffect(() => {
-        ScrollReveal().reveal("#BAR_CHART_TITLE", {reset: true});
-        ScrollReveal().reveal("#BAR_CHART", {reset: true});
-    }, []);
 
     return (
         <div className="flex flex-col w-[100%] text-center">

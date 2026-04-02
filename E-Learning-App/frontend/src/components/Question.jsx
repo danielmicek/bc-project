@@ -1,34 +1,35 @@
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {useSearchParams} from "react-router-dom";
 
 
-function handleClick(selectedArray, setSelectedArray, index, difficulty, answers, multiselect) {
+function handleClick(selectedArray, setSelectedArray, index, difficulty, multiselect, dontAnswerIndex, isFreeAnswerQuestion, setFreeAnswerText) {
     // neodpovedat
-    if(index === 4){
+    if(index === dontAnswerIndex){
         setSelectedArray(prevSelectedArray => {
-            const newSelectedArray = [...prevSelectedArray];
-            // set all to false
-            for(let i = 0; i < selectedArray.length-1; i++){
-                newSelectedArray[i] = false;
-            }
-            // only the last one to true
+            const newSelectedArray = new Array(prevSelectedArray.length).fill(false);
             newSelectedArray[index] = true;
             return newSelectedArray;
         })
+
+        if (isFreeAnswerQuestion) {
+            setFreeAnswerText("");
+        }
     }
     // other options
     else{
         setSelectedArray(prevSelectedArray => {
             const newSelectedArray = [...prevSelectedArray];
             newSelectedArray[index] = !newSelectedArray[index];
+
             // single-select
             if(difficulty !== "hard" && multiselect === false){ // in hard test all the questions can be selected regardless of the multiselect
                 return newSelectedArray.map((value, i) => {
                     return i === index; // return true if the index is selected, false otherwise
                 });
             }
-            // if I change the answer from "neodpovedať" to any else, the "neodpovedať is unmarked
-            newSelectedArray[newSelectedArray.length-1] = false;
+
+            // if I change the answer from "neodpovedat" to any else, the "neodpovedat" is unmarked
+            newSelectedArray[dontAnswerIndex] = false;
             return newSelectedArray;
         })
     }
@@ -45,7 +46,7 @@ function styleSetter(selectedArray, index, readOnly, answer){
         if(answer.selected === false && answer.correct === true){
             return { backgroundColor: "green", borderColor: "green", color: "black", fontWeight: "bold" }
         }
-        // "neodpovedať" answer
+        // "neodpovedat" answer
         if(answer.selected === true && answer.correct === null){
             return { backgroundColor: "var(--main-color-orange)", borderColor: "var(--main-color-orange)", color: "black", fontWeight: "bold" }
         }
@@ -68,13 +69,42 @@ function getPoints(difficulty){
     return 5
 }
 
-function saveSelectedAnswersIntoTest(selectedArray, setQuestions, activeIndex){
-    // deep copy of both - questions array itself, inner question and its asnwers
+function getFreeAnswerTextAreaStyle(readOnly, aiResponse){
+    if(readOnly && aiResponse === true){
+        return {
+            backgroundColor: "green",
+            borderColor: "green",
+            color: "black",
+            fontWeight: "bold"
+        }
+    }
+
+    if(readOnly && aiResponse === false){
+        return {
+            backgroundColor: "red",
+            borderColor: "red",
+            color: "black",
+            fontWeight: "bold"
+        }
+    }
+
+    return {
+        backgroundColor: "rgb(55 65 81)",
+        borderColor: "rgb(75 85 99)",
+        color: "white"
+    }
+}
+
+function saveQuestionStateIntoTest(selectedArray, freeAnswerText, setQuestions, questionIndex, isFreeAnswerQuestion){
+    // deep copy of both - questions array itself, inner question and its answers
     setQuestions(prevQuestions => {
         const newAnswersArray =  [...prevQuestions]
-        newAnswersArray[activeIndex] = {
-            ...newAnswersArray[activeIndex],
-            answers: newAnswersArray[activeIndex].answers.map((answer, ansIndex) => ({
+        if (newAnswersArray[questionIndex] === undefined) return prevQuestions;
+
+        newAnswersArray[questionIndex] = {
+            ...newAnswersArray[questionIndex],
+            free_answer_text: isFreeAnswerQuestion ? freeAnswerText : (newAnswersArray[questionIndex].free_answer_text ?? ""),
+            answers: newAnswersArray[questionIndex].answers.map((answer, ansIndex) => ({
                 ...answer,
                 selected: selectedArray[ansIndex]
             }))
@@ -83,18 +113,33 @@ function saveSelectedAnswersIntoTest(selectedArray, setQuestions, activeIndex){
     });
 }
 
-// the active index is the swiper page
-export default function Question({activeIndex, question, setQuestions}) {
-    const[selectedArray, setSelectedArray] = useState([false, false, false, false, false]);
+// questionIndex is the index in test structure
+export default function Question({activeIndex, questionIndex, question, setQuestions}) {
+    if(!question || !question.answers) return null;
+
     const [searchParams] = useSearchParams();
     const testDifficulty = searchParams.get("testDifficulty")
     const READ_ONLY = searchParams.get("readOnly") === "true"
     const points = getPoints(question.difficulty)
+    const dontAnswerIndex = useMemo(() => question.answers.length - 1, [question.answers.length]);
+    const isFreeAnswerQuestion = question.free_answer === true;
+    const indexToSave = questionIndex ?? activeIndex;
+
+
+    const[selectedArray, setSelectedArray] = useState(() =>
+        question.answers.map((answer) => Boolean(answer.selected))
+    );
+    const [freeAnswerText, setFreeAnswerText] = useState(() => question.free_answer_text ?? "");
 
     useEffect(() => {
-        if(READ_ONLY) return
-        saveSelectedAnswersIntoTest(selectedArray, setQuestions, activeIndex)
-    }, [selectedArray]); //pri zakliknuti odpovede ulozim zaznacene odpovede do skutocnej struktury testu (cely JSON -> cely vygenerovany test)
+        setSelectedArray(question.answers.map((answer) => Boolean(answer.selected)));
+        setFreeAnswerText(question.free_answer_text ?? "");
+    }, [question.id]);
+
+    useEffect(() => {
+        if(READ_ONLY || indexToSave === undefined) return
+        saveQuestionStateIntoTest(selectedArray, freeAnswerText, setQuestions, indexToSave, isFreeAnswerQuestion)
+    }, [selectedArray, freeAnswerText]); // pri zakliknuti odpovede ulozim zaznacene odpovede do skutocnej struktury testu (cely JSON -> cely vygenerovany test)
 
     return <>
         <div className="pb-8 justify-self-center flex flex-col gap-0 overflow-hidden max-[750px]:w-[70vw] mb-5">
@@ -104,11 +149,36 @@ export default function Question({activeIndex, question, setQuestions}) {
                  Body: {points} {testDifficulty === "medium" ? (question.multiselect === true ? "| Multi-select" : "| Single-select") : ""}</p>}
 
         </div>
-        <ul id = "ANSWERS" className="relative flex flex-col gap-[20px] mb-[50px] justify-self-center self-center w-[550px] h-fit text-white max-[750px]:w-[60vw] mt-3 ">
+
+        {isFreeAnswerQuestion && (
+            <div className="justify-self-center self-center w-[550px] max-[750px]:w-[60vw] mb-4">
+                <textarea
+                    value={freeAnswerText}
+                    readOnly={READ_ONLY}
+                    placeholder="Tvoja odpoveď..."
+                    className="w-full min-h-[120px] rounded-xl p-3 border outline-none focus:border-(--main-color-orange)"
+                    style={getFreeAnswerTextAreaStyle(READ_ONLY, question.aiResponse)}
+                    onChange={(e) => {
+                        const newValue = e.target.value;
+                        setFreeAnswerText(newValue);
+
+                        if (newValue.trim().length > 0) {
+                            setSelectedArray(prevSelectedArray => {
+                                const newSelectedArray = [...prevSelectedArray];
+                                newSelectedArray[dontAnswerIndex] = false;
+                                return newSelectedArray;
+                            })
+                        }
+                    }}
+                />
+            </div>
+        )}
+
+        <ul id = "ANSWERS" className="relative flex flex-col gap-[20px] justify-self-center self-center w-[550px] h-fit text-white max-[750px]:w-[60vw] mt-3">
             {question.answers.map((answer, i) => (
                     <li key = {i} className = "ans a"
                         style = {styleSetter(selectedArray, i, READ_ONLY, answer)}
-                        onClick={() => READ_ONLY ? undefined : handleClick(selectedArray, setSelectedArray, i, testDifficulty, question.answers, question.multiselect)}>{question.answers[i].text}
+                        onClick={() => READ_ONLY ? undefined : handleClick(selectedArray, setSelectedArray, i, testDifficulty, question.multiselect, dontAnswerIndex, isFreeAnswerQuestion, setFreeAnswerText)}>{question.answers[i].text}
                     </li>
                 )
             )}

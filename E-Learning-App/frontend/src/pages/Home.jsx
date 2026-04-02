@@ -1,12 +1,12 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import '../styles/styles.css';
-import {Button, useDisclosure} from "@heroui/react";
+import {Button} from "@heroui/react";
+import {useDisclosure} from "@heroui/use-disclosure";
 import {SignedOut, SignInButton, useUser} from "@clerk/clerk-react";
 import BigStatCard from "../components/BigStatCard.jsx";
 import {Link} from "react-router-dom";
 import LightRays from "../components/LightRays.jsx";
 import VerifyCertificateModal from "../components/VerifyCertificateModal.jsx";
-import ScrollReveal from "scrollreveal";
 
 function Home() {
 
@@ -16,16 +16,6 @@ function Home() {
     const {isOpen: isOpenVerifyCertModal, onOpen: onOpenVerifyCertModal, onClose: onCloseVerifyCertModal} = useDisclosure();
     const {isSignedIn} = useUser();
 
-    // scroll reveal
-    useEffect(() => {
-        const sr = ScrollReveal();
-        sr.reveal("#MAIN_TITLE", {reset: true});
-        sr.reveal("#QUOTE", {reset: true});
-        sr.reveal("#WHAT_IS_ELEONORE", {reset: true});
-        sr.reveal(".BIG_STAT_CARD", {reset: true, interval: 80});
-        sr.reveal("#BOTTOM_CONTAINER", {reset: true});
-    }, []);
-
     return (
         <>
             {/*VERIFY CERTIFICATE MODAL*/}
@@ -34,10 +24,10 @@ function Home() {
                                     onClose={onCloseVerifyCertModal}
             />
 
-            <div id = "BLACK_BACKGROUND" className="flex flex-col w-full min-h-[300px] LightRays mt-0 shadow-xl relative overflow-hidden"
+            <div id = "BLACK_BACKGROUND" className="flex relative flex-col w-full min-h-screen LightRays mt-0 shadow-xl relative overflow-hidden"
                  style={{backgroundColor: "#050505"}}>
 
-                <div className="container pb-20 flex flex-col items-center relative">
+                <div className="container pb-40 flex flex-col items-center relative">
                     <div className="absolute w-screen md:h-[30cm] h-[15cm]">
                         <LightRays
                             raysOrigin="top-center"
@@ -81,8 +71,8 @@ function Home() {
                             <h1 className="font-extrabold sm:text-4xl text-3xl w-fit sm:pr-0 pr-8">Čo je eleonore</h1>
                         </div>
                         <p className="text-gray-300 text-lg mt-8 text-center">
-                            Eleonore je prostredie pre sústredené učenie určené pre tých, ktorí chcú skutočne pochopiť, nie sa len rýchlo presunúť ďalej.<br/>
-                            Bez rozptýlení. Bez tlaku. Iba jasný a merateľný pokrok.</p>
+                            Eleonore je priestor pre zmysluplné učenie, v ktorom nejde len o splnenie úlohy, ale o skutočné porozumenie .<br/>
+                            Prehľadne, systematicky a s dôrazom na merateľný pokrok.</p>
                     </div>
 
                     <div id = "STAT_CARD_CONTAINER" className="flex flex-row gap-10 flex-wrap justify-center z-5 px-8">
@@ -105,9 +95,9 @@ function Home() {
                         />
 
                     </div>
-                    <div id = "BOTTOM_CONTAINER" className="flex md:flex-row flex-col items-center justify-center z-5 mt-40 w-[100%] pr-10">
+                    <div id = "BOTTOM_CONTAINER" className="flex md:flex-row flex-col items-center justify-center z-5 mt-40 w-[100%]">
                         <img src="/laptop.png" alt="laptop" className="md:w-[500px] min-[1300px]:w-[800px] lg:w-[700px] w-[450px]"/>
-                        <ul className="list-disc flex flex-col list-inside text-white mt-10 md:mt-0 pl-10">
+                        <ul className="list-disc flex flex-col list-inside text-white mt-10 md:mt-0 pl-10 pr-5">
                             <li className="mb-8 font-extrabold text-gray-400 text-xl">Získaj medailu po úspechu v teste</li>
                             <li className="mb-8 font-extrabold text-gray-400 text-xl">AI na prefrázovanie otázok a odpovedí</li>
                             <li className="mb-8 font-extrabold text-gray-400 text-xl">Sústreď sa na pochopenie, nie memorizáciu</li>

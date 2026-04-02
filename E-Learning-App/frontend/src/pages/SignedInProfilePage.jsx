@@ -22,6 +22,7 @@ import BasicSparkLineComponent from "../components/SparkLineChartComponent.jsx";
 import ExportCertificateContainer from "../components/ExportCertificateContainer.jsx";
 import HistoryTable from "../components/HistoryTable.jsx";
 import SpotlightCard from "@/components/SpotlightCard.jsx";
+import Loader from "@/components/Loader.jsx";
 import ScrollReveal from "scrollreveal";
 
 
@@ -138,23 +139,35 @@ export default function SignedInProfilePage() {
         if (userTests !== null) loadHardTests()
     }, [userTests])
 
-    // scroll reveal
+    // run reveal only after profile content is rendered (not while loader is shown)
     useEffect(() => {
-        ScrollReveal().reveal("#MAIN_CONTAINER_WITH_PROFILE_PIC", {reset: true});
-        ScrollReveal().reveal("#SEND_FR_AND_COPY_PROFILE_LINK_CONTAINER", {reset: true});
-        ScrollReveal().reveal("#FOOTER", {reset: true});
-        ScrollReveal().reveal("#STATS_TITLE", {reset: true});
-    })
+        if (userTests === null) return;
+
+        const sr = ScrollReveal();
+        sr.reveal("#MAIN_CONTAINER_WITH_PROFILE_PIC", {reset: true});
+        sr.reveal("#SEND_FR_AND_COPY_PROFILE_LINK_CONTAINER", {reset: true});
+        sr.reveal("#STATS_TITLE", {reset: true});
+        sr.reveal("#FRIEND_OR_FR_LIST", {reset: true});
+        sr.reveal("#EXPORT_CERT", {reset: true});
+        sr.reveal("#PIE_CHART_TITLE", {reset: true});
+        sr.reveal("#PIE_CHART", {reset: true});
+        sr.reveal("#BAR_CHART_TITLE", {reset: true});
+        sr.reveal("#BAR_CHART", {reset: true});
+        sr.reveal("#SPARKLINE_CHART_TITLE", {reset: true});
+        sr.reveal("#SPARKLINE_CHART", {reset: true});
+        sr.reveal("#HISTORY_TABLE", {reset: true});
+        sr.reveal("#LEADERBOARD", {reset: true});
+        sr.reveal(".STAT_CARD", {reset: true});
+    }, [userTests]);
 
     return (<>
         <Toaster
             position="bottom-center"
             reverseOrder={false}
         />
-        <div id="BLACK_BACKGROUND"
-             className="relative flex w-full flex-col min-h-screen justify-center shadow-xl bg-[#050505]">
-            {userTests === null ? <></> :
-                <div className="container pb-20 h-full w-full flex flex-col items-center mt-20">
+        <div id="BLACK_BACKGROUND" className="relative flex w-full flex-col min-h-screen justify-center shadow-xl bg-[#050505]">
+            {userTests === null ? <Loader/> :
+                <div className="container pb-40 h-full w-full flex flex-col items-center mt-20">
                     <SpotlightCard className="custom-spotlight-card relative shadow-[5px_5px_17px_4px_rgba(149,_157,_165,_0.3)]
                         w-[90%] h-fit rounded-lg bg-linear-to-br from-[#3B3B3B] to-[#1f1f1f]">
                         <div id="MAIN_CONTAINER_WITH_PROFILE_PIC"
@@ -165,7 +178,7 @@ export default function SignedInProfilePage() {
                                     <UserAvatar/>
                                 </SignedIn>
                                 <div id="GRID_CONTAINER_LOGGED_PROFILE_PAGE"
-                                     className="flex flex-col relative min-[900px]:ml-20
+                                     className="flex flex-col relative min-[900px]:ml-20 z-999
                                 my-12.5 min-[900px]:border-l-2 min-[900px]:border-l-[#545454] max-[1024px]:items-center
                                 max-[900px]:border-t-2 max-[900px]:border-t-[#545454] max-[900px]:pt-20 lg:pl-10">
                                     <div id="USERNAME"

@@ -3,7 +3,6 @@ import {useEffect, useState} from 'react';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import {SparkLineChart} from '@mui/x-charts/SparkLineChart';
-import ScrollReveal from "scrollreveal";
 
 export default function BasicSparkLineComponent({tests, title}) {
     const [allPointsArray, setAllPointsArray] = useState([]);
@@ -24,12 +23,6 @@ export default function BasicSparkLineComponent({tests, title}) {
             15.78, 39.02, 70.66
         ]);
     }, [tests])
-
-    // scroll reveal
-    useEffect(() => {
-        ScrollReveal().reveal("#SPARKLINE_CHART_TITLE", {reset: true});
-        ScrollReveal().reveal("#SPARKLINE_CHART", {reset: true});
-    }, []);
 
     return (
         <>
