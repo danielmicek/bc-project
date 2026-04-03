@@ -5,9 +5,8 @@ import {ClerkExpressRequireAuth} from "@clerk/clerk-sdk-node";
 const router = express.Router();
 
 // ------------------GET REQUEST - GET USER---------------------------------------------------------------
-router.get("/getUser/:username", ClerkExpressRequireAuth(), (request, response)=> {
+router.get("/getUser/:username", (request, response)=> {
     let username = request.params.username;
-
 
     const getQuery = "SELECT user_id, username, email, image_url FROM \"Users\" WHERE username = $1";
 
@@ -35,7 +34,7 @@ router.get("/getUser/:username", ClerkExpressRequireAuth(), (request, response)=
 });
 
 // ------------------GET REQUEST - GET USER's SCORE -> SUM OF TESTS POINTS----------------------------------------------
-router.get("/getUserScore/:userId", ClerkExpressRequireAuth(), (request, response)=> {
+router.get("/getUserScore/:userId", (request, response)=> {
     let userId = request.params.userId;
 
     const getQuery = `
@@ -101,6 +100,7 @@ router.put("/putUser", ClerkExpressRequireAuth(), (request, response)=> {
     const { userId: loggedInUserId } = request.auth;
 
     // check whether user calling this endpoint is the one logged in
+    // preventing such a situation when someone else would want to change user's information
     if (loggedInUserId !== clerk_user_id) {
         return response.status(403).json("Zakázaná akcia!");
     }

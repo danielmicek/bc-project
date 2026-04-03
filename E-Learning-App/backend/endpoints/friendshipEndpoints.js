@@ -13,7 +13,7 @@ router.get("/getAllFriends/:userId", ClerkExpressRequireAuth(), (request, respon
 
     // check whether user calling this endpoint is the one logged in
     if (loggedInUserId !== userId) {
-        return response.status(403).send("Zakázaná akcia!");
+        return response.status(403).send("Zakázaná akcia! Túto akciu môže vykonať iba vlastník profilu.");
     }
 
     const getQuery = `
@@ -72,7 +72,7 @@ router.post("/acceptFriendRequest/:userId/:friendId", ClerkExpressRequireAuth(),
 
     // check whether user calling this endpoint is the one logged in
     if (loggedInUserId !== userId) {
-        return response.status(403).send("Zakázaná akcia!");
+        return response.status(403).send("Zakázaná akcia! Túto akciu môže vykonať iba vlastník profilu.");
     }
 
     const deleteQuery = "DELETE FROM \"Friend_requests\" WHERE (to_user_id = $1 OR from_user_id = $2)";
@@ -99,7 +99,7 @@ router.delete("/deleteFriendRequest/:userId/:friendId", ClerkExpressRequireAuth(
 
     // check whether user calling this endpoint is the one logged in
     if (loggedInUserId !== userId) {
-        return response.status(403).send("Zakázaná akcia!");
+        return response.status(403).send("Zakázaná akcia! Túto akciu môže vykonať iba vlastník profilu.");
     }
 
     const getQuery = "DELETE FROM \"Friend_requests\" WHERE (to_user_id = $1 AND from_user_id = $2)";
@@ -122,7 +122,7 @@ router.delete("/deleteFriendship/:userId/:friendId", ClerkExpressRequireAuth(), 
 
     // check whether user calling this endpoint is the one logged in
     if (loggedInUserId !== userId) {
-        return response.status(403).send("Zakázaná akcia!");
+        return response.status(403).send("Zakázaná akcia! Túto akciu môže vykonať iba vlastník profilu.");
     }
 
     const getQuery = "DELETE FROM \"Friendships\" WHERE (user_id = $1 AND friend_id = $2) OR (user_id = $2 AND friend_id = $1)";
@@ -145,7 +145,7 @@ router.get("/getAllFriendRequests/:userId", ClerkExpressRequireAuth(), (request,
 
     // check whether user calling this endpoint is the one logged in
     if (loggedInUserId !== userId) {
-        return response.status(403).send("Zakázaná akcia!");
+        return response.status(403).send("Zakázaná akcia! Túto akciu môže vykonať iba vlastník profilu.");
     }
     const getQuery = `
         SELECT u.username AS friend_username
@@ -180,7 +180,7 @@ router.get("/getFriendship/:userId/:friendId", ClerkExpressRequireAuth(), (reque
 
     // check whether user calling this endpoint is the one logged in
     if (loggedInUserId !== userId) {
-        return response.status(403).send("Zakázaná akcia!");
+        return response.status(403).send("Zakázaná akcia! Túto akciu môže vykonať iba vlastník profilu.");
     }
 
     const getQuery = "SELECT * FROM \"Friendships\" WHERE (user_id = $1 AND friend_id = $2) OR (user_id = $2 AND friend_id = $1)";
@@ -210,7 +210,7 @@ router.post("/sendFriendRequest", ClerkExpressRequireAuth(), async (request, res
 
     // check whether user calling this endpoint is the one logged in
     if (loggedInUserId !== from) {
-        return response.status(403).send("Zakázaná akcia!");
+        return response.status(403).send("Zakázaná akcia! Túto akciu môže vykonať iba vlastník profilu.");
     }
 
 

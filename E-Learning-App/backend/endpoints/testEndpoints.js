@@ -20,7 +20,7 @@ const router = express.Router();
 
 // ------------------GET REQUEST - GET ALL USER's TESTS-----------------------------------------------------------------
 // sending back an object of: {all tests, best test score}
-router.get("/getAllUsersTests/:userId", ClerkExpressRequireAuth(), (request, response)=> {
+router.get("/getAllUsersTests/:userId", (request, response)=> {
     let requestedUserId = request.params.userId;
 
     const getQuery = "SELECT * FROM \"Tests\" WHERE fk_user_id = $1 ORDER BY timestamp";
@@ -87,7 +87,7 @@ router.get("/getTestByTestId/:testId/:userId", ClerkExpressRequireAuth(), (reque
 });
 
 // ------------------GET REQUEST - GET CERTIFICATE BY ID--------------------------------------------------------------------
-router.get("/getCertificateById/:certId", ClerkExpressRequireAuth(), (request, response)=> {
+router.get("/getCertificateById/:certId", (request, response)=> {
     const certId = request.params.certId;
 
     const getQuery = "SELECT * FROM \"Certificates\" WHERE certificate_id = $1";
@@ -111,6 +111,16 @@ router.get("/getCertificateById/:certId", ClerkExpressRequireAuth(), (request, r
 router.post("/postCertificate", ClerkExpressRequireAuth(), async (request, response) => {
     const certId = request.body["certId"];
     const username = request.body["username"];
+
+    const { userId: loggedInUserId } = request.auth;
+
+    //TODO  fixni, ze posles aj userID z frontendu a porovnas to ci sa to rovna s loggedInUserId
+
+    // check whether user who created this certificate is the one logged in
+    // preventing such a situation when someone would want to post certificate to other user
+    /*if (loggedInUserId !== userId) {
+        return response.status(403).send("Zakázaná akcia! Túto akciu môže vykonať iba vlastník profilu.");
+    }*/
 
     const insertQuery = "INSERT INTO \"Certificates\" VALUES ($1, $2)";
     pool.query(insertQuery, [certId, username])

@@ -36,7 +36,7 @@ app.use("/api/test", testRouter)
 app.use("/api/chapters", chapterRouter)
 
 
-// ------------------UNAUTHENTICATED USER ERROR HANDLER---------------------------------------------------------------
+// ------------------UNAUTHENTICATED USER ERROR HANDLER-----------------------------------------------------------------
 app.use((err, req, res, next) => {
     res.status(401).send('Neprihlásený používateľ.');
 });
