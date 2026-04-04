@@ -40,7 +40,8 @@ export async function getUser_object(username, getToken){ //async function alway
         userId: responseJson.userId,
         userName: responseJson.userName,
         userEmail: responseJson.userEmail,
-        userImgUrl: responseJson.imageUrl
+        userImgUrl: responseJson.imageUrl,
+        userScore: responseJson.score,
     });
 }
 
@@ -145,7 +146,12 @@ export async function friendRequestListLoader(userId, setFriendRequestList, getT
     setFriendRequestList([]); // reset the list so everytime we get fresh FR from the db
     for(const friendName of friendRequests){
         getUser_object(friendName, getToken).then(result => {
-            setFriendRequestList(prevList => [...prevList, {friendName: friendName, friendId: result.userId, imgUrl: result.userImgUrl, email: result.userEmail}]);
+            setFriendRequestList(prevList => [...prevList, {
+                friendName: friendName,
+                friendId: result.userId,
+                imgUrl: result.userImgUrl,
+                email: result.userEmail
+            }]);
         });
     }
 }

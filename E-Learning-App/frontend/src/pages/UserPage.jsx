@@ -5,12 +5,10 @@ import {filterTestsByDifficulty, getUser_object} from "../methods/methodsClass.j
 import Loader from "../components/Loader.jsx";
 import Stats from "../components/Stats.jsx";
 import {Divider} from "@heroui/react";
-import {useDisclosure} from "@heroui/use-disclosure";
 import PieChartComponent from "../components/PieChartComponent.jsx";
 import BarChartComponent from "../components/BarChartComponent.jsx";
 import BasicSparkLineComponent from "../components/SparkLineChartComponent.jsx";
 import {GET_allUsersTests, GET_UserScore} from "../methods/fetchMethods.js";
-import ModalComponent from "@/components/ModalComponent.jsx";
 
 
 // a page with statistics of a particular user
@@ -26,19 +24,12 @@ export default function UserPage() {
     const [userScore, setUserScore] = useState(0);
     const username = searchParams.get("username")
     const [user, setUser] = useState(null);
-    const [UNAUTHORIZED_FLAG, SET_UNAUTHORIZED_FLAG]  = useState(false);
-    const {isOpen: isOpenTest_Chapter_Modal, onOpen: onOpenTest_Chapter_Modal, onClose: onCloseTest_Chapter_Modal} = useDisclosure();
 
 
     // load user
     useEffect(() => {
         async function outterGetUser() {
             const tmp = await getUser_object(username, getToken);
-            console.log(tmp);
-            if(tmp === 401) {
-                SET_UNAUTHORIZED_FLAG(true)
-                onOpenTest_Chapter_Modal()
-            }
             setUser(tmp);
         }
 
@@ -91,18 +82,6 @@ export default function UserPage() {
 
         if (userTests !== null) loadHardTests()
     }, [userTests])
-
-    if(UNAUTHORIZED_FLAG) return(
-        <ModalComponent title={"Nie si prihlásený"}
-                        mainText={"Na vstup to tejto sekcie je potrebné byt prihlásený."}
-                        isOpen={isOpenTest_Chapter_Modal}
-                        onClose={onCloseTest_Chapter_Modal}
-                        declineButtonclickHandler={() => {navigate("/")}}
-                        signInFlag={true}
-                        confirmButtonText = {"Prihlásiť sa"}
-                        declineButtonText = {"Späť do menu"}
-        />
-    )
 
     return( !user || !userTests ? <Loader/> :
             <div id = "BLACK_BACKGROUND" className="relative flex flex-col min-h-screen justify-center shadow-xl bg-[#050505]">
