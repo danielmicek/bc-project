@@ -66,7 +66,7 @@ router.get("/getUserScore/:userId", (request, response)=> {
         })
 });
 
-// ------------------POST REQUEST - POST USER TO DBS---------------------------------------------------------------
+// ------------------POST REQUEST - POST USER TO DBS--------------------------------------------------------------------
 router.post("/addUser", ClerkExpressRequireAuth(), async (request, response) => {
     const user_id = request.body["user_id"];
     const username = request.body["username"];
@@ -93,7 +93,7 @@ router.post("/addUser", ClerkExpressRequireAuth(), async (request, response) => 
         })
 })
 
-// ------------------PUT REQUEST - SAVE ALL USER's INFO TO DB AFTER HE CHANGES IT--------------------------------------------------
+// ------------------PUT REQUEST - SAVE ALL USER's INFO TO DB AFTER HE CHANGES IT---------------------------------------
 router.put("/putUser", ClerkExpressRequireAuth(), (request, response)=> {
     const { user_username, user_email, user_imageUrl, clerk_user_id } = request.body;
 
