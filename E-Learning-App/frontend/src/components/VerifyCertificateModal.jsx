@@ -1,7 +1,7 @@
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from "@heroui/react";
 import React, {useRef} from "react";
 import {toast, Toaster} from "react-hot-toast";
-import {getCertificateById} from "../methods/fetchMethods.js";
+import {GET_getCertificateById} from "../methods/fetchMethods.js";
 import {useAuth} from "@clerk/clerk-react";
 
 export default function VerifyCertificateModal({title,
@@ -28,7 +28,7 @@ export default function VerifyCertificateModal({title,
                                 <form className="flex h-[55px] px-1 gap-3"
                                       onSubmit={async (event) => {
                                           event.preventDefault(); // prevent page reload
-                                          const foundCertificate = await getCertificateById(inputRef.current.value, getToken)
+                                          const foundCertificate = await GET_getCertificateById(inputRef.current.value, getToken)
                                           if(foundCertificate.certificateFound) toast.success(
                                               "Platný certifikát používateľa " + foundCertificate.certificateOwner,
                                               {

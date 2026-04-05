@@ -1,167 +1,182 @@
-import * as React from 'react';
+import * as React from "react";
 import {useAuth} from "@clerk/clerk-react";
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemText from '@mui/material/ListItemText';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import EqualizerOutlinedIcon from '@mui/icons-material/EqualizerOutlined';
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ListItemText from "@mui/material/ListItemText";
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import EqualizerOutlinedIcon from "@mui/icons-material/EqualizerOutlined";
 import {acceptFriendRequest, deleteFriendRequest, deleteFriendship} from "../methods/methodsClass.js";
 import {Link} from "react-router-dom";
 import Loader from "./Loader.jsx";
 import {Divider} from "@heroui/react";
 
-
 async function handleClick({
-                     decision,
-                     type,
-                     setRequestList,
-                     userUsername,
-                     userId,
-                     friendName,
-                     friendId,
-                     setFriendsList,
-                     imgUrl,
-                     getToken}) {
-
+    decision,
+    type,
+    setRequestList,
+    userUsername,
+    userId,
+    friendName,
+    friendEmail,
+    friendId,
+    setFriendsList,
+    imgUrl,
+    getToken,
+}) {
     if (decision === "accept") {
-        void acceptFriendRequest(userUsername, friendName, userId, friendId, setFriendsList, setRequestList, imgUrl, getToken);
+        void acceptFriendRequest(
+            userUsername,
+            friendName,
+            friendEmail,
+            userId,
+            friendId,
+            setFriendsList,
+            setRequestList,
+            imgUrl,
+            getToken,
+        );
+    } else if (type === "friendRequestList") {
+        await deleteFriendRequest(userUsername, friendName, userId, friendId, setFriendsList, setRequestList, getToken);
     } else {
-        if(type === "friendRequestList") await deleteFriendRequest(userUsername, friendName, userId, friendId, setFriendsList, setRequestList, getToken)
-        else await deleteFriendship(userUsername, friendName, userId, friendId, setFriendsList, setRequestList, getToken)
+        await deleteFriendship(userUsername, friendName, userId, friendId, setFriendsList, setRequestList, getToken);
     }
 }
 
 function generateList({
-                          type,
-                          list,
-                          setRequestList,
-                          userUsername,
-                          userId,
-                          setFriendsList,
-                          getToken
-                      }) {
-
-    return list.map((friend) => {
-        return React.cloneElement(
-            <ListItem
-                key = {userId}
-                sx={{
-                    backgroundColor: "white",
-                    borderRadius: 2,
-                    mb: 1,
-                }}
-                secondaryAction={
-                    <>
-                        {type === "friendRequestList" ? //show only in the friend_requests table
-                            <IconButton edge="end" aria-label="accept"
-                                        onClick={() => handleClick({
-                                            decision: "accept",
-                                            type,
-                                            setRequestList,
-                                            userUsername,
-                                            userId,
-                                            friendName: friend.friendName,
-                                            friendId: friend.friendId,
-                                            setFriendsList,
-                                            imgUrl: friend.imgUrl,
-                                            getToken
-                                        })
-                                        }>
-                                <CheckCircleIcon/>
-                            </IconButton>
-                            :
-                            // show only in the friends table
-                            <Link to={`/userPage/?username=${friend.friendName}`}>
-                                <IconButton edge="end" aria-label="accept">
-                                    <EqualizerOutlinedIcon/>
-                                </IconButton>
-                            </Link>
-                        }
-                        {/*show in both tables*/}
-                        <IconButton edge="end" aria-label="delete" color="warning"
-                                    onClick={() => handleClick({
-                                        decision: "reject_or_delete",
-                                        type: type === "friendRequestList" ? "friendRequestList" : "friendList",
-                                        setRequestList,
-                                        userUsername,
-                                        userId,
-                                        friendName: friend.friendName,
-                                        friendId: friend.friendId,
-                                        setFriendsList,
-                                        imgUrl: friend.imgUrl,
-                                        getToken
-                                    })
-                                    }>
-                            <DeleteIcon/>
+    type,
+    list,
+    setRequestList,
+    userUsername,
+    userId,
+    setFriendsList,
+    getToken,
+}) {
+    return list.map((friend) => (
+        <ListItem
+            key={friend.friendId}
+            sx={{
+                backgroundColor: "white",
+                borderRadius: 2,
+                mb: 1,
+            }}
+            secondaryAction={
+                <>
+                    {type === "friendRequestList" ? (
+                        <IconButton
+                            edge="end"
+                            aria-label="accept"
+                            onClick={() =>
+                                handleClick({
+                                    decision: "accept",
+                                    type,
+                                    setRequestList,
+                                    userUsername,
+                                    userId,
+                                    friendName: friend.friendName,
+                                    friendEmail: friend.email,
+                                    friendId: friend.friendId,
+                                    setFriendsList,
+                                    imgUrl: friend.imgUrl,
+                                    getToken,
+                                })
+                            }
+                        >
+                            <CheckCircleIcon />
                         </IconButton>
-                    </>
-                }
-            >
-                <ListItemAvatar>
-                    <Avatar src={friend.imgUrl} alt="Avatar"/>
-                </ListItemAvatar>
-                <ListItemText sx={{display: "flex", flexDirection: "column", gap: "8px"}}
-                    primary={friend.friendName}
-                    secondary={friend.email}
-                />
-            </ListItem>, {
-                key: friend.friendName,
-            })
-    });
+                    ) : (
+                        <Link to={`/userPage/?username=${friend.friendName}`}>
+                            <IconButton edge="end" aria-label="profile">
+                                <EqualizerOutlinedIcon />
+                            </IconButton>
+                        </Link>
+                    )}
+
+                    <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        color="warning"
+                        onClick={() =>
+                            handleClick({
+                                decision: "reject_or_delete",
+                                type: type === "friendRequestList" ? "friendRequestList" : "friendList",
+                                setRequestList,
+                                userUsername,
+                                userId,
+                                friendName: friend.friendName,
+                                friendEmail: friend.email,
+                                friendId: friend.friendId,
+                                setFriendsList,
+                                imgUrl: friend.imgUrl,
+                                getToken,
+                            })
+                        }
+                    >
+                        <DeleteIcon />
+                    </IconButton>
+                </>
+            }
+        >
+            <ListItemAvatar>
+                <Avatar src={friend.imgUrl} alt="Avatar" />
+            </ListItemAvatar>
+            <ListItemText
+                sx={{ display: "flex", flexDirection: "column", gap: "8px" }}
+                primary={friend.friendName}
+                secondary={friend.email}
+            />
+        </ListItem>
+    ));
 }
 
-
 export default function FriendList({
-                                       type,
-                                       list,
-                                       setRequestList,
-                                       setFriendsList,
-                                       userUsername,
-                                       userId,
-                                       isLoading
-                                   }) {
+    type,
+    list,
+    setRequestList,
+    setFriendsList,
+    userUsername,
+    userId,
+    isLoading,
+}) {
     const { getToken } = useAuth();
     const title = type === "friendList" ? "Priatelia" : "Žiadosti";
+    const safeList = Array.isArray(list) ? list : [];
 
     return (
-
-        <div id = "FRIEND_OR_FR_LIST" className="w-full h-full bg-gradient-to-br from-[#3B3B3B] to-[#1f1f1f] pt-10 px-5">
-            <div className = "flex relative w-full gap-5 items-center mb-3 pb-3">
-                <img className="shrink-0 w-[40px] h-[40px] aspect-square relative" src ={type === "friendList" ? "/friends-white.png" : "/add-user-white.png"} alt = {title}/>
-                <h1 className = "font-bold min-w-0 max-[500px]:text-3xl text-4xl text-white">{title}</h1>
+        <div id="FRIEND_OR_FR_LIST" className="w-full h-full bg-gradient-to-br from-[#3B3B3B] to-[#1f1f1f] pt-10 px-5">
+            <div className="flex relative w-full gap-5 items-center mb-3 pb-3">
+                <img className="shrink-0 w-[40px] h-[40px] aspect-square relative" src={type === "friendList" ? "/friends-white.png" : "/add-user-white.png"} alt={title} />
+                <h1 className="font-bold min-w-0 max-[500px]:text-3xl text-4xl text-white">{title}</h1>
             </div>
 
-            <Divider className="bg-gray-500"/>
+            <Divider className="bg-gray-500" />
 
-            {isLoading ? <Loader/>
-                :
-            <div className="overflow-y-scroll no-scrollbar rounded-lg">
-                {list.length === 0 ?
-                    <h3 className = "absolute inset-0 mt-10 flex h-full w-full items-center justify-center text-center
-                    text-gray-400 font-bold text-xl">
-                        {type === "friendList" ? "Žiadny priatelia" : "Žiadne žiadosti o priateľstvo"}
-                    </h3>
-                    :
-                    <List dense={false}>
-                        {generateList(
-                            {
+            {isLoading ? (
+                <Loader />
+            ) : (
+                <div className="overflow-y-scroll no-scrollbar rounded-lg">
+                    {safeList.length === 0 ? (
+                        <h3 className="absolute inset-0 mt-10 flex h-full w-full items-center justify-center text-center text-gray-400 font-bold text-xl">
+                            {type === "friendList" ? "Žiadni priatelia" : "Žiadne žiadosti o priateľstvo"}
+                        </h3>
+                    ) : (
+                        <List dense={false}>
+                            {generateList({
                                 type,
-                                list,
+                                list: safeList,
                                 setRequestList,
                                 userUsername,
                                 userId,
                                 setFriendsList,
-                                getToken
-                            }
-                        )}
-                    </List>
-                }
-            </div>
-            }
+                                getToken,
+                            })}
+                        </List>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

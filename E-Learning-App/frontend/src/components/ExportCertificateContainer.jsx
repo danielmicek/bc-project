@@ -4,7 +4,7 @@ import {PDFDownloadLink} from "@react-pdf/renderer";
 import Certificate from "./Certificate.jsx";
 import {POST_postCertificate} from "../methods/fetchMethods.js";
 import {getUniqueTestID} from "../methods/methodsClass.js";
-import {useAuth} from "@clerk/clerk-react";
+import {useAuth, useUser} from "@clerk/clerk-react";
 
 export default function ExportCertificateContainer({
                                                        text,
@@ -12,6 +12,7 @@ export default function ExportCertificateContainer({
                                                        userName}){
     const certificateId = getUniqueTestID("ELC")
     const { getToken } = useAuth();
+    const {user} = useUser();
 
     return (
         <div id = "EXPORT_CERT" className = "flex md:flex-row flex-col items-center justify-between mt-20 gap-5 w-[90%]
@@ -19,7 +20,7 @@ export default function ExportCertificateContainer({
         py-3 hover:shadow-[5px_10px_30px_rgba(252,147,40,0.8)]">
             <p className="font-bold text-white">{text}</p>
             <Button isDisabled = {!certificateStatus.enabled} variant="light" className="bg-(--main-color-orange) font-bold px-15"
-                    onPress={() => {void POST_postCertificate(certificateId, userName, getToken)}}>
+                    onPress={() => {void POST_postCertificate(certificateId, user.username, user.id, getToken)}}>
                 <PDFDownloadLink document={
                     <Certificate userName={userName}
                                  percentage={certificateStatus.percentage}

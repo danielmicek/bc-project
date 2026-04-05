@@ -43,7 +43,7 @@ router.get("/getAllFriends/:userId", ClerkExpressRequireAuth(), (request, respon
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
-                return response.status(404).send("Žiadny priatelia");
+                return response.status(200).send([]);
             }
             else{
                 let foundFriends = result.rows.map(row => ({
@@ -51,7 +51,7 @@ router.get("/getAllFriends/:userId", ClerkExpressRequireAuth(), (request, respon
                     friendId: row.friend_id,
                     imgUrl: row.image_url,
                     email: row.email,
-                    score: parseInt(row.score)
+                    score: row.score
                 })); // returns an array of user's friends
                 return response.status(200).send(foundFriends);
             }
@@ -91,7 +91,7 @@ router.post("/acceptFriendRequest/:userId/:friendId", ClerkExpressRequireAuth(),
         })
 });
 
-// ------------------DELETE FR - DELETE FR AFTER DECLINING OR ACCEPTING FR ---------------------------------------------
+// ------------------DELETE FR - DELETE FR AFTER DECLINING --------------- ---------------------------------------------
 router.delete("/deleteFriendRequest/:userId/:friendId", ClerkExpressRequireAuth(), (request, response)=> {
     const { userId, friendId } = request.params;
 
@@ -129,7 +129,7 @@ router.delete("/deleteFriendship/:userId/:friendId", ClerkExpressRequireAuth(), 
     pool.query(getQuery, [userId, friendId])
         .then((result) => {
             console.log(result);
-            return response.status(200).send("Akcia prebehla úspešne");
+            return response.status(200).send("Priateľstvo ukončené!");
         })
         .catch((error) => {
             console.log(error);
@@ -148,7 +148,7 @@ router.get("/getAllFriendRequests/:userId", ClerkExpressRequireAuth(), (request,
         return response.status(403).send("Zakázaná akcia! Túto akciu môže vykonať iba vlastník profilu.");
     }
     const getQuery = `
-        SELECT u.username AS friend_username
+        SELECT u.username AS friend_username, u.user_id AS friend_id, u.image_url, u.email
         FROM "Friend_requests" AS fr
                  JOIN "Users" AS u
                       ON fr.from_user_id = u.user_id
@@ -161,7 +161,12 @@ router.get("/getAllFriendRequests/:userId", ClerkExpressRequireAuth(), (request,
                 return response.status(200).send([]);
             }
             else{
-                let foundFriends = result.rows.map(row => row.friend_username); // returns an array of user's friend requests
+                let foundFriends = result.rows.map(row => ({
+                    friendName: row.friend_username,
+                    friendId: row.friend_id,
+                    imgUrl: row.image_url,
+                    email: row.email
+                })); // returns an array of user's friend requests
                 return response.status(200).send(foundFriends);
             }
 
@@ -229,3 +234,4 @@ router.post("/sendFriendRequest", ClerkExpressRequireAuth(), async (request, res
 })
 
 export default router;
+

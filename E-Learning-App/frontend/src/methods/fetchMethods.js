@@ -93,6 +93,11 @@ export async function GET_UserScore(userId, getToken){
     const apiClient = getApiClient(getToken);
     return await apiClient.get(`/api/user/getUserScore/${userId}`);
 }
+
+export async function DELETE_deleteUserProfile(userId, getToken){
+    const apiClient = getApiClient(getToken);
+    return await apiClient.delete(`/api/user/deleteUserProfile/${userId}`);
+}
 /*----------------------------------------------------------------------------------------------*/
 
 /*-------------FRIENDSHIP API CALLS----------------------------------------------------------------*/
@@ -157,14 +162,14 @@ export async function POST_acceptFriendRequest(userId, friendId, getToken){
 export async function DELETE_deleteFriendship(userId, friendId, getToken){
     const apiClient = getApiClient(getToken);
 
-    const response = await apiClient.delete(`/api/friendship/deleteFriend/${userId}/${friendId}`);
+    const response = await apiClient.delete(`/api/friendship/deleteFriendship/${userId}/${friendId}`);
     return asText(response);
 }
 
 export async function DELETE_deleteFriendRequest(userId, friendId, getToken){
     const apiClient = getApiClient(getToken);
 
-    const response = await apiClient.delete(`/api/friendship/deleteFriend/${userId}/${friendId}`);
+    const response = await apiClient.delete(`/api/friendship/deleteFriendRequest/${userId}/${friendId}`);
     return asText(response);
 }
 /*----------------------------------------------------------------------------------------------*/
@@ -198,23 +203,31 @@ export async function POST_submitTest(testStructure, testDifficulty, userId, tes
     }
 }
 
-export async function getCertificateById(certId, getToken){
+export async function GET_getCertificateById(certId, getToken){
     const apiClient = getApiClient(getToken);
     return await apiClient.get(`/api/test/getCertificateById/${certId}`);
 }
 
-export async function POST_postCertificate(certId, username, getToken) {
+export async function POST_postCertificate(certId, username, userId, getToken) {
     const apiClient = getApiClient(getToken);
 
     return await apiClient.post("/api/test/postCertificate", {
         certId,
         username,
+        userId
     });
 }
 
 export async function GET_allUsersTests(userId, getToken){
     const apiClient = getApiClient(getToken);
-    return await apiClient.get(`/api/test/getAllUsersTests/${userId}`);
+    try {
+        return await apiClient.get(`/api/test/getAllUsersTests/${userId}`);
+    } catch (error) {
+        if (error.status === 404) {
+            return { tests: [], bestScore: 0 };
+        }
+        throw error;
+    }
 }
 
 export async function GET_createdTest(testDifficulty, getToken, onOpenAiLimitModal = null) {

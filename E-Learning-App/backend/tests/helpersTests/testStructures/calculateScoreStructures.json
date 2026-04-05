@@ -1,0 +1,180 @@
+{
+  "easy": [
+    {
+      "difficulty": "easy",
+      "free_answer": false,
+      "multiselect": false,
+      "answers": [
+        { "selected": true, "correct": true },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": null }
+      ]
+    },
+    {
+      "difficulty": "easy",
+      "free_answer": false,
+      "multiselect": false,
+      "answers": [
+        { "selected": false, "correct": true },
+        { "selected": true, "correct": false },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": null }
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "free_answer": false,
+      "multiselect": true,
+      "answers": [
+        { "selected": true, "correct": true },
+        { "selected": true, "correct": false },
+        { "selected": false, "correct": true },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": null }
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "free_answer": false,
+      "multiselect": false,
+      "answers": [
+        { "selected": false, "correct": false },
+        { "selected": true, "correct": true },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": null }
+      ]
+    }
+  ],
+  "medium": [
+    {
+      "difficulty": "medium",
+      "free_answer": false,
+      "multiselect": true,
+      "answers": [
+        { "selected": true, "correct": true },
+        { "selected": true, "correct": false },
+        { "selected": true, "correct": true },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": null }
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "free_answer": false,
+      "multiselect": false,
+      "answers": [
+        { "selected": false, "correct": true },
+        { "selected": true, "correct": false },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": null }
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "free_answer": false,
+      "multiselect": false,
+      "answers": [
+        { "selected": false, "correct": false },
+        { "selected": true, "correct": true },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": null }
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "free_answer": true,
+      "body": "Explain how HTTP status 200 differs from 404",
+      "free_answer_text": "200 means success and 404 means resource not found",
+      "answers": [
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": null }
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "free_answer": true,
+      "body": "Describe CAP theorem",
+      "free_answer_text": "completely unrelated answer",
+      "answers": [
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": null }
+      ]
+    }
+  ],
+  "hard": [
+    {
+      "difficulty": "hard",
+      "free_answer": false,
+      "multiselect": true,
+      "answers": [
+        { "selected": true, "correct": true },
+        { "selected": true, "correct": true },
+        { "selected": true, "correct": false },
+        { "selected": false, "correct": true },
+        { "selected": false, "correct": null }
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "free_answer": false,
+      "multiselect": false,
+      "answers": [
+        { "selected": true, "correct": false },
+        { "selected": false, "correct": true },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": null }
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "free_answer": false,
+      "multiselect": false,
+      "answers": [
+        { "selected": false, "correct": false },
+        { "selected": true, "correct": true },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": null }
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "free_answer": true,
+      "body": "Explain ACID properties in databases",
+      "free_answer_text": "atomicity consistency isolation durability",
+      "answers": [
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": null }
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "free_answer": true,
+      "body": "What is a REST API",
+      "free_answer_text": "an api that follows resource-based http principles",
+      "answers": [
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": false },
+        { "selected": false, "correct": null }
+      ]
+    }
+  ]
+}

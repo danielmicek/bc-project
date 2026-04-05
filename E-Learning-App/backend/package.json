@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
+    "@clerk/backend": "^3.2.4",
     "@clerk/clerk-sdk-node": "^4.13.23",
     "@clerk/express": "^2.0.4",
     "@google/genai": "^1.38.0",
@@ -23,6 +26,8 @@
     "eslint-plugin-react-hooks": "^7.0.0",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.4.0",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "supertest": "^7.1.4",
+    "vitest": "^3.2.4"
   }
 }

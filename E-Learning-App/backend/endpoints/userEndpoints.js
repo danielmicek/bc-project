@@ -1,6 +1,12 @@
 import express from "express";
 import pool from "../database.js";
 import {ClerkExpressRequireAuth} from "@clerk/clerk-sdk-node";
+import {createClerkClient} from '@clerk/backend'
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY })
 
 const router = express.Router();
 
@@ -115,6 +121,34 @@ router.put("/putUser", ClerkExpressRequireAuth(), (request, response)=> {
             response.status(500).send("Chyba na strane servera");
             console.log(error);
         })
+});
+
+// ------------------DELETE REQUEST - DELETE USER PROFILE---------------------------------------------------------------
+router.delete("/deleteUserProfile/:userId", ClerkExpressRequireAuth(), async (request, response)=> {
+    const userId = request.params.userId;
+    const { userId: loggedInUserId } = request.auth;
+
+    // check whether user calling this endpoint is the one logged in
+    if (loggedInUserId !== userId) {
+        return response.status(403).json("Zakázaná akcia!");
+    }
+
+    try {
+        //first delete user from our db
+        const deleteQuery = "DELETE FROM \"Users\" WHERE user_id = $1";
+        const dbResult = await pool.query(deleteQuery, [userId]);
+
+        if (dbResult.rowCount === 0) {
+            return response.status(404).send("Používateľ nenájdený");
+        }
+
+        // then remove him from clerk
+        await clerkClient.users.deleteUser(userId);
+        return response.status(200).send("Používateľský profil úspešne odstránený!");
+    } catch (error) {
+        console.log(error);
+        return response.status(500).send("Chyba na strane servera");
+    }
 });
 
 export default router;

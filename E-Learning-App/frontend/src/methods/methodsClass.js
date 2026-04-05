@@ -90,12 +90,12 @@ export async function sendFriendRequest(userUsername, user_id, friendUniqueIdent
 }
 
 // accept the friend-request from friend_username user
-export async function acceptFriendRequest(user_username, friend_username, userId, friendId, setUserFriendsList, setUserFriendRequestList, imgUrl, getToken){
+export async function acceptFriendRequest(user_username, friend_username, friendEmail, userId, friendId, setUserFriendsList, setUserFriendRequestList, imgUrl, getToken){
     try{
         const responseText = await POST_acceptFriendRequest(userId, friendId, getToken); // update friendship status to "ACCEPTED"
         setUserFriendsList(prevList => { // add friend to friendsList
             if(!prevList.includes(friend_username)){
-                return [...prevList, {friendName: friend_username, imgUrl: imgUrl}];
+                return [...prevList, {friendName: friend_username, friendId, imgUrl: imgUrl, email: friendEmail}];
             }
             else return prevList;
         });
@@ -143,17 +143,7 @@ export async function friendRequestListLoader(userId, setFriendRequestList, getT
         setFriendRequestList([]);
         return;
     }
-    setFriendRequestList([]); // reset the list so everytime we get fresh FR from the db
-    for(const friendName of friendRequests){
-        getUser_object(friendName, getToken).then(result => {
-            setFriendRequestList(prevList => [...prevList, {
-                friendName: friendName,
-                friendId: result.userId,
-                imgUrl: result.userImgUrl,
-                email: result.userEmail
-            }]);
-        });
-    }
+    setFriendRequestList(friendRequests);
 }
 
 export async function friendListLoader(userId, setFriendList, getToken){
@@ -163,8 +153,7 @@ export async function friendListLoader(userId, setFriendList, getToken){
         setFriendList([]);
         return;
     }
-    setFriendList([]);
-    setFriendList(friends); // different than method friendRequestListLoader, because this endpoint returns an object of users, the friendRequestListLoader returns an array of usernames
+    setFriendList(friends);
 }
 
 export function getUniqueTestID(prefix) {

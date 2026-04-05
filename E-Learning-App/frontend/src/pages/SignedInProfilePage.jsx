@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {SignedIn, useAuth, UserAvatar, useUser} from "@clerk/clerk-react";
+import {SignedIn, useAuth, useClerk, UserAvatar, useUser} from "@clerk/clerk-react";
 import '../styles/index.css';
 import {
     filterTestsByDifficulty,
@@ -12,7 +12,7 @@ import FriendList from "../components/FriendList.jsx";
 import StatCard from "../components/StatCard.jsx";
 import ClickToCopy from "../components/ClickToCopy.jsx";
 import {Button, Divider} from "@heroui/react";
-import {GET_allUsersTests, GET_UserScore, PUT_user} from "../methods/fetchMethods.js";
+import {DELETE_deleteUserProfile, GET_allUsersTests, GET_UserScore, PUT_user} from "../methods/fetchMethods.js";
 import {toast, Toaster} from "react-hot-toast";
 import Stats from "../components/Stats.jsx";
 import LeaderBoard from "../components/LeaderBoard.jsx";
@@ -24,7 +24,8 @@ import HistoryTable from "../components/HistoryTable.jsx";
 import SpotlightCard from "@/components/SpotlightCard.jsx";
 import Loader from "@/components/Loader.jsx";
 import ScrollReveal from "scrollreveal";
-
+import ModalComponent from "@/components/ModalComponent.jsx";
+import {useDisclosure} from "@heroui/use-disclosure";
 
 // initialize both friendList and list of FR by calling endpoints to get all friends and another one to get all FR
 // Promise.all() is resolving both promises at the same time - parallel execution
@@ -62,6 +63,8 @@ export default function SignedInProfilePage() {
     const {isSignedIn, user, isLoaded} = useUser();
     const { getToken } = useAuth();
     const [userScore, setUserScore] = useState(0);
+    const {isOpen: isOpenDeleteProfileModal, onOpen: onOpenDeleteProfileModal, onClose: onCloseDeleteProfileModal} = useDisclosure();
+    const { signOut } = useClerk();
 
     // only call this when the user is signed, isLoaded changes, and the user already exists
     useEffect(() => {
@@ -165,6 +168,23 @@ export default function SignedInProfilePage() {
             position="bottom-center"
             reverseOrder={false}
         />
+        {/*DELETE PROFILE MODAL*/}
+        <ModalComponent title={"Naozaj chceš vymazať svoj profil?"}
+                        mainText={"Profil bude nenávratne vymazaný"}
+                        isOpen={isOpenDeleteProfileModal}
+                        onClose={onCloseDeleteProfileModal}
+                        confirmButtonText = {"Áno"}
+                        declineButtonText = {"Nie"}
+                        confirmButtonclickHandler={async () => {
+                            try {
+                                const response = await DELETE_deleteUserProfile(user.id, getToken);
+                                toast.success(response);
+                                await signOut({ redirectUrl: "/profile" });
+                            } catch (error) {
+                                toast.error(error.message);
+                            }
+                        }}
+        />
         <div id="BLACK_BACKGROUND" className="relative flex w-full flex-col min-h-screen justify-center shadow-xl bg-[#050505]">
             {userTests === null ? <Loader/> :
                 <div className="container pb-40 h-full w-full flex flex-col items-center mt-20">
@@ -190,8 +210,14 @@ export default function SignedInProfilePage() {
                                         {user.primaryEmailAddress.emailAddress}
                                     </div>
                                     <div id="MEMBER_SICNE"
-                                         className="relative sm:text-lg text-mf text-[#BFBBBB] max-[900px]:text-center">Profil vytvorený: {new Date(user.createdAt).toLocaleDateString()}
+                                         className="relative sm:text-lg text-mf text-[#BFBBBB] max-[900px]:text-center">
+                                        Profil vytvorený: {new Date(user.createdAt).toLocaleDateString()}
                                     </div>
+
+                                    <Button className="bg-[#3B3B3B] mt-3 text-[#BFBBBB] w-fit"
+                                            onPress={() => onOpenDeleteProfileModal()}>
+                                        Vymazať profil
+                                    </Button>
 
                                     <div id="SQUARES"
                                          className="flex items-center flex-wrap min-[700px]:items-start justify-center mt-15 gap-5
@@ -242,7 +268,6 @@ export default function SignedInProfilePage() {
                     {certificateStatus.enabled ?
                         <ExportCertificateContainer text={"Úspešne si absolvoval najvyššiu úroveň testu - Gold. Teraz si môžeš exportovať certifikát"}
                                                     certificateStatus = {certificateStatus}
-                                                    userName = {user.username}
                         />
                     :
                         <ExportCertificateContainer text={"Na získanie certifikátu je potrebné úšpešné absolvovanie testu Gold (získanie medaile)"}
@@ -260,6 +285,7 @@ export default function SignedInProfilePage() {
                                     setFriendsList={setUserFriendList}
                                     userUsername={user.username}
                                     userId={user.id}
+                                    userEmail = {user.emailAddresses[0].emailAddress}
                                     isLoading={isLoading}
                         />
                     </SpotlightCard>
@@ -272,6 +298,7 @@ export default function SignedInProfilePage() {
                                     setFriendsList={setUserFriendList}
                                     userUsername={user.username}
                                     userId={user.id}
+                                    userEmail = {user.emailAddresses[0].emailAddress}
                                     isLoading={isLoading}
                         />
                     </SpotlightCard>

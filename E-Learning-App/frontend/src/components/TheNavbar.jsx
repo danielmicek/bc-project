@@ -31,7 +31,7 @@ export default function TheNavbar() {
         "Profil",
     ];
     return (
-        <Navbar onMenuOpenChange={setIsMenuOpen} isMenuOpen={isMenuOpen} className="z-[99999]">
+        <Navbar onMenuOpenChange={setIsMenuOpen} isMenuOpen={isMenuOpen} className="z-[9999]">
             <NavbarContent>
                 <NavbarMenuToggle
                     aria-label={isMenuOpen ? "Close menu" : "Open menu"}

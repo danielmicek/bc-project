@@ -28,7 +28,7 @@ router.get("/getAllUsersTests/:userId", (request, response)=> {
         .then((result) => {
             console.log(result);
             if (result.rows.length === 0) {
-                response.status(404).send({error: "Žiadne testy", tests: result.rows, bestScore: 0});
+                response.status(404).send("Žiadne testy");
             }
             else{
                 let foundTests = result.rows.map(test => ({
@@ -111,16 +111,15 @@ router.get("/getCertificateById/:certId", (request, response)=> {
 router.post("/postCertificate", ClerkExpressRequireAuth(), async (request, response) => {
     const certId = request.body["certId"];
     const username = request.body["username"];
+    const userId = request.body["userId"];
 
     const { userId: loggedInUserId } = request.auth;
 
-    //TODO  fixni, ze posles aj userID z frontendu a porovnas to ci sa to rovna s loggedInUserId
-
     // check whether user who created this certificate is the one logged in
     // preventing such a situation when someone would want to post certificate to other user
-    /*if (loggedInUserId !== userId) {
+    if (loggedInUserId !== userId) {
         return response.status(403).send("Zakázaná akcia! Túto akciu môže vykonať iba vlastník profilu.");
-    }*/
+    }
 
     const insertQuery = "INSERT INTO \"Certificates\" VALUES ($1, $2)";
     pool.query(insertQuery, [certId, username])
@@ -239,7 +238,6 @@ router.get("/createTest/:testDifficulty", ClerkExpressRequireAuth(), async (requ
 
         // decrease ai requests limit
         await decreaseAiLimit()
-        console.log("decreased");
         response.status(200).send({createdTest: generatedTestQuestions});
     }
     catch(err){
@@ -258,6 +256,12 @@ router.post("/submitTest", ClerkExpressRequireAuth(), async (request, response)=
     const testDifficulty = request.body["testDifficulty"];
     const testId = request.body["testId"];
     const fullPoints = testDifficulty === "easy" ? 13 : testDifficulty === "medium" ? 40 : 70
+
+    const { userId: loggedInUserId } = request.auth;
+    // check whether user calling this endpoint is the one logged in
+    if (loggedInUserId !== userId) {
+        return response.status(403).send("Zakázaná akcia! Túto akciu môže vykonať iba vlastník profilu.");
+    }
 
     const calculatedResult = await calculateTestScore(testStructure, testDifficulty)
     const calculatedResultPercentage = ((calculatedResult/fullPoints) * 100).toFixed(2)
