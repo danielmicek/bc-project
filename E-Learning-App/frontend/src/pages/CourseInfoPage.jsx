@@ -13,7 +13,7 @@ export function CourseInfoPage(){
     useEffect(() => {
         async function loadAiLimit() {
             const tmp = await GET_aiLimit(getToken);
-            console.log(tmp);
+            console.log(tmp); // todo delete this line
             setAiLimit(tmp.aiLimit);
         }
 

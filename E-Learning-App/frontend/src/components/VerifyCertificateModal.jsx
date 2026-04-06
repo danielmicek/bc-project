@@ -1,6 +1,6 @@
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from "@heroui/react";
 import React, {useRef} from "react";
-import {toast, Toaster} from "react-hot-toast";
+import {toast} from "react-hot-toast";
 import {GET_getCertificateById} from "../methods/fetchMethods.js";
 import {useAuth} from "@clerk/clerk-react";
 
@@ -13,11 +13,6 @@ export default function VerifyCertificateModal({title,
 
     return (
         <>
-            <Toaster
-                position="bottom-center"
-                reverseOrder={false}
-            />
-
             <Modal backdrop={"blur"} isOpen={isOpen} onClose={onClose}>
                 <ModalContent>
                     {(onClose) => (

@@ -87,17 +87,19 @@ body {
     text-align: center;
     font-size: 18px;
 
-    /* Center slide text vertically */
+    /* Keep long question content fully visible from top to bottom */
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: stretch;
+    height: auto !important;
 
 }
 
 .swiper {
     margin-top: 30px;
     width: 90%;
+    height: auto;
 }
 
 .swiper-slide img {
@@ -120,6 +122,10 @@ body {
 .swiper-pagination-bullet-active {
     color: #fff;
     background: var(--main-color-orange) !important;
+}
+
+.questions-pagination.swiper-pagination {
+    position: static !important;
 }
 
 

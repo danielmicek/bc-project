@@ -16,6 +16,7 @@ import Chapter from "./pages/Chapter.jsx";
 import CookieConsent from "@/components/cookie-consent.jsx";
 import {FooterComponent} from "@/components/FooterComponent.jsx";
 import ScrollReveal from "scrollreveal";
+import {Toaster} from "react-hot-toast";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 if (!PUBLISHABLE_KEY) {
@@ -120,7 +121,11 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')).render(
     <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
       <HeroUIProvider>
-        <RouterProvider  router={router}/>
+        <Toaster
+            position="bottom-center"
+            reverseOrder={false}
+        />
+        <RouterProvider router={router}/>
       </HeroUIProvider>
     </ClerkProvider>
 );

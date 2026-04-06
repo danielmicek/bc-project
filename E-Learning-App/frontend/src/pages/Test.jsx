@@ -8,7 +8,7 @@ import {Button} from "@heroui/react";
 import {useDisclosure} from "@heroui/use-disclosure";
 import Loader from "../components/Loader.jsx";
 import ModalComponent from "../components/ModalComponent.jsx";
-import {getTestLength, goToPage} from "../methods/methodsClass.js";
+import {goToPage} from "../methods/methodsClass.js";
 import {toast} from "react-hot-toast";
 
 
@@ -19,6 +19,8 @@ export default function Test() {
     const [questions, setQuestions] = useState( []);
     const [testResults, setTestResults] = useState(null);
     const [isLoading, setIsLoading] = useState( true);
+    const [testLengthMinutes, setTestLengthMinutes] = useState(null);
+    const [testSessionToken, setTestSessionToken] = useState(null);
     const [timerGoing, setTimerGoing] = useState( false);
     const [testStatus, setTestStatus] = useState("ongoing"); // "ongoing" / "paused" / "submitted" / "ended"
     const {isOpen: isOpenEndTestModal, onOpen: onOpenEndTestModal, onClose: onCloseEndTestModal} = useDisclosure();
@@ -75,9 +77,15 @@ export default function Test() {
     useEffect(() => {
         async function loadQuestions() {
             try{
-                const tmp = READ_ONLY ? await GET_getTestByTestId(TEST_ID, getToken, user.id) : await GET_createdTest(TEST_DIFFICULTY, getToken)
+                const tmp = READ_ONLY
+                    ? await GET_getTestByTestId(TEST_ID, getToken, user.id)
+                    : await GET_createdTest(TEST_DIFFICULTY, TEST_ID, getToken);
                 setQuestions(READ_ONLY ? tmp.structure : tmp.createdTest)
                 if(READ_ONLY) setTestResults(tmp.results)
+                if(!READ_ONLY){
+                    setTestLengthMinutes(tmp.testLengthMinutes);
+                    setTestSessionToken(tmp.testSessionToken);
+                }
             }
             catch (error) {
                 toast.error("Error. Skús znova neskôr")
@@ -181,7 +189,15 @@ export default function Test() {
                         declineButtonText = {"Nie"}
                         confirmButtonclickHandler={async () => {
                             onCloseSubmitTestModal()
-                            const result = await POST_submitTest(questions, TEST_DIFFICULTY, user.id, TEST_ID, setIsLoading, getToken)
+                            const result = await POST_submitTest(
+                                questions,
+                                TEST_DIFFICULTY,
+                                user.id,
+                                TEST_ID,
+                                testSessionToken,
+                                setIsLoading,
+                                getToken,
+                            )
                             setQuestions(result.structure)
                             setTestResults(result.results);
                             onOpenTestResultsModal()
@@ -196,7 +212,7 @@ export default function Test() {
                 testStatus === "ongoing" && !READ_ONLY ?
                     <> {/*TEST ONGOING*/}
                         <div className = "container pb-20 h-full flex flex-col items-center">
-                            <Timer minutes = {getTestLength(TEST_DIFFICULTY)}
+                            <Timer minutes = {testLengthMinutes ?? 0}
                                    timerGoing={timerGoing}
                                    setTimerGoing = {setTimerGoing}
                                    completeHandler = {() => {}}
@@ -209,6 +225,7 @@ export default function Test() {
                                    onCloseSubmitTestModal = {onCloseSubmitTestModal}
                                    onOpenTestResultsModal = {onOpenTestResultsModal}
                                    setTestStatus = {setTestStatus}
+                                   testSessionToken = {testSessionToken}
                                    getToken = {getToken}
                             />
 

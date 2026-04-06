@@ -3,7 +3,6 @@ import SignedInProfilePage from "./SignedInProfilePage.jsx";
 import '../styles/styles.css';
 import React, {useEffect} from "react";
 import {getUser_info} from "../methods/methodsClass.js";
-import {Toaster} from "react-hot-toast";
 import TypingAnimatedText from "../components/TypingAnimatedText.jsx";
 import SlidingCircle from "../components/SlidingCircle.jsx";
 import Loader from "../components/Loader.jsx";
@@ -101,15 +100,5 @@ export function Profile() {
                     </>
             }
         </div>
-        <div>
-            <Toaster
-                position="bottom-center"
-                reverseOrder={false}
-            />
-        </div>
-
-
-
-
     </div>
 }

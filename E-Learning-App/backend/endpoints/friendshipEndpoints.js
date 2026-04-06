@@ -51,7 +51,7 @@ router.get("/getAllFriends/:userId", ClerkExpressRequireAuth(), (request, respon
                     friendId: row.friend_id,
                     imgUrl: row.image_url,
                     email: row.email,
-                    score: row.score
+                    score: row.score === null ? 0 : parseInt(row.score)
                 })); // returns an array of user's friends
                 return response.status(200).send(foundFriends);
             }

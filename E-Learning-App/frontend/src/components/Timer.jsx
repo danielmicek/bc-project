@@ -24,6 +24,7 @@ export default function Timer({
                                   onCloseSubmitTestModal,
                                   onOpenTestResultsModal,
                                   setTestStatus,
+                                  testSessionToken,
                                   getToken}) {
     const [searchParams, setSearchParams] = useSearchParams();
     return (
@@ -37,8 +38,16 @@ export default function Timer({
                 duration={minutes*60}
                 initialRemainingTime={minutes*60-1}
                 onComplete={async (totalElapsedTime) => {
-                    const result = await POST_submitTest(questions, TEST_DIFFICULTY, userId, TEST_ID, setIsLoading, getToken)
-                    setQuestions(result.testStructure)
+                    const result = await POST_submitTest(
+                        questions,
+                        TEST_DIFFICULTY,
+                        userId,
+                        TEST_ID,
+                        testSessionToken,
+                        setIsLoading,
+                        getToken,
+                    )
+                    setQuestions(result.structure)
                     onCloseSubmitTestModal()
                     onOpenTestResultsModal()
                     setTestStatus("submitted")

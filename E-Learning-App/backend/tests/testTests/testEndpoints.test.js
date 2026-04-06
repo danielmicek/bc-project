@@ -1,6 +1,19 @@
 import request from "supertest";
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { createRouterApp } from "../helpers/createRouterApp.js";
+import crypto from "node:crypto";
+import {beforeEach, describe, expect, it, vi} from "vitest";
+import {createRouterApp} from "../helpers/createRouterApp.js";
+import router from "../../endpoints/testEndpoints.js";
+
+const TEST_SESSION_SECRET = process.env.TEST_SESSION_SECRET ?? "dev-test-session-secret";
+
+function createTestSessionToken(payloadObject) {
+    const payload = Buffer.from(JSON.stringify(payloadObject)).toString("base64url");
+    const signature = crypto
+        .createHmac("sha256", TEST_SESSION_SECRET)
+        .update(payload)
+        .digest("base64url");
+    return `${payload}.${signature}`;
+}
 
 const hoisted = vi.hoisted(() => ({
     queryMock: vi.fn(),
@@ -15,6 +28,7 @@ const hoisted = vi.hoisted(() => ({
     getMedalMock: vi.fn(),
     getRandomElementsFromArrayMock: vi.fn(),
     shuffleArrayMock: vi.fn(),
+    getAiResponseMock: vi.fn(),
 }));
 
 vi.mock("../../database.js", () => ({
@@ -40,14 +54,16 @@ vi.mock("../../steps/testSteps.js", () => ({
     shuffleArray: hoisted.shuffleArrayMock,
 }));
 
+vi.mock("../../steps/geminiSteps.js", () => ({
+    getAiResponse: hoisted.getAiResponseMock,
+}));
+
 vi.mock("@clerk/clerk-sdk-node", () => ({
     ClerkExpressRequireAuth: () => (req, _res, next) => {
         req.auth = { userId: req.headers["x-test-auth-user"] ?? "user-1" };
         next();
     },
 }));
-
-import router from "../../endpoints/testEndpoints.js";
 
 describe("testEndpoints", () => {
     const app = createRouterApp(router);
@@ -65,6 +81,7 @@ describe("testEndpoints", () => {
         hoisted.getMedalMock.mockReset();
         hoisted.getRandomElementsFromArrayMock.mockReset();
         hoisted.shuffleArrayMock.mockReset();
+        hoisted.getAiResponseMock.mockReset();
 
         hoisted.getBestTestScoreMock.mockReturnValue(88.5);
         hoisted.getAiLimitMock.mockResolvedValue(10);
@@ -78,6 +95,7 @@ describe("testEndpoints", () => {
         hoisted.getMedalMock.mockReturnValue("none");
         hoisted.getCurrentTimestampMock.mockReturnValue("2026-04-05T10:00:00.000Z");
         hoisted.addTestMock.mockResolvedValue(true);
+        hoisted.getAiResponseMock.mockResolvedValue(JSON.stringify([]));
     });
 
     // checks test history mapping and use of getBestTestScore helper
@@ -234,11 +252,16 @@ describe("testEndpoints", () => {
         hoisted.getQuestionsBasedOnDifficultyMock
             .mockResolvedValueOnce(easyQuestions)
             .mockResolvedValueOnce(mediumQuestions);
+        hoisted.getAiResponseMock.mockResolvedValueOnce(
+            JSON.stringify([...easyQuestions.slice(0, 7), ...mediumQuestions.slice(0, 3)]),
+        );
 
-        const res = await request(app).get("/createTest/easy");
+        const res = await request(app).get("/createTest/easy").query({ testId: "t-create-1" });
 
         expect(res.status).toBe(200);
         expect(res.body.createdTest).toHaveLength(10);
+        expect(typeof res.body.testSessionToken).toBe("string");
+        expect(res.body.testLengthMinutes).toBe(20);
         expect(hoisted.decreaseAiLimitMock).toHaveBeenCalledTimes(1);
     });
 
@@ -249,11 +272,20 @@ describe("testEndpoints", () => {
         hoisted.getMedalMock.mockReturnValueOnce("none");
         hoisted.addTestMock.mockResolvedValueOnce(true);
 
+        const token = createTestSessionToken({
+            userId: "user-1",
+            testId: "t1",
+            testDifficulty: "easy",
+            issuedAt: Date.now() - 10_000,
+            expiresAt: Date.now() + 60_000,
+        });
+
         const res = await request(app).post("/submitTest").send({
             userId: "user-1",
             testId: "t1",
             testDifficulty: "easy",
             testStructure: [{ id: 1 }],
+            testSessionToken: token,
         });
 
         expect(res.status).toBe(200);
@@ -264,32 +296,83 @@ describe("testEndpoints", () => {
         expect(hoisted.addTestMock).toHaveBeenCalledTimes(1);
     });
 
-    // checks submitTest 500 branch when addTest returns false
-    it("POST /submitTest returns 500 when addTest returns false", async () => {
+    // checks submitTest 500 because insert test into DB failed
+    it("POST /submitTest returns 500 when adding test to db fails", async () => {
         hoisted.addTestMock.mockResolvedValueOnce(false);
+        const token = createTestSessionToken({
+            userId: "user-1",
+            testId: "t1",
+            testDifficulty: "easy",
+            issuedAt: Date.now() - 10_000,
+            expiresAt: Date.now() + 60_000,
+        });
 
         const res = await request(app).post("/submitTest").send({
             userId: "user-1",
             testId: "t1",
             testDifficulty: "easy",
             testStructure: [{ id: 1 }],
+            testSessionToken: token,
         });
 
         expect(res.status).toBe(500);
     });
 
-    // checks submitTest 500 branch when addTest throws
-    it("POST /submitTest returns 500 when addTest throws", async () => {
+    // checks submitTest 500 branch when addTest throws Error
+    it("POST /submitTest returns 500 when addTest throws Error", async () => {
         hoisted.addTestMock.mockRejectedValueOnce(new Error("insert failed"));
+        const token = createTestSessionToken({
+            userId: "user-1",
+            testId: "t1",
+            testDifficulty: "easy",
+            issuedAt: Date.now() - 10_000,
+            expiresAt: Date.now() + 60_000,
+        });
 
         const res = await request(app).post("/submitTest").send({
             userId: "user-1",
             testId: "t1",
             testDifficulty: "easy",
             testStructure: [{ id: 1 }],
+            testSessionToken: token,
         });
 
         expect(res.status).toBe(500);
+    });
+
+    // checks submitTest rejects invalid token
+    it("POST /submitTest returns 403 when token is invalid", async () => {
+        const res = await request(app).post("/submitTest").send({
+            userId: "user-1",
+            testId: "t1",
+            testDifficulty: "easy",
+            testStructure: [{ id: 1 }],
+            testSessionToken: "invalid-token",
+        });
+
+        expect(res.status).toBe(403);
+        expect(hoisted.calculateTestScoreMock).not.toHaveBeenCalled();
+    });
+
+    // checks submitTest rejects expired token
+    it("POST /submitTest returns 408 when token is expired", async () => {
+        const token = createTestSessionToken({
+            userId: "user-1",
+            testId: "t1",
+            testDifficulty: "easy",
+            issuedAt: Date.now() - 120_000,
+            expiresAt: Date.now() - 1_000,
+        });
+
+        const res = await request(app).post("/submitTest").send({
+            userId: "user-1",
+            testId: "t1",
+            testDifficulty: "easy",
+            testStructure: [{ id: 1 }],
+            testSessionToken: token,
+        });
+
+        expect(res.status).toBe(408);
     });
 
     // checks getAiLimit mapping from DB value to response object

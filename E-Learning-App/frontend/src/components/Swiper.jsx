@@ -8,6 +8,7 @@ import Question from "./Question.jsx";
 
 export default function SwiperComponent({questions, setQuestions = ()=>{}}) {
     const pagination = {
+        el: ".questions-pagination",
         clickable: true,
         renderBullet: function (index, className) {
             return '<span class="' + className + '">' + (index + 1) + '</span>';
@@ -25,19 +26,20 @@ export default function SwiperComponent({questions, setQuestions = ()=>{}}) {
     }
 
     return (
-        <>
+        <div className="w-full">
             <Swiper
                 onSwiper={(swiper) => { refSwiper.current = swiper;}}
                 slidesPerView={1}
                 spaceBetween={24}
                 loop={false}
+                autoHeight={true}
                 pagination={pagination}
                 navigation={swiperNavigationVisible}
                 modules={[Pagination, Navigation]}
                 className="swiper"
             >
                 {questions.map((question, index) => {
-                    return <SwiperSlide className="swiper" key={question.id ?? index}>
+                    return <SwiperSlide key={question.id ?? index}>
                         <Question questionIndex = {index}
                                   question = {question}
                                   setQuestions = {setQuestions}
@@ -47,6 +49,8 @@ export default function SwiperComponent({questions, setQuestions = ()=>{}}) {
                 })}
 
             </Swiper>
-        </>
+
+            <div className="questions-pagination mt-4 flex justify-center" />
+        </div>
     );
 }

@@ -187,7 +187,7 @@ export async function GET_getTestByTestId(testId, getToken, userId){
     return await apiClient.get(`/api/test/getTestByTestId/${testId}/${userId}`);
 }
 
-export async function POST_submitTest(testStructure, testDifficulty, userId, testId, setIsLoading, getToken) {
+export async function POST_submitTest(testStructure, testDifficulty, userId, testId, testSessionToken, setIsLoading, getToken) {
     const apiClient = getApiClient(getToken);
     setIsLoading(true);
 
@@ -197,6 +197,7 @@ export async function POST_submitTest(testStructure, testDifficulty, userId, tes
             testId,
             testStructure,
             testDifficulty,
+            testSessionToken,
         });
     } finally {
         setIsLoading(false);
@@ -230,11 +231,11 @@ export async function GET_allUsersTests(userId, getToken){
     }
 }
 
-export async function GET_createdTest(testDifficulty, getToken, onOpenAiLimitModal = null) {
+export async function GET_createdTest(testDifficulty, testId, getToken, onOpenAiLimitModal = null) {
     const apiClient = getApiClient(getToken);
 
     try {
-        return await apiClient.get(`/api/test/createTest/${testDifficulty}`);
+        return await apiClient.get(`/api/test/createTest/${testDifficulty}?testId=${encodeURIComponent(testId)}`);
     } catch (error) {
         //if (error.status === 429 && onOpenAiLimitModal) onOpenAiLimitModal();
         throw error;

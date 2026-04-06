@@ -1,4 +1,5 @@
 // -----------------------------CALCULATION OF TEST SCORE---------------------------------------------------------------
+import crypto from "node:crypto";
 import pool from "../database.js";
 import {aiCorrectFreeAnswerQuestions} from "./geminiSteps.js";
 
@@ -165,4 +166,52 @@ export function getMedal(grade, testDifficulty){
     else if(testDifficulty === "medium" && grade === "A") return "Silver"
     else if(testDifficulty === "easy" && grade === "A") return "Bronze"
     else return "none"
+}
+
+export function getTestLengthMinutes(testDifficulty) {
+    switch(testDifficulty){
+        case "easy":
+            return 20;
+        case "medium":
+            return 40;
+        case "hard":
+            return 60;
+        default:
+            return null;
+    }
+}
+
+// creates an encrypted token that is going to frontend
+export function createTestSessionToken(payloadObject, TEST_SESSION_SECRET) {
+    const payload = Buffer.from(JSON.stringify(payloadObject)).toString("base64url");
+    const signature = crypto
+        .createHmac("sha256", TEST_SESSION_SECRET)
+        .update(payload)
+        .digest("base64url");
+    return `${payload}.${signature}`;
+}
+
+export function verifyTestSessionToken(token, TEST_SESSION_SECRET) {
+    if (!token || typeof token !== "string" || !token.includes(".")) {
+        return null;
+    }
+
+    // token looks like-> payload.signature
+    const [payload, signature] = token.split(".");
+    const expectedSignature = crypto
+        .createHmac("sha256", TEST_SESSION_SECRET)
+        .update(payload)
+        .digest("base64url");
+
+    // compare the signatures
+    // signature is created based on the object => if object is changed, the signature is changed as well
+    if (signature !== expectedSignature) {
+        return null;
+    }
+
+    try{
+        return JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
+    } catch{
+        return null;
+    }
 }

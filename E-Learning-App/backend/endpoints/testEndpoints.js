@@ -4,6 +4,7 @@ import getQuestionsBasedOnDifficulty from "../steps/questionsSteps.js";
 import {
     addTest,
     calculateTestScore,
+    createTestSessionToken,
     decreaseAiLimit,
     getAiLimit,
     getBestTestScore,
@@ -11,12 +12,16 @@ import {
     getGrade,
     getMedal,
     getRandomElementsFromArray,
-    shuffleArray
+    getTestLengthMinutes,
+    shuffleArray,
+    verifyTestSessionToken
 } from "../steps/testSteps.js";
 import 'dotenv/config';
 import {ClerkExpressRequireAuth} from "@clerk/clerk-sdk-node";
+import {getAiResponse} from "../steps/geminiSteps.js";
 
 const router = express.Router();
+const TEST_SESSION_SECRET = process.env.TEST_SESSION_SECRET;
 
 // ------------------GET REQUEST - GET ALL USER's TESTS-----------------------------------------------------------------
 // sending back an object of: {all tests, best test score}
@@ -143,7 +148,20 @@ router.get("/createTest/:testDifficulty", ClerkExpressRequireAuth(), async (requ
         return
     }
 
-    let testDifficulty = request.params.testDifficulty;
+    const testDifficulty = request.params.testDifficulty;
+    const testId = request.query.testId;
+    const { userId: loggedInUserId } = request.auth;
+    const testLengthMinutes = getTestLengthMinutes(testDifficulty);
+
+    if (typeof testId !== "string" || testId.length === 0) {
+        response.status(400).send("Chýbajúce testID");
+        return
+    }
+
+    if (testLengthMinutes === null) {
+        response.status(400).send("Neplatná obtiažnosť testu");
+        return
+    }
     const EASY = "easy"
     const MEDIUM = "medium"
     const HARD = "hard"
@@ -208,7 +226,6 @@ router.get("/createTest/:testDifficulty", ClerkExpressRequireAuth(), async (requ
             shuffleArray(allElementsExceptLast)
             question.answers = [...allElementsExceptLast, lastElement];   // the last choice - "neodpovedať" stays last after shuffle
         }
-        /*// TODO funguje to, zakomentoval som to aby to nezralo tokeny pri kazdom nacitani stranky
         const aiResponse =
             await getAiResponse(
                 "You will receive JSON. Edit it in-place.\n" +
@@ -224,7 +241,7 @@ router.get("/createTest/:testDifficulty", ClerkExpressRequireAuth(), async (requ
             )
 
         if(!aiResponse){
-            response.status(500).send({errorMessage: "Error during crating the test"});
+            response.status(500).send({errorMessage: "Chyba na strane servera"});
             return
         }
 
@@ -233,12 +250,29 @@ router.get("/createTest/:testDifficulty", ClerkExpressRequireAuth(), async (requ
             generatedTestQuestions = JSON.parse(aiResponse)
         } catch(err){
             console.log(err);
+            response.status(500).send({errorMessage: "Chyba na strane servera"});
             return
-        }*/
+        }
 
         // decrease ai requests limit
         await decreaseAiLimit()
-        response.status(200).send({createdTest: generatedTestQuestions});
+
+        const issuedAt = Date.now();
+        const expiresAt = issuedAt + (testLengthMinutes * 60 * 1000);
+        const testSessionToken = createTestSessionToken({
+            userId: loggedInUserId,
+            testId,
+            testDifficulty,
+            issuedAt,
+            expiresAt,
+        }, TEST_SESSION_SECRET);
+
+        response.status(200).send({
+            createdTest: generatedTestQuestions,
+            testSessionToken,
+            expiresAt,
+            testLengthMinutes,
+        });
     }
     catch(err){
         console.log("Error during crating the test");
@@ -255,12 +289,30 @@ router.post("/submitTest", ClerkExpressRequireAuth(), async (request, response)=
     const testStructure = request.body["testStructure"];
     const testDifficulty = request.body["testDifficulty"];
     const testId = request.body["testId"];
+    const testSessionToken = request.body["testSessionToken"];
     const fullPoints = testDifficulty === "easy" ? 13 : testDifficulty === "medium" ? 40 : 70
 
     const { userId: loggedInUserId } = request.auth;
     // check whether user calling this endpoint is the one logged in
     if (loggedInUserId !== userId) {
         return response.status(403).send("Zakázaná akcia! Túto akciu môže vykonať iba vlastník profilu.");
+    }
+
+    const tokenPayload = verifyTestSessionToken(testSessionToken, TEST_SESSION_SECRET);
+    if (!tokenPayload) { // in case something was changed on the frontend
+        return response.status(403).send("Neplatný test token");
+    }
+
+    if ( // in case something was changed on the frontend
+        tokenPayload.userId !== userId ||
+        tokenPayload.testId !== testId ||
+        tokenPayload.testDifficulty !== testDifficulty
+    ) {
+        return response.status(403).send("Neplatný test token");
+    }
+
+    if (Date.now() > Number(tokenPayload.expiresAt)) { // in case time was changed on the frontend
+        return response.status(408).send("Čas na test vypršal");
     }
 
     const calculatedResult = await calculateTestScore(testStructure, testDifficulty)

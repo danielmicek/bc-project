@@ -209,15 +209,6 @@ export function getAStreak(tests){
     return bestStreak;
 }
 
-// get test length in minutes based on difficulty
-export function getTestLength(difficulty){
-    switch(difficulty){
-        case "easy": return 20;
-        case "medium": return 4;
-        case "hard": return 60;
-    }
-}
-
 // find if a gold medal exists
 // get the highest percentage of the test with a gold medal reward
 export function findGoldMedal(tests){

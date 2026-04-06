@@ -13,7 +13,7 @@ import StatCard from "../components/StatCard.jsx";
 import ClickToCopy from "../components/ClickToCopy.jsx";
 import {Button, Divider} from "@heroui/react";
 import {DELETE_deleteUserProfile, GET_allUsersTests, GET_UserScore, PUT_user} from "../methods/fetchMethods.js";
-import {toast, Toaster} from "react-hot-toast";
+import {toast} from "react-hot-toast";
 import Stats from "../components/Stats.jsx";
 import LeaderBoard from "../components/LeaderBoard.jsx";
 import BarChartComponent from "../components/BarChartComponent.jsx";
@@ -99,6 +99,7 @@ export default function SignedInProfilePage() {
     useEffect(() => {
         async function loadUserScore() {
             const tmp = await GET_UserScore(user.id, getToken)
+            console.log(tmp);
             setUserScore(tmp.score);
         }
 
@@ -164,10 +165,6 @@ export default function SignedInProfilePage() {
     }, [userTests]);
 
     return (<>
-        <Toaster
-            position="bottom-center"
-            reverseOrder={false}
-        />
         {/*DELETE PROFILE MODAL*/}
         <ModalComponent title={"Naozaj chceš vymazať svoj profil?"}
                         mainText={"Profil bude nenávratne vymazaný"}

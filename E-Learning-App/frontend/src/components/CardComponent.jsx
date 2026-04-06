@@ -9,6 +9,7 @@ import {goToPage} from "../methods/methodsClass.js";
 import DetailsModal from "./DetailsModal.jsx";
 import {chaptersDetails, testsAndLearningDetails} from "../methods/details.jsx";
 import SpotlightCard from "@/components/SpotlightCard.jsx";
+import {toast} from "react-hot-toast";
 
 // renders the orange button in each CardComponent according to its type
 // Learning -> "Zobraziť kapitoly" button
@@ -85,7 +86,6 @@ export default function CardComponent({
                           isOpen = {isOpenDetailModal}
                           onClose = {onCloseDetailModal}
             />
-
             {/*AI LIMIT GONE*/}
             <ModalComponent title={"AI limit vyčerpaný"}
                             mainText={"Na dnešný deň boli vyčerpané všetky AI requesty, otestuj sa znova zajtra."}
@@ -109,8 +109,15 @@ export default function CardComponent({
                                 declineButtonText = {"Neskôr"}
                                 confirmButtonclickHandler={() => {
                                     onCloseTest_Chapter_Modal()
-                                    if(aiLimit > 1) goToPage("/test", navigate, false, difficultyTransformation[difficulty])
+                                    if(aiLimit > 1) {
+                                        toast("Test sa načítava pomocou AI, môže to chvíľu trvať.", {
+                                            icon: "⏳",
+                                        });
+                                        goToPage("/test", navigate, false, difficultyTransformation[difficulty])
+
+                                    }
                                     else onOpenAiLimitModal()
+
                                 }}
                 />
                 :
