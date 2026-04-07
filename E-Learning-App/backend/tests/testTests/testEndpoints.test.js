@@ -28,6 +28,9 @@ const hoisted = vi.hoisted(() => ({
     getMedalMock: vi.fn(),
     getRandomElementsFromArrayMock: vi.fn(),
     shuffleArrayMock: vi.fn(),
+    createTestSessionTokenMock: vi.fn(),
+    verifyTestSessionTokenMock: vi.fn(),
+    getTestLengthMinutesMock: vi.fn(),
     getAiResponseMock: vi.fn(),
 }));
 
@@ -51,6 +54,9 @@ vi.mock("../../steps/testSteps.js", () => ({
     getGrade: hoisted.getGradeMock,
     getMedal: hoisted.getMedalMock,
     getRandomElementsFromArray: hoisted.getRandomElementsFromArrayMock,
+    createTestSessionToken: hoisted.createTestSessionTokenMock,
+    verifyTestSessionToken: hoisted.verifyTestSessionTokenMock,
+    getTestLengthMinutes: hoisted.getTestLengthMinutesMock,
     shuffleArray: hoisted.shuffleArrayMock,
 }));
 
@@ -81,12 +87,53 @@ describe("testEndpoints", () => {
         hoisted.getMedalMock.mockReset();
         hoisted.getRandomElementsFromArrayMock.mockReset();
         hoisted.shuffleArrayMock.mockReset();
+        hoisted.createTestSessionTokenMock.mockReset();
+        hoisted.verifyTestSessionTokenMock.mockReset();
+        hoisted.getTestLengthMinutesMock.mockReset();
         hoisted.getAiResponseMock.mockReset();
 
         hoisted.getBestTestScoreMock.mockReturnValue(88.5);
         hoisted.getAiLimitMock.mockResolvedValue(10);
         hoisted.getRandomElementsFromArrayMock.mockImplementation((fromArray, toArray, numberOfElements) => {
             toArray.push(...fromArray.slice(0, numberOfElements));
+        });
+        hoisted.getTestLengthMinutesMock.mockImplementation((difficulty) => {
+            switch (difficulty) {
+                case "easy":
+                    return 20;
+                case "medium":
+                    return 40;
+                case "hard":
+                    return 60;
+                default:
+                    return null;
+            }
+        });
+        hoisted.createTestSessionTokenMock.mockImplementation((payloadObject, secret) => {
+            const payload = Buffer.from(JSON.stringify(payloadObject)).toString("base64url");
+            const signature = crypto
+                .createHmac("sha256", secret)
+                .update(payload)
+                .digest("base64url");
+            return `${payload}.${signature}`;
+        });
+        hoisted.verifyTestSessionTokenMock.mockImplementation((token, secret) => {
+            if (!token || typeof token !== "string" || !token.includes(".")) {
+                return null;
+            }
+            const [payload, signature] = token.split(".");
+            const expectedSignature = crypto
+                .createHmac("sha256", secret)
+                .update(payload)
+                .digest("base64url");
+            if (signature !== expectedSignature) {
+                return null;
+            }
+            try {
+                return JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
+            } catch {
+                return null;
+            }
         });
         hoisted.shuffleArrayMock.mockImplementation(() => {});
         hoisted.decreaseAiLimitMock.mockResolvedValue(undefined);
@@ -195,7 +242,7 @@ describe("testEndpoints", () => {
         const res = await request(app)
             .post("/postCertificate")
             .set("x-test-auth-user", "user-1")
-            .send({ certId: "c1", username: "john", userId: "user-2" });
+            .send({ certId: "c1", userId: "user-2" });
 
         expect(res.status).toBe(403);
         expect(hoisted.queryMock).not.toHaveBeenCalled();
@@ -208,7 +255,7 @@ describe("testEndpoints", () => {
         const res = await request(app)
             .post("/postCertificate")
             .set("x-test-auth-user", "user-1")
-            .send({ certId: "c1", username: "john", userId: "user-1" });
+            .send({ certId: "c1", userId: "user-1" });
 
         expect(res.status).toBe(200);
     });
@@ -394,4 +441,3 @@ describe("testEndpoints", () => {
         expect(res.status).toBe(400);
     });
 });
-

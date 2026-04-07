@@ -67,7 +67,7 @@ describe("friendshipEndpoints", () => {
 
         expect(res.status).toBe(200);
         expect(res.body).toEqual([
-            { friendName: "Alice", friendId: "u2", imgUrl: "alice.png", email: "alice@x.com" },
+            { friendName: "Alice", friendId: "u2", imgUrl: "alice.png", email: "alice@x.com", score: 15 },
         ]);
     });
 

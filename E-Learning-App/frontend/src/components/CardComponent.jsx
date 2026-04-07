@@ -86,7 +86,7 @@ export default function CardComponent({
                           isOpen = {isOpenDetailModal}
                           onClose = {onCloseDetailModal}
             />
-            {/*AI LIMIT GONE*/}
+            {/*AI LIMIT LOW*/}
             <ModalComponent title={"AI limit vyčerpaný"}
                             mainText={"Na dnešný deň boli vyčerpané všetky AI requesty, otestuj sa znova zajtra."}
                             secondaryText1={"Medzičasom si oddýchni alebo študuj materiály!"}

@@ -95,7 +95,9 @@ router.get("/getTestByTestId/:testId/:userId", ClerkExpressRequireAuth(), (reque
 router.get("/getCertificateById/:certId", (request, response)=> {
     const certId = request.params.certId;
 
-    const getQuery = "SELECT * FROM \"Certificates\" WHERE certificate_id = $1";
+    const getQuery = `SELECT u.username AS username FROM \"Certificates\" c 
+                  JOIN \"Users\" u ON c.user_id = u.user_id
+                  WHERE certificate_id = $1`;
     pool.query(getQuery, [certId])
         .then((result) => {
             console.log(result);
@@ -115,7 +117,6 @@ router.get("/getCertificateById/:certId", (request, response)=> {
 // -------------------------POST REQUEST - POST CERTIFICATE TO DB----------------------------------------------------
 router.post("/postCertificate", ClerkExpressRequireAuth(), async (request, response) => {
     const certId = request.body["certId"];
-    const username = request.body["username"];
     const userId = request.body["userId"];
 
     const { userId: loggedInUserId } = request.auth;
@@ -127,10 +128,10 @@ router.post("/postCertificate", ClerkExpressRequireAuth(), async (request, respo
     }
 
     const insertQuery = "INSERT INTO \"Certificates\" VALUES ($1, $2)";
-    pool.query(insertQuery, [certId, username])
+    pool.query(insertQuery, [certId, userId])
         .then((result) => {
             console.log(result);
-            response.status(200).send({message: "CertificateID added successfully."});
+            response.status(200).send({message: "Certifikát úspešne pridaný"});
         })
         .catch((error) => {
             console.log(error);
@@ -141,6 +142,10 @@ router.post("/postCertificate", ClerkExpressRequireAuth(), async (request, respo
 //----------------------------GET REQUEST - CREATE TEST-----------------------------------------------------------------
 // create test based on testDifficulty
 router.get("/createTest/:testDifficulty", ClerkExpressRequireAuth(), async (request, response)=> {
+    if (!TEST_SESSION_SECRET) {
+        return response.status(500).send("Server configuration error");
+    }
+
     //first check if there is enough AI requests left for generation and for evaluation
     const ai_limit = await getAiLimit()
     if(ai_limit <= 1) {
@@ -285,6 +290,10 @@ router.get("/createTest/:testDifficulty", ClerkExpressRequireAuth(), async (requ
 // then save the test to db
 // eventually send the calculated score to frontend
 router.post("/submitTest", ClerkExpressRequireAuth(), async (request, response)=> {
+    if (!TEST_SESSION_SECRET) {
+        return response.status(500).send("Server configuration error");
+    }
+
     const userId = request.body["userId"];
     const testStructure = request.body["testStructure"];
     const testDifficulty = request.body["testDifficulty"];

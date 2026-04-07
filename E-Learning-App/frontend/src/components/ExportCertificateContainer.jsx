@@ -8,8 +8,7 @@ import {useAuth, useUser} from "@clerk/clerk-react";
 
 export default function ExportCertificateContainer({
                                                        text,
-                                                       certificateStatus,
-                                                       userName}){
+                                                       certificateStatus}){
     const certificateId = getUniqueTestID("ELC")
     const { getToken } = useAuth();
     const {user} = useUser();
@@ -22,7 +21,7 @@ export default function ExportCertificateContainer({
             <Button isDisabled = {!certificateStatus.enabled} variant="light" className="bg-(--main-color-orange) font-bold px-15"
                     onPress={() => {void POST_postCertificate(certificateId, user.username, user.id, getToken)}}>
                 <PDFDownloadLink document={
-                    <Certificate userName={userName}
+                    <Certificate userName={user.username}
                                  percentage={certificateStatus.percentage}
                                  certificateId={certificateId}
                     />

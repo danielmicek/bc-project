@@ -9,7 +9,6 @@ import {useDisclosure} from "@heroui/use-disclosure";
 import Loader from "../components/Loader.jsx";
 import ModalComponent from "../components/ModalComponent.jsx";
 import {goToPage} from "../methods/methodsClass.js";
-import {toast} from "react-hot-toast";
 
 
 export default function Test() {
@@ -22,18 +21,19 @@ export default function Test() {
     const [testLengthMinutes, setTestLengthMinutes] = useState(null);
     const [testSessionToken, setTestSessionToken] = useState(null);
     const [timerGoing, setTimerGoing] = useState( false);
+    const [blockedByAiLimit, setBlockedByAiLimit] = useState( false);
     const [testStatus, setTestStatus] = useState("ongoing"); // "ongoing" / "paused" / "submitted" / "ended"
     const {isOpen: isOpenEndTestModal, onOpen: onOpenEndTestModal, onClose: onCloseEndTestModal} = useDisclosure();
     const {isOpen: isOpenSubmitTestModal, onOpen: onOpenSubmitTestModal, onClose: onCloseSubmitTestModal} = useDisclosure();
     const {isOpen: isOpenTestResultsModal, onOpen: onOpenTestResultsModal, onClose: onCloseTestResultsModal} = useDisclosure();
-    const {isOpen: isOpenTimeOutModal, onOpen: onOpenTimeOutModal, onClose: onCloseTimeOutModal} = useDisclosure();
     const {isOpen: isOpenLeavePageModal, onOpen: onOpenLeavePageModal, onClose: onCloseLeavePageModal} = useDisclosure();
+    const {isOpen: isOpenAiLimitModal, onOpen: onOpenAiLimitModal, onClose: onCloseAiLimitModal} = useDisclosure();
     const TEST_DIFFICULTY = searchParams.get("testDifficulty")
     const [TEST_ID] = useState(() => searchParams.get("testID"));
     const READ_ONLY = searchParams.get("readOnly") === "true"
     const { getToken } = useAuth()
 
-    // browser back button xx
+    // browser back button
     useEffect(() => {
         const handlePopState = () => {
 
@@ -86,13 +86,14 @@ export default function Test() {
                     setTestLengthMinutes(tmp.testLengthMinutes);
                     setTestSessionToken(tmp.testSessionToken);
                 }
-            }
-            catch (error) {
-                toast.error("Error. Skús znova neskôr")
-            }
-            finally {
+
                 setIsLoading(false)
                 setTimerGoing(true)
+            }
+            catch (error) {
+                setIsLoading(false)
+                setBlockedByAiLimit(true)
+                onOpenAiLimitModal()
             }
         }
         void loadQuestions()
@@ -125,20 +126,22 @@ export default function Test() {
     }, [testStatus])*/
 
     return <>
-        {/*TIME OUT MODAL*/}
-        <ModalComponent title={"Čas vypršal"}
-                        mainText={"Zaznačené odpovede boli vyhodnotené, za nezaznačené boli strhnuté body."}
-                        secondaryText={"yyy"}
-                        isOpen={isOpenTimeOutModal}
-                        onClose={onCloseTimeOutModal}
-                        confirmButtonText = {"Pozrieť vyhodnotený test"}
+        {/*AI LIMIT LOW*/}
+        <ModalComponent title={"AI limit vyčerpaný"}
+                        mainText={"Na dnešný deň boli vyčerpané všetky AI requesty, otestuj sa znova zajtra."}
+                        secondaryText1={"Medzičasom si oddýchni alebo študuj materiály!"}
+                        isOpen={isOpenAiLimitModal}
+                        onClose={onCloseAiLimitModal}
+                        confirmButtonText = {"Študovať materiály"}
                         declineButtonText = {"Späť do menu"}
-                        confirmButtonclickHandler = {async () => {
-                            const tmp = await GET_getTestByTestId(TEST_ID, getToken, user.id);
-                            setQuestions(tmp.test.structure);
-                            onCloseTimeOutModal()
+                        confirmButtonclickHandler = {() => {
+                            onCloseAiLimitModal()
+                            navigate("/learning");
                         }}
-                        declineButtonclickHandler = {() => goToPage("/courseInfoPage", navigate)}
+                        declineButtonclickHandler = {() => {
+                            onCloseAiLimitModal()
+                            navigate("/courseInfoPage");
+                        }}
         />
         {/*TEST RESULTS MODAL*/}
         <ModalComponent title={"Výsledky"}
@@ -208,7 +211,7 @@ export default function Test() {
 
         <div id = "BLACK_BACKGROUND" className="flex flex-col min-h-screen justify-center shadow-xl relative"
              style={{backgroundColor: "#050505"}}>
-            {isLoading || !userIsLoaded || !questions ? <Loader/> :
+            {blockedByAiLimit ? null : (isLoading || !userIsLoaded || !questions ? <Loader/> :
                 testStatus === "ongoing" && !READ_ONLY ?
                     <> {/*TEST ONGOING*/}
                         <div className = "container pb-20 h-full flex flex-col items-center">
@@ -256,7 +259,7 @@ export default function Test() {
                         </Button>
                         <SwiperComponent questions={questions}/>
                     </div>
-            }
+            )}
         </div>
     </>
 }

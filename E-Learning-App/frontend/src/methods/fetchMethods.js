@@ -214,7 +214,6 @@ export async function POST_postCertificate(certId, username, userId, getToken) {
 
     return await apiClient.post("/api/test/postCertificate", {
         certId,
-        username,
         userId
     });
 }
