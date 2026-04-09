@@ -9,7 +9,7 @@ import express from 'express';
 // aby si tento file pustil dat do konzoly node xxx.js
 
 dotenv.config(); // Load environment variables from .env file
-const PORT = process.env.BACKEND_PORT || 5000;
+const PORT = process.env.PORT || 5000;
 const app = express();
 app.use(express.json());
 
