@@ -45,7 +45,7 @@ export default function SlidingCircle() {
     duration-800 ease-in-out"  style={{ top: isOpen ? "10vh" : "75vh" }}>
             <img src="/tap.png" alt="tap" className="absolute top-3 justify-self-center h-8 z-100 text-black text-5xl hover:scale-110 transition-transform duration-200"
                  onClick={prev => setIsOpen(prev => !prev)}/>
-            <p id="NOT_SIGNED_YET" className="flex items-center justify-center relative left-5 text-[2rem] font-medium col-start-2 mb-20 row-start-1">Nový používateľ?</p>
+            <p id="NOT_SIGNED_YET" className="flex items-center justify-center relative left-5 text-[2rem] font-medium col-start-2 mb-23 row-start-1">Nový používateľ?</p>
 
             <div id="DO_IT_NOW" className="flex flex-col items-center justify-end text-[2rem] font-[1000] col-start-2 row-start-2">
                 <span>Vytvor si účet!</span>
