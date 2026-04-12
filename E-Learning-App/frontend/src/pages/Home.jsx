@@ -28,7 +28,7 @@ function Home() {
                  style={{backgroundColor: "#050505"}}>
 
                 <div className="container pb-40 flex flex-col items-center relative">
-                    <div className="absolute w-screen md:h-[30cm] h-[15cm]">
+                    <div className="absolute w-screen md:h-[50cm] h-[25cm]">
                         <LightRays
                             raysOrigin="top-center"
                             raysColor="#ffffff"

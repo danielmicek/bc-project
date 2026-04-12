@@ -387,5 +387,11 @@ router.get("/getAiLimit", ClerkExpressRequireAuth(), (request, response)=> {
         })
 });
 
+// ------------------PUT REQUEST - RESET AI LIMIT EVERY DAY BY EXTRERNAL PAGE WHICH CALLS THIS ENDPOINT-----------------
+router.get("/resetAiLimit", async (req, res) => {
+    await pool.query('UPDATE public."AI_limit" SET ai_limit = 20');
+    res.status(200).send("AI limit resetnutý");
+});
+
 export default router;
 
