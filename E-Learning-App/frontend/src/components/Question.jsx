@@ -1,4 +1,5 @@
 import {useEffect, useMemo, useState} from "react";
+import {useAuth} from "@clerk/clerk-react";
 import {useSearchParams} from "react-router-dom";
 import {GET_keepBackendAlive} from "@/methods/fetchMethods.js";
 

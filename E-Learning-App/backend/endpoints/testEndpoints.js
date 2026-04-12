@@ -252,7 +252,16 @@ router.get("/createTest/:testDifficulty", ClerkExpressRequireAuth(), async (requ
 
         try{
             console.log(aiResponse);
-            generatedTestQuestions = JSON.parse(aiResponse)
+            let cleanedAiResponse = aiResponse.trim();
+
+            if (cleanedAiResponse.startsWith("```json")) {
+                cleanedAiResponse = cleanedAiResponse.replace(/^```json\s*/, "").replace(/\s*```$/, "");
+            }
+            else if (cleanedAiResponse.startsWith("```")) {
+                cleanedAiResponse = cleanedAiResponse.replace(/^```\s*/, "").replace(/\s*```$/, "");
+            }
+
+            generatedTestQuestions = JSON.parse(cleanedAiResponse)
         } catch(err){
             console.log(err);
             response.status(500).send({errorMessage: "Chyba na strane servera"});
