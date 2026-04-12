@@ -213,6 +213,7 @@ export function getAStreak(tests){
 // get the highest percentage of the test with a gold medal reward
 export function findGoldMedal(tests){
     let highestPercentage = 0;
+    console.log(tests);
 
     for(const test of tests){
         if(test.difficulty === "hard" && test.medal === "Gold"){

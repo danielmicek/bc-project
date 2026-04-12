@@ -71,7 +71,7 @@ describe("testSteps helpers", () => {
         expect(getMedal("A", "easy")).toBe("Bronze");
         expect(getMedal("A", "medium")).toBe("Silver");
         expect(getMedal("A", "hard")).toBe("Gold");
-        expect(getMedal("B", "hard")).toBe("none");
+        expect(getMedal("B", "hard")).toBe("None");
     });
 
     // checks that timestamp helper returns a valid ISO string
@@ -112,7 +112,7 @@ describe("testSteps helpers", () => {
     it("addTest returns true on successful insert", async () => {
         hoisted.queryMock.mockResolvedValueOnce({ rowCount: 1 });
 
-        const inserted = await addTest("t1", 10, "50.00", "2026-01-01", "C", "none", "u1", [{ id: 1 }], "easy");
+        const inserted = await addTest("t1", 10, "50.00", "2026-01-01", "C", "None", "u1", [{ id: 1 }], "easy");
         expect(inserted).toBe(true);
     });
 
@@ -120,7 +120,7 @@ describe("testSteps helpers", () => {
     it("addTest returns false when no row was inserted", async () => {
         hoisted.queryMock.mockResolvedValueOnce({ rowCount: 0 });
 
-        const inserted = await addTest("t1", 10, "50.00", "2026-01-01", "C", "none", "u1", [{ id: 1 }], "easy");
+        const inserted = await addTest("t1", 10, "50.00", "2026-01-01", "C", "None", "u1", [{ id: 1 }], "easy");
         expect(inserted).toBe(false);
     });
 

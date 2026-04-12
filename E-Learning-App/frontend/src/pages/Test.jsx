@@ -148,7 +148,7 @@ export default function Test() {
                         mainText={"Dosiahnutý počet bodov: " + Number(testResults?.points ?? 0).toFixed(2)}
                         secondaryText1={"Výsledok v % : " + testResults?.percentage}
                         secondaryText2={"Známka: " + testResults?.grade}
-                        secondaryText3={"Medaila: " + (testResults?.medal === "none" ? "Žiadna" : testResults?.medal)}
+                        secondaryText3={"Medaila: " + (testResults?.medal === "None" ? "Žiadna" : testResults?.medal)}
                         isOpen={isOpenTestResultsModal}
                         onClose={onCloseTestResultsModal}
                         confirmButtonText = {"Pozrieť vyhodnotený test"}

@@ -140,7 +140,7 @@ describe("testEndpoints", () => {
         hoisted.decreaseAiLimitMock.mockResolvedValue(undefined);
         hoisted.calculateTestScoreMock.mockResolvedValue(8);
         hoisted.getGradeMock.mockReturnValue("B");
-        hoisted.getMedalMock.mockReturnValue("none");
+        hoisted.getMedalMock.mockReturnValue("None");
         hoisted.getCurrentTimestampMock.mockReturnValue("2026-04-05T10:00:00.000Z");
         hoisted.addTestMock.mockResolvedValue(true);
         hoisted.getAiResponseMock.mockResolvedValue(JSON.stringify([]));
@@ -155,7 +155,7 @@ describe("testEndpoints", () => {
                     percentage: "88.5",
                     timestamp: "2026-04-01",
                     grade: "B",
-                    medal: "none",
+                    medal: "None",
                     structure: [{ id: 1 }],
                     difficulty: "medium",
                 },
@@ -172,7 +172,7 @@ describe("testEndpoints", () => {
                     percentage: "88.5",
                     timestamp: "2026-04-01",
                     grade: "B",
-                    medal: "none",
+                    medal: "None",
                     structure: [{ id: 1 }],
                     difficulty: "medium",
                 },
@@ -204,7 +204,7 @@ describe("testEndpoints", () => {
     // checks test detail payload for an existing testId
     it("GET /getTestByTestId/:testId/:userId returns test result payload", async () => {
         hoisted.queryMock.mockResolvedValueOnce({
-            rows: [{ percentage: "90.00", points: 9, medal: "silver", grade: "A", structure: [{ id: 1 }] }],
+            rows: [{ percentage: "90.00", points: 9, medal: "Silver", grade: "A", structure: [{ id: 1 }] }],
         });
 
         const res = await request(app)
@@ -213,7 +213,7 @@ describe("testEndpoints", () => {
 
         expect(res.status).toBe(200);
         expect(res.body).toEqual({
-            results: { percentage: "90.00", points: 9, medal: "silver", grade: "A" },
+            results: { percentage: "90.00", points: 9, medal: "Silver", grade: "A" },
             structure: [{ id: 1 }],
         });
     });
@@ -452,7 +452,7 @@ describe("testEndpoints", () => {
     it("POST /submitTest returns calculated result payload when insert succeeds", async () => {
         hoisted.calculateTestScoreMock.mockResolvedValueOnce(8);
         hoisted.getGradeMock.mockReturnValueOnce("B");
-        hoisted.getMedalMock.mockReturnValueOnce("none");
+        hoisted.getMedalMock.mockReturnValueOnce("None");
         hoisted.addTestMock.mockResolvedValueOnce(true);
 
         const token = createTestSessionToken({
@@ -473,7 +473,7 @@ describe("testEndpoints", () => {
 
         expect(res.status).toBe(200);
         expect(res.body).toEqual({
-            results: { percentage: "61.54", points: 8, medal: "none", grade: "B" },
+            results: { percentage: "61.54", points: 8, medal: "None", grade: "B" },
             structure: [{ id: 1 }],
         });
         expect(hoisted.addTestMock).toHaveBeenCalledTimes(1);

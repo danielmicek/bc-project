@@ -165,7 +165,7 @@ export function getMedal(grade, testDifficulty){
     if(testDifficulty === "hard" && grade === "A") return "Gold"
     else if(testDifficulty === "medium" && grade === "A") return "Silver"
     else if(testDifficulty === "easy" && grade === "A") return "Bronze"
-    else return "none"
+    else return "None"
 }
 
 export function getTestLengthMinutes(testDifficulty) {
