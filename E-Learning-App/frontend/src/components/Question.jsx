@@ -150,7 +150,7 @@ export default function Question({activeIndex, questionIndex, question, setQuest
     }, [selectedArray, freeAnswerText]);
 
     return <>
-        <div className="pb-8 justify-self-center flex flex-col gap-0 overflow-hidden max-[750px]:w-[70vw] mb-5">
+        <div className="pb-8 self-center flex flex-col gap-0 overflow-hidden max-[750px]:w-[70vw] mb-5">
 
             <div id = "BODY" className="flex items-center justify-center text-center text-white font-bold text-xl w-full pb-3 ">{question.body}</div>
             {<p className="text-sm font-light text-gray-500">

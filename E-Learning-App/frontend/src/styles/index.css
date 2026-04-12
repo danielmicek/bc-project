@@ -126,6 +126,11 @@ body {
 
 .questions-pagination.swiper-pagination {
     position: static !important;
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
 }
 
 

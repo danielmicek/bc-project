@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -17,13 +17,15 @@ export default function SwiperComponent({questions, setQuestions = ()=>{}}) {
 
     const refSwiper = useRef(null);
     const [swiperNavigationVisible, setSwiperNavigationVisible] = React.useState(window.innerWidth > 640);
-    addEventListener("resize", (event) => { })
 
-    // if screen is a mobile-sized, hide navigation arrows in the Swiper component
-    onresize = (event) => {
-        if(window.innerWidth < 640) setSwiperNavigationVisible(false)
-        else setSwiperNavigationVisible(true)
-    }
+    useEffect(() => {
+        function handleResize() {
+            setSwiperNavigationVisible(window.innerWidth > 640);
+        }
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     return (
         <div className="w-full">
@@ -50,7 +52,7 @@ export default function SwiperComponent({questions, setQuestions = ()=>{}}) {
 
             </Swiper>
 
-            <div className="questions-pagination mt-4 flex justify-center" />
+            <div className="questions-pagination mt-4 flex flex-wrap justify-center" />
         </div>
     );
 }
