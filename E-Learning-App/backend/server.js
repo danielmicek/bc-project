@@ -16,7 +16,7 @@ app.use(express.json());
 const allowedOrigins = [
     "http://localhost:5173",
     "http://localhost:8080",
-    "https://eleonore-backend-8o43.onrender.com"
+    "https://eleonore-ry00.onrender.com"
 ];
 
 // Enables React frontend (dev/prod local ports) to make API calls to Express backend.
