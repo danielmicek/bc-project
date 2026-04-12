@@ -7,6 +7,22 @@ import BigStatCard from "../components/BigStatCard.jsx";
 import {Link} from "react-router-dom";
 import LightRays from "../components/LightRays.jsx";
 import VerifyCertificateModal from "../components/VerifyCertificateModal.jsx";
+import Marquee from "react-fast-marquee";
+
+const usedTechnologies = [
+    { name: "JavaScript", imgPath: "/js_logo.png" },
+    { name: "React", imgPath: "/react_logo.png" },
+    { name: "Tailwind CSS", imgPath: "/tailwind_logo.png" },
+    { name: "Node.js", imgPath: "/node_logo.png" },
+    { name: "Express", imgPath: "/express_logo.png" },
+    { name: "Clerk", imgPath: "/clerk_logo.png" },
+    { name: "Notion", imgPath: "/notion_logo.png" },
+    { name: "Docker", imgPath: "/docker_logo.png" },
+    { name: "Render", imgPath: "/render_logo.png" },
+    { name: "Gemini", imgPath: "/gemini_logo.png" },
+    { name: "PostgreSQL", imgPath: "/postgresql_logo.png" },
+    { name: "Axios", imgPath: "/axios_logo.png" },
+];
 
 function Home() {
 
@@ -92,7 +108,7 @@ function Home() {
                         />
 
                     </div>
-                    <div id = "BOTTOM_CONTAINER" className="flex md:flex-row flex-col items-center justify-center z-5 mt-40 w-[100%]">
+                    <div id = "BOTTOM_CONTAINER" className="flex md:flex-row pb-30 flex-col items-center justify-center z-5 mt-40 w-[100%]">
                         <img src="/laptop.png" alt="laptop" className="md:w-[500px] min-[1300px]:w-[800px] lg:w-[700px] w-[450px]"/>
                         <ul className="list-disc flex flex-col list-inside text-white mt-10 md:mt-0 pl-10 pr-5">
                             <li className="mb-8 font-extrabold text-gray-400 text-xl">Získaj medailu po úspechu v teste</li>
@@ -104,6 +120,17 @@ function Home() {
                                 Overiť certifikát
                             </Button>
                         </ul>
+                    </div>
+
+                    <div className="absolute bottom-10 w-full overflow-hidden border-y border-white/10 bg-white/4 py-4">
+                        <Marquee speed={50} gradient={false} autoFill>
+                            {usedTechnologies.map((tech, index) => (
+                                <div key={`${tech.name}-${index}`}
+                                     className="mx-10 flex min-w-fit items-center justify-center">
+                                    <img src={tech.imgPath} alt={tech.name} className="h-16 w-16 object-contain"/>
+                                </div>
+                            ))}
+                        </Marquee>
                     </div>
                 </div>
             </div>
