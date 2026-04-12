@@ -10,9 +10,6 @@ import VerifyCertificateModal from "../components/VerifyCertificateModal.jsx";
 
 function Home() {
 
-    /*window.addEventListener("popstate", () => {  kliknutie na backbutton v browseri
-        console.log("popstate");
-    });*/
     const {isOpen: isOpenVerifyCertModal, onOpen: onOpenVerifyCertModal, onClose: onCloseVerifyCertModal} = useDisclosure();
     const {isSignedIn} = useUser();
 

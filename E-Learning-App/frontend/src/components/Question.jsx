@@ -149,7 +149,7 @@ export default function Question({activeIndex, questionIndex, question, setQuest
         saveQuestionStateIntoTest(selectedArray, freeAnswerText, setQuestions, indexToSave, isFreeAnswerQuestion)
     }, [selectedArray, freeAnswerText]);
 
-    return <>
+    return <div className="flex flex-col justify-center items-center">
         <div className="pb-8 self-center flex flex-col gap-0 overflow-hidden max-[750px]:w-[70vw] mb-5">
 
             <div id = "BODY" className="flex items-center justify-center text-center text-white font-bold text-xl w-full pb-3 ">{question.body}</div>
@@ -192,5 +192,5 @@ export default function Question({activeIndex, questionIndex, question, setQuest
             )}
 
         </ul>
-    </>
+    </div>
 }

@@ -110,7 +110,7 @@ export default function CardComponent({
                                 confirmButtonclickHandler={() => {
                                     onCloseTest_Chapter_Modal()
                                     if(aiLimit > 1) {
-                                        toast("Test sa načítava pomocou AI, môže to chvíľu trvať.", {
+                                        toast("Test sa generuje pomocou AI, môže to chvíľu trvať.", {
                                             icon: "⏳",
                                         });
                                         goToPage("/test", navigate, false, difficultyTransformation[difficulty])
