@@ -101,6 +101,27 @@ describe("friendshipEndpoints", () => {
         ]);
     });
 
+    // checks auth guard for getAllFriendRequests
+    it("GET /getAllFriendRequests/:userId returns 403 when auth user mismatches", async () => {
+        const res = await request(app)
+            .get("/getAllFriendRequests/user-2")
+            .set("x-test-auth-user", "user-1");
+
+        expect(res.status).toBe(403);
+        expect(queryMock).not.toHaveBeenCalled();
+    });
+
+    // checks DB failure handling for getAllFriendRequests
+    it("GET /getAllFriendRequests/:userId returns 500 on DB error", async () => {
+        queryMock.mockRejectedValueOnce(new Error("db failed"));
+
+        const res = await request(app)
+            .get("/getAllFriendRequests/user-1")
+            .set("x-test-auth-user", "user-1");
+
+        expect(res.status).toBe(500);
+    });
+
     // checks the "not found" friendship branch which currently returns 400
     it("GET /getFriendship/:userId/:friendId returns 400 when friendship does not exist", async () => {
         queryMock.mockResolvedValueOnce({ rows: [] });
@@ -121,6 +142,27 @@ describe("friendshipEndpoints", () => {
             .set("x-test-auth-user", "user-1");
 
         expect(res.status).toBe(200);
+    });
+
+    // checks auth guard for getFriendship
+    it("GET /getFriendship/:userId/:friendId returns 403 when auth user mismatches", async () => {
+        const res = await request(app)
+            .get("/getFriendship/user-2/user-3")
+            .set("x-test-auth-user", "user-1");
+
+        expect(res.status).toBe(403);
+        expect(queryMock).not.toHaveBeenCalled();
+    });
+
+    // checks DB failure handling for getFriendship
+    it("GET /getFriendship/:userId/:friendId returns 500 on DB error", async () => {
+        queryMock.mockRejectedValueOnce(new Error("db failed"));
+
+        const res = await request(app)
+            .get("/getFriendship/user-1/user-2")
+            .set("x-test-auth-user", "user-1");
+
+        expect(res.status).toBe(500);
     });
 
     // checks 403 guard for sendFriendRequest
@@ -156,6 +198,18 @@ describe("friendshipEndpoints", () => {
         expect(queryMock).toHaveBeenCalledTimes(1);
     });
 
+    // checks DB failure handling for sendFriendRequest
+    it("POST /sendFriendRequest returns 500 when insert fails", async () => {
+        queryMock.mockRejectedValueOnce(new Error("insert failed"));
+
+        const res = await request(app)
+            .post("/sendFriendRequest")
+            .set("x-test-auth-user", "user-1")
+            .send({ from: "user-1", friend_id: "user-2" });
+
+        expect(res.status).toBe(500);
+    });
+
     // checks request accept flow (delete + insert)
     it("POST /acceptFriendRequest/:userId/:friendId returns 200 on successful insert", async () => {
         queryMock
@@ -183,6 +237,39 @@ describe("friendshipEndpoints", () => {
         expect(res.status).toBe(500);
     });
 
+    // checks 404 when request to accept does not exist
+    it("POST /acceptFriendRequest/:userId/:friendId returns 404 when request row is missing", async () => {
+        queryMock.mockResolvedValueOnce({ rowCount: 0 });
+
+        const res = await request(app)
+            .post("/acceptFriendRequest/user-1/user-2")
+            .set("x-test-auth-user", "user-1");
+
+        expect(res.status).toBe(404);
+        expect(queryMock).toHaveBeenCalledTimes(1);
+    });
+
+    // checks 500 when delete query itself fails during accept flow
+    it("POST /acceptFriendRequest/:userId/:friendId returns 500 when delete fails", async () => {
+        queryMock.mockRejectedValueOnce(new Error("delete failed"));
+
+        const res = await request(app)
+            .post("/acceptFriendRequest/user-1/user-2")
+            .set("x-test-auth-user", "user-1");
+
+        expect(res.status).toBe(500);
+    });
+
+    // checks auth guard for acceptFriendRequest
+    it("POST /acceptFriendRequest/:userId/:friendId returns 403 when auth user mismatches", async () => {
+        const res = await request(app)
+            .post("/acceptFriendRequest/user-2/user-3")
+            .set("x-test-auth-user", "user-1");
+
+        expect(res.status).toBe(403);
+        expect(queryMock).not.toHaveBeenCalled();
+    });
+
     // checks successful deleteFriendRequest branch
     it("DELETE /deleteFriendRequest/:userId/:friendId returns 200 on success", async () => {
         queryMock.mockResolvedValueOnce({ rowCount: 1 });
@@ -194,6 +281,27 @@ describe("friendshipEndpoints", () => {
         expect(res.status).toBe(200);
     });
 
+    // checks auth guard for deleteFriendRequest
+    it("DELETE /deleteFriendRequest/:userId/:friendId returns 403 when auth user mismatches", async () => {
+        const res = await request(app)
+            .delete("/deleteFriendRequest/user-2/user-3")
+            .set("x-test-auth-user", "user-1");
+
+        expect(res.status).toBe(403);
+        expect(queryMock).not.toHaveBeenCalled();
+    });
+
+    // checks DB failure handling for deleteFriendRequest
+    it("DELETE /deleteFriendRequest/:userId/:friendId returns 500 on DB error", async () => {
+        queryMock.mockRejectedValueOnce(new Error("db failed"));
+
+        const res = await request(app)
+            .delete("/deleteFriendRequest/user-1/user-2")
+            .set("x-test-auth-user", "user-1");
+
+        expect(res.status).toBe(500);
+    });
+
     // checks successful deleteFriendship branch
     it("DELETE /deleteFriendship/:userId/:friendId returns 200 on success", async () => {
         queryMock.mockResolvedValueOnce({ rowCount: 1 });
@@ -203,6 +311,27 @@ describe("friendshipEndpoints", () => {
             .set("x-test-auth-user", "user-1");
 
         expect(res.status).toBe(200);
+    });
+
+    // checks auth guard for deleteFriendship
+    it("DELETE /deleteFriendship/:userId/:friendId returns 403 when auth user mismatches", async () => {
+        const res = await request(app)
+            .delete("/deleteFriendship/user-2/user-3")
+            .set("x-test-auth-user", "user-1");
+
+        expect(res.status).toBe(403);
+        expect(queryMock).not.toHaveBeenCalled();
+    });
+
+    // checks DB failure handling for deleteFriendship
+    it("DELETE /deleteFriendship/:userId/:friendId returns 500 on DB error", async () => {
+        queryMock.mockRejectedValueOnce(new Error("db failed"));
+
+        const res = await request(app)
+            .delete("/deleteFriendship/user-1/user-2")
+            .set("x-test-auth-user", "user-1");
+
+        expect(res.status).toBe(500);
     });
 });
 

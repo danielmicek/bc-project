@@ -195,9 +195,9 @@ export default function SignedInProfilePage() {
                                     <UserAvatar/>
                                 </SignedIn>
                                 <div id="GRID_CONTAINER_LOGGED_PROFILE_PAGE"
-                                     className="flex flex-col relative min-[900px]:ml-20 z-999
-                                my-12.5 min-[900px]:border-l-2 min-[900px]:border-l-[#545454] max-[1024px]:items-center
-                                max-[900px]:border-t-2 max-[900px]:border-t-[#545454] max-[900px]:pt-20 lg:pl-10">
+                                     className="flex flex-col relative min-[900px]:ml-20 
+                                                my-12.5 min-[900px]:border-l-2 min-[900px]:border-l-[#545454] max-[1024px]:items-center
+                                                max-[900px]:border-t-2 max-[900px]:border-t-[#545454] max-[900px]:pt-20 lg:pl-10">
                                     <div id="USERNAME"
                                          className="sm:text-4xl text-3xl font-bold mb-3.75 text-shadow-md max-[900px]:text-center
                                      text-white">{user.username}

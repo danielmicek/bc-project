@@ -3,6 +3,7 @@ import {readFileSync} from "node:fs";
 import {
     addTest,
     calculateTestScore,
+    createTestSessionToken,
     decreaseAiLimit,
     getAiLimit,
     getBestTestScore,
@@ -10,7 +11,9 @@ import {
     getGrade,
     getMedal,
     getRandomElementsFromArray,
+    getTestLengthMinutes,
     shuffleArray,
+    verifyTestSessionToken,
 } from "../../steps/testSteps.js";
 
 const hoisted = vi.hoisted(() => ({
@@ -77,6 +80,14 @@ describe("testSteps helpers", () => {
         expect(Number.isNaN(Date.parse(ts))).toBe(false);
     });
 
+    // checks duration lookup for each known difficulty and invalid input
+    it("getTestLengthMinutes returns expected values for valid and invalid difficulties", () => {
+        expect(getTestLengthMinutes("easy")).toBe(20);
+        expect(getTestLengthMinutes("medium")).toBe(40);
+        expect(getTestLengthMinutes("hard")).toBe(60);
+        expect(getTestLengthMinutes("unknown")).toBeNull();
+    });
+
     // checks that shuffle keeps elements and length, only order may change
     it("shuffleArray keeps same elements and length", () => {
         const arr = [1, 2, 3, 4, 5];
@@ -127,6 +138,46 @@ describe("testSteps helpers", () => {
         expect(hoisted.queryMock).toHaveBeenCalledTimes(1);
     });
 
+    // checks decreaseAiLimit swallows DB errors and does not throw
+    it("decreaseAiLimit does not throw when update query fails", async () => {
+        hoisted.queryMock.mockRejectedValueOnce(new Error("update failed"));
+        await expect(decreaseAiLimit()).resolves.toBeUndefined();
+    });
+
+    // checks token roundtrip between create and verify helpers
+    it("createTestSessionToken and verifyTestSessionToken roundtrip the payload", () => {
+        const payload = {
+            userId: "user-1",
+            testId: "t1",
+            testDifficulty: "medium",
+            issuedAt: 1,
+            expiresAt: 2,
+        };
+
+        const token = createTestSessionToken(payload, "secret");
+        const parsed = verifyTestSessionToken(token, "secret");
+
+        expect(parsed).toEqual(payload);
+    });
+
+    // checks verifyTestSessionToken rejects invalid or malformed tokens
+    it("verifyTestSessionToken returns null for invalid token formats and signatures", () => {
+        const validToken = createTestSessionToken({ userId: "u1" }, "secret");
+        const tamperedToken = validToken.replace(/\.[^.]+$/, ".wrong-signature");
+
+        expect(verifyTestSessionToken(null, "secret")).toBeNull();
+        expect(verifyTestSessionToken("plain-string", "secret")).toBeNull();
+        expect(verifyTestSessionToken(tamperedToken, "secret")).toBeNull();
+    });
+
+    // checks verifyTestSessionToken rejects tokens with invalid JSON payload
+    it("verifyTestSessionToken returns null for malformed payload JSON", () => {
+        const payload = Buffer.from("{bad-json", "utf8").toString("base64url");
+        const signature = Buffer.from("sig", "utf8").toString("base64url");
+
+        expect(verifyTestSessionToken(`${payload}.${signature}`, "secret")).toBeNull();
+    });
+
     // checks score calculation on a larger easy test structure
     it("calculateTestScore returns expected score for complex easy test", async () => {
         const testStructure = cloneScoreFixture("easy");
@@ -171,5 +222,57 @@ describe("testSteps helpers", () => {
         expect(hoisted.aiCorrectFreeAnswerQuestionsMock).toHaveBeenCalledTimes(1);
         expect(hoisted.queryMock).toHaveBeenCalledTimes(1);
     });
-});
 
+    // checks score clamping so negative totals never go below zero
+    it("calculateTestScore clamps negative score to zero", async () => {
+        const testStructure = [
+            {
+                difficulty: "hard",
+                multiselect: false,
+                free_answer: false,
+                answers: [
+                    { selected: true, correct: false },
+                    { selected: false, correct: false },
+                    { selected: false, correct: false },
+                    { selected: false, correct: false },
+                    { selected: false, correct: null },
+                ],
+            },
+            {
+                difficulty: "hard",
+                multiselect: false,
+                free_answer: false,
+                answers: [
+                    { selected: true, correct: false },
+                    { selected: false, correct: false },
+                    { selected: false, correct: false },
+                    { selected: false, correct: false },
+                    { selected: false, correct: null },
+                ],
+            },
+        ];
+
+        const points = await calculateTestScore(testStructure, "hard");
+        expect(points).toBe(0);
+    });
+
+    // checks free-answer path when AI returns no result
+    it("calculateTestScore skips free-answer bonus when AI response is missing", async () => {
+        const testStructure = [
+            {
+                difficulty: "medium",
+                multiselect: false,
+                free_answer: true,
+                body: "Explain X",
+                free_answer_text: "answer",
+                answers: [{ selected: false }, { selected: false }, { selected: false }, { selected: false }, { selected: false }],
+            },
+        ];
+        hoisted.aiCorrectFreeAnswerQuestionsMock.mockResolvedValueOnce(null);
+
+        const points = await calculateTestScore(testStructure, "medium");
+
+        expect(points).toBe(0);
+        expect(hoisted.queryMock).not.toHaveBeenCalled();
+    });
+});

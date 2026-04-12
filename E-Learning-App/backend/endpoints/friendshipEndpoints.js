@@ -65,7 +65,7 @@ router.get("/getAllFriends/:userId", ClerkExpressRequireAuth(), (request, respon
 // ------------------POST REQUEST - ACCEPT FR --------------------------------------------------------------------------
 // remove FR from Friend_requests
 // add FR to Friendships
-router.post("/acceptFriendRequest/:userId/:friendId", ClerkExpressRequireAuth(), (request, response)=> {
+router.post("/acceptFriendRequest/:userId/:friendId", ClerkExpressRequireAuth(), async (request, response)=> {
     const { userId, friendId } = request.params;
 
     const { userId: loggedInUserId } = request.auth;
@@ -75,20 +75,24 @@ router.post("/acceptFriendRequest/:userId/:friendId", ClerkExpressRequireAuth(),
         return response.status(403).send("Zakázaná akcia! Túto akciu môže vykonať iba vlastník profilu.");
     }
 
-    const deleteQuery = "DELETE FROM \"Friend_requests\" WHERE (to_user_id = $1 OR from_user_id = $2)";
-    const deleteResult = pool.query(deleteQuery, [userId, friendId]);
-    if (deleteResult.rowCount === 0) return response.status(404).send("Priateľstvo nenájdené!");
+    try {
+        const deleteQuery = "DELETE FROM \"Friend_requests\" WHERE (to_user_id = $1 AND from_user_id = $2)";
+        const deleteResult = await pool.query(deleteQuery, [userId, friendId]);
 
-    const insertQuery = "INSERT INTO \"Friendships\" (user_id, friend_id) VALUES ($1, $2)";
-    pool.query(insertQuery, [userId, friendId])
-        .then((result) => {
-            console.log(result);
-            return response.status(200).send("Žiadosť akceptovaná!");
-        })
-        .catch((error) => {
-            console.log(error);
-            return response.status(500).send("Chyba na strane servera");
-        })
+        if (deleteResult.rowCount === 0) {
+            return response.status(404).send("Priateľstvo nenájdené");
+        }
+
+        const insertQuery = "INSERT INTO \"Friendships\" (user_id, friend_id) VALUES ($1, $2)";
+        const insertResult = await pool.query(insertQuery, [userId, friendId]);
+
+        console.log(insertResult);
+        return response.status(200).send("Žiadosť akceptovaná!");
+    }
+    catch (error) {
+        console.log(error);
+        return response.status(500).send("Chyba na strane servera");
+    }
 });
 
 // ------------------DELETE FR - DELETE FR AFTER DECLINING --------------- ---------------------------------------------
@@ -234,4 +238,3 @@ router.post("/sendFriendRequest", ClerkExpressRequireAuth(), async (request, res
 })
 
 export default router;
-

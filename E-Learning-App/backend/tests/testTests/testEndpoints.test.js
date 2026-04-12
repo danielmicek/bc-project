@@ -75,6 +75,7 @@ describe("testEndpoints", () => {
     const app = createRouterApp(router);
 
     beforeEach(() => {
+        process.env.AI_LIMIT_RESET_SECRET = "test-reset-secret";
         hoisted.queryMock.mockReset();
         hoisted.getQuestionsBasedOnDifficultyMock.mockReset();
         hoisted.addTestMock.mockReset();
@@ -217,6 +218,29 @@ describe("testEndpoints", () => {
         });
     });
 
+    // checks getTestByTestId 404 branch when the test does not exist
+    it("GET /getTestByTestId/:testId/:userId returns 404 when test does not exist", async () => {
+        hoisted.queryMock.mockResolvedValueOnce({ rows: [] });
+
+        const res = await request(app)
+            .get("/getTestByTestId/t1/user-1")
+            .set("x-test-auth-user", "user-1");
+
+        expect(res.status).toBe(404);
+        expect(res.body).toEqual({ error: "Test nenájdený", tests: [], bestScore: 0 });
+    });
+
+    // checks getTestByTestId 500 branch on DB failure
+    it("GET /getTestByTestId/:testId/:userId returns 500 on DB error", async () => {
+        hoisted.queryMock.mockRejectedValueOnce(new Error("db failed"));
+
+        const res = await request(app)
+            .get("/getTestByTestId/t1/user-1")
+            .set("x-test-auth-user", "user-1");
+
+        expect(res.status).toBe(500);
+    });
+
     // checks getCertificateById branch for missing certificate
     it("GET /getCertificateById/:certId returns certificateFound=false when missing", async () => {
         hoisted.queryMock.mockResolvedValueOnce({ rows: [] });
@@ -260,6 +284,18 @@ describe("testEndpoints", () => {
         expect(res.status).toBe(200);
     });
 
+    // checks postCertificate 500 branch when insert fails
+    it("POST /postCertificate returns 500 on insert failure", async () => {
+        hoisted.queryMock.mockRejectedValueOnce(new Error("insert failed"));
+
+        const res = await request(app)
+            .post("/postCertificate")
+            .set("x-test-auth-user", "user-1")
+            .send({ certId: "c1", userId: "user-1" });
+
+        expect(res.status).toBe(500);
+    });
+
     // checks createTest 429 branch when AI limit is exhausted
     it("GET /createTest/:testDifficulty returns 429 when AI limit is exhausted", async () => {
         hoisted.getAiLimitMock.mockResolvedValueOnce(1);
@@ -267,6 +303,66 @@ describe("testEndpoints", () => {
         const res = await request(app).get("/createTest/easy");
 
         expect(res.status).toBe(429);
+    });
+
+    // checks createTest 400 branch when testId query param is missing
+    it("GET /createTest/:testDifficulty returns 400 when testId is missing", async () => {
+        const res = await request(app).get("/createTest/easy");
+
+        expect(res.status).toBe(400);
+    });
+
+    // checks createTest 400 branch when difficulty is invalid
+    it("GET /createTest/:testDifficulty returns 400 on invalid difficulty", async () => {
+        const res = await request(app)
+            .get("/createTest/unknown")
+            .query({ testId: "t-create-x" });
+
+        expect(res.status).toBe(400);
+    });
+
+    // checks createTest 500 branch when AI returns null
+    it("GET /createTest/:testDifficulty returns 500 when AI response is missing", async () => {
+        hoisted.getQuestionsBasedOnDifficultyMock
+            .mockResolvedValueOnce(Array.from({ length: 8 }).map((_, i) => ({
+                id: `e${i}`,
+                difficulty: "easy",
+                free_answer: false,
+                answers: [{ text: "a", correct: true }, { text: "x", correct: false }, { text: "y", correct: false }, { text: "z", correct: false }, { text: "Neodpovedat", correct: null }],
+            })))
+            .mockResolvedValueOnce(Array.from({ length: 5 }).map((_, i) => ({
+                id: `m${i}`,
+                difficulty: "medium",
+                free_answer: false,
+                answers: [{ text: "a", correct: true }, { text: "x", correct: false }, { text: "y", correct: false }, { text: "z", correct: false }, { text: "Neodpovedat", correct: null }],
+            })));
+        hoisted.getAiResponseMock.mockResolvedValueOnce(null);
+
+        const res = await request(app).get("/createTest/easy").query({ testId: "t-create-2" });
+
+        expect(res.status).toBe(500);
+    });
+
+    // checks createTest 500 branch when AI returns invalid JSON
+    it("GET /createTest/:testDifficulty returns 500 when AI JSON parsing fails", async () => {
+        hoisted.getQuestionsBasedOnDifficultyMock
+            .mockResolvedValueOnce(Array.from({ length: 8 }).map((_, i) => ({
+                id: `e${i}`,
+                difficulty: "easy",
+                free_answer: false,
+                answers: [{ text: "a", correct: true }, { text: "x", correct: false }, { text: "y", correct: false }, { text: "z", correct: false }, { text: "Neodpovedat", correct: null }],
+            })))
+            .mockResolvedValueOnce(Array.from({ length: 5 }).map((_, i) => ({
+                id: `m${i}`,
+                difficulty: "medium",
+                free_answer: false,
+                answers: [{ text: "a", correct: true }, { text: "x", correct: false }, { text: "y", correct: false }, { text: "z", correct: false }, { text: "Neodpovedat", correct: null }],
+            })));
+        hoisted.getAiResponseMock.mockResolvedValueOnce("{invalid-json");
+
+        const res = await request(app).get("/createTest/easy").query({ testId: "t-create-3" });
+
+        expect(res.status).toBe(500);
     });
 
     // checks easy createTest flow: selecting questions, decreasing AI limit, and response payload
@@ -312,6 +408,46 @@ describe("testEndpoints", () => {
         expect(hoisted.decreaseAiLimitMock).toHaveBeenCalledTimes(1);
     });
 
+    // checks medium createTest path with extra hard and free-answer question sources
+    it("GET /createTest/:testDifficulty returns generated medium test with expected length", async () => {
+        const easyQuestions = Array.from({ length: 5 }).map((_, i) => ({
+            id: `e${i}`,
+            difficulty: "easy",
+            free_answer: false,
+            answers: [{ text: "a", correct: true }, { text: "b", correct: false }, { text: "c", correct: false }, { text: "d", correct: false }, { text: "Neodpovedat", correct: null }],
+        }));
+        const mediumQuestions = Array.from({ length: 8 }).map((_, i) => ({
+            id: `m${i}`,
+            difficulty: "medium",
+            free_answer: false,
+            answers: [{ text: "a", correct: true }, { text: "b", correct: false }, { text: "c", correct: false }, { text: "d", correct: false }, { text: "Neodpovedat", correct: null }],
+        }));
+        const hardQuestions = Array.from({ length: 5 }).map((_, i) => ({
+            id: `h${i}`,
+            difficulty: "hard",
+            free_answer: false,
+            answers: [{ text: "a", correct: true }, { text: "b", correct: false }, { text: "c", correct: false }, { text: "d", correct: false }, { text: "Neodpovedat", correct: null }],
+        }));
+        const mediumFree = [{ id: "mf1", difficulty: "medium", free_answer: true, answers: [] }];
+        const hardFree = [{ id: "hf1", difficulty: "hard", free_answer: true, answers: [] }];
+
+        const allQuestions = [...easyQuestions, ...mediumQuestions, ...hardQuestions, ...mediumFree, ...hardFree];
+
+        hoisted.getQuestionsBasedOnDifficultyMock
+            .mockResolvedValueOnce(easyQuestions)
+            .mockResolvedValueOnce(mediumQuestions)
+            .mockResolvedValueOnce(hardQuestions)
+            .mockResolvedValueOnce(mediumFree)
+            .mockResolvedValueOnce(hardFree);
+        hoisted.getAiResponseMock.mockResolvedValueOnce(JSON.stringify(allQuestions));
+
+        const res = await request(app).get("/createTest/medium").query({ testId: "t-create-4" });
+
+        expect(res.status).toBe(200);
+        expect(res.body.createdTest).toHaveLength(20);
+        expect(res.body.testLengthMinutes).toBe(40);
+    });
+
     // checks successful submitTest branch including addTest call and response payload
     it("POST /submitTest returns calculated result payload when insert succeeds", async () => {
         hoisted.calculateTestScoreMock.mockResolvedValueOnce(8);
@@ -343,9 +479,111 @@ describe("testEndpoints", () => {
         expect(hoisted.addTestMock).toHaveBeenCalledTimes(1);
     });
 
+    // checks submitTest 403 on auth mismatch before token work starts
+    it("POST /submitTest returns 403 when authenticated user mismatches body userId", async () => {
+        const res = await request(app)
+            .post("/submitTest")
+            .set("x-test-auth-user", "user-2")
+            .send({
+                userId: "user-1",
+                testId: "t1",
+                testDifficulty: "easy",
+                testStructure: [{ id: 1 }],
+                testSessionToken: "invalid-token",
+            });
+
+        expect(res.status).toBe(403);
+        expect(hoisted.calculateTestScoreMock).not.toHaveBeenCalled();
+    });
+
     // checks submitTest 500 because insert test into DB failed
     it("POST /submitTest returns 500 when adding test to db fails", async () => {
         hoisted.addTestMock.mockResolvedValueOnce(false);
+        const token = createTestSessionToken({
+            userId: "user-1",
+            testId: "t1",
+            testDifficulty: "easy",
+            issuedAt: Date.now() - 10_000,
+            expiresAt: Date.now() + 60_000,
+        });
+
+        const res = await request(app).post("/submitTest").send({
+            userId: "user-1",
+            testId: "t1",
+            testDifficulty: "easy",
+            testStructure: [{ id: 1 }],
+            testSessionToken: token,
+        });
+
+        expect(res.status).toBe(500);
+    });
+
+    // checks submitTest 403 when token userId does not match request
+    it("POST /submitTest returns 403 when token userId mismatches body userId", async () => {
+        const token = createTestSessionToken({
+            userId: "user-2",
+            testId: "t1",
+            testDifficulty: "easy",
+            issuedAt: Date.now() - 10_000,
+            expiresAt: Date.now() + 60_000,
+        });
+
+        const res = await request(app).post("/submitTest").send({
+            userId: "user-1",
+            testId: "t1",
+            testDifficulty: "easy",
+            testStructure: [{ id: 1 }],
+            testSessionToken: token,
+        });
+
+        expect(res.status).toBe(403);
+    });
+
+    // checks submitTest 403 when token testId mismatches body testId
+    it("POST /submitTest returns 403 when token testId mismatches body testId", async () => {
+        const token = createTestSessionToken({
+            userId: "user-1",
+            testId: "other-test",
+            testDifficulty: "easy",
+            issuedAt: Date.now() - 10_000,
+            expiresAt: Date.now() + 60_000,
+        });
+
+        const res = await request(app).post("/submitTest").send({
+            userId: "user-1",
+            testId: "t1",
+            testDifficulty: "easy",
+            testStructure: [{ id: 1 }],
+            testSessionToken: token,
+        });
+
+        expect(res.status).toBe(403);
+    });
+
+    // checks submitTest 403 when token difficulty mismatches body difficulty
+    it("POST /submitTest returns 403 when token difficulty mismatches body difficulty", async () => {
+        const token = createTestSessionToken({
+            userId: "user-1",
+            testId: "t1",
+            testDifficulty: "medium",
+            issuedAt: Date.now() - 10_000,
+            expiresAt: Date.now() + 60_000,
+        });
+
+        const res = await request(app).post("/submitTest").send({
+            userId: "user-1",
+            testId: "t1",
+            testDifficulty: "easy",
+            testStructure: [{ id: 1 }],
+            testSessionToken: token,
+        });
+
+        expect(res.status).toBe(403);
+    });
+
+    // checks submitTest 500 when score calculation throws
+    it("POST /submitTest returns 500 when calculateTestScore throws", async () => {
+        hoisted.calculateTestScoreMock.mockRejectedValueOnce(new Error("calc failed"));
         const token = createTestSessionToken({
             userId: "user-1",
             testId: "t1",
@@ -439,5 +677,43 @@ describe("testEndpoints", () => {
         const res = await request(app).get("/getAiLimit");
 
         expect(res.status).toBe(400);
+    });
+
+    // checks getAiLimit 500 branch on DB failure
+    it("GET /getAiLimit returns 500 on DB error", async () => {
+        hoisted.queryMock.mockRejectedValueOnce(new Error("db failed"));
+
+        const res = await request(app).get("/getAiLimit");
+
+        expect(res.status).toBe(500);
+    });
+
+    // checks resetAiLimit success branch
+    it("GET /resetAiLimit returns 200 after successful update", async () => {
+        hoisted.queryMock.mockResolvedValueOnce({ rowCount: 1 });
+
+        const res = await request(app)
+            .get("/resetAiLimit")
+            .set("ai_limit_reset_secret", "test-reset-secret");
+
+        expect(res.status).toBe(200);
+        expect(hoisted.queryMock).toHaveBeenCalledTimes(1);
+    });
+
+    // checks resetAiLimit rejects invalid secret header
+    it("GET /resetAiLimit returns 403 when secret header is invalid", async () => {
+        const res = await request(app)
+            .get("/resetAiLimit")
+            .set("ai_limit_reset_secret", "wrong-secret");
+
+        expect(res.status).toBe(403);
+        expect(hoisted.queryMock).not.toHaveBeenCalled();
+    });
+
+    // checks keepBackendAlive status code
+    it("GET /keepBackendAlive returns 204", async () => {
+        const res = await request(app).get("/keepBackendAlive");
+
+        expect(res.status).toBe(204);
     });
 });

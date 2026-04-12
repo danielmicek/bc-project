@@ -389,8 +389,19 @@ router.get("/getAiLimit", ClerkExpressRequireAuth(), (request, response)=> {
 
 // ------------------PUT REQUEST - RESET AI LIMIT EVERY DAY BY EXTRERNAL PAGE WHICH CALLS THIS ENDPOINT-----------------
 router.get("/resetAiLimit", async (req, res) => {
+    // validation
+    if (req.headers["ai_limit_reset_secret"] !== process.env.AI_LIMIT_RESET_SECRET) {
+        return res.status(403).send("Forbidden");
+    }
+
     await pool.query('UPDATE public."AI_limit" SET ai_limit = 20');
     res.status(200).send("AI limit resetnutý");
+});
+
+// ------------------GET REQUEST - KEEP BACKEND ALIVE BECAUSE OF SERVER SETTINGS----------------------------------------
+// the server turns off the backend after 15 minutres of inactivity, os we need to aritificially keep it alive
+router.get("/keepBackendAlive", (request, response)=> {
+    response.status(204).send("Backend aktívny");
 });
 
 export default router;

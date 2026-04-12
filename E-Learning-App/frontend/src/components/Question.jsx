@@ -1,5 +1,6 @@
 import {useEffect, useMemo, useState} from "react";
 import {useSearchParams} from "react-router-dom";
+import {GET_keepBackendAlive} from "@/methods/fetchMethods.js";
 
 
 function handleClick(selectedArray, setSelectedArray, index, difficulty, multiselect, dontAnswerIndex, isFreeAnswerQuestion, setFreeAnswerText) {
@@ -124,22 +125,28 @@ export default function Question({activeIndex, questionIndex, question, setQuest
     const dontAnswerIndex = useMemo(() => question.answers.length - 1, [question.answers.length]);
     const isFreeAnswerQuestion = question.free_answer === true;
     const indexToSave = questionIndex ?? activeIndex;
-
+    const { getToken } = useAuth()
 
     const[selectedArray, setSelectedArray] = useState(() =>
         question.answers.map((answer) => Boolean(answer.selected))
     );
     const [freeAnswerText, setFreeAnswerText] = useState(() => question.free_answer_text ?? "");
 
+    // load data from the test structure of the particular question
+    // and call the keepBackendAlive button to keep it alive because of server settings which turn off the backend
+    // after 15 minutes of inactivity
     useEffect(() => {
         setSelectedArray(question.answers.map((answer) => Boolean(answer.selected)));
         setFreeAnswerText(question.free_answer_text ?? "");
+
+        GET_keepBackendAlive(getToken).then()
     }, [question.id]);
 
+    // save answers into the test structure after each click on any answer
     useEffect(() => {
         if(READ_ONLY || indexToSave === undefined) return
         saveQuestionStateIntoTest(selectedArray, freeAnswerText, setQuestions, indexToSave, isFreeAnswerQuestion)
-    }, [selectedArray, freeAnswerText]); // pri zakliknuti odpovede ulozim zaznacene odpovede do skutocnej struktury testu (cely JSON -> cely vygenerovany test)
+    }, [selectedArray, freeAnswerText]);
 
     return <>
         <div className="pb-8 justify-self-center flex flex-col gap-0 overflow-hidden max-[750px]:w-[70vw] mb-5">

@@ -42,7 +42,7 @@ function createApiClient(getToken){
     return apiClient;
 }
 
-// for optimisation -> the same client is used in each method
+// for optimization -> the same client is used in each method
 // without this, for each call of a method, a new client would be created
 const apiClientCache = new WeakMap();
 function getApiClient(getToken){
@@ -175,11 +175,10 @@ export async function DELETE_deleteFriendRequest(userId, friendId, getToken){
 /*----------------------------------------------------------------------------------------------*/
 
 /*-------------TEST API CALLS----------------------------------------------------------------*/
-export async function POST_getBestTestScore(tests, getToken) {
+export async function GET_keepBackendAlive(getToken) {
     const apiClient = getApiClient(getToken);
 
-    const response = await apiClient.post("/api/test/getBestTestScore", { tests });
-    return asText(response);
+    await apiClient.get("/api/test/keepBackendAlive");
 }
 
 export async function GET_getTestByTestId(testId, getToken, userId){

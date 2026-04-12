@@ -215,7 +215,7 @@ export function findGoldMedal(tests){
     let highestPercentage = 0;
 
     for(const test of tests){
-        if(test.difficulty === "hard" && test.medal === "gold"){
+        if(test.difficulty === "hard" && test.medal === "Gold"){
             if(test.percentage > highestPercentage) highestPercentage = test.percentage;
         }
     }

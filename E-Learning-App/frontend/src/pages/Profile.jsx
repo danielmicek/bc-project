@@ -14,11 +14,6 @@ export function Profile() {
     const {isSignedIn, user, isLoaded} = useUser();
     const { getToken } = useAuth();
 
-    if (isSignedIn && user) {
-        if (user.username === null || user.username === undefined) {
-            user.username = user.firstName + " " + user.lastName;
-        }
-    }
     // Call the postRequest function when the user state changes to save the user's information to the database
     useEffect(() => {
         if (isSignedIn && user) {

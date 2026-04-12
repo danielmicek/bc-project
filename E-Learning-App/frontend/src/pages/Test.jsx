@@ -205,7 +205,7 @@ export default function Test() {
                             setTestResults(result.results);
                             onOpenTestResultsModal()
                             setTestStatus("submitted")
-                            setSearchParams({testID: TEST_ID, difficulty: TEST_DIFFICULTY, readOnly: "true" });
+                            setSearchParams({testID: TEST_ID, testDifficulty: TEST_DIFFICULTY, readOnly: "true" });
                         }}
         />
 
