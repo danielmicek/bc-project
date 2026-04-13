@@ -203,17 +203,35 @@ export async function POST_submitTest(testStructure, testDifficulty, userId, tes
     }
 }
 
-export async function GET_getCertificateById(certId, getToken){
+export async function GET_getCertificateById(certId, userId, getToken){
     const apiClient = getApiClient(getToken);
-    return await apiClient.get(`/api/test/getCertificateById/${certId}`);
+
+    try{
+        return await apiClient.get(`/api/test/getCertificateById/${certId}/${userId}`);
+    } catch(error){
+        return JSON.parse(error.message)
+    }
 }
 
-export async function POST_postCertificate(certId, username, userId, getToken) {
+export async function GET_getCertificateByUsername(username, userId, getToken){
+    const apiClient = getApiClient(getToken);
+
+    try{
+        return await apiClient.get(`/api/test/getCertificateByUsername/${username}/${userId}`);
+    } catch(error){
+        return JSON.parse(error.message)
+    }
+}
+
+export async function POST_postCertificate(certId, user_name, userId, timestamp, percentage, getToken) {
     const apiClient = getApiClient(getToken);
 
     return await apiClient.post("/api/test/postCertificate", {
         certId,
-        userId
+        userId,
+        user_name,
+        timestamp,
+        percentage
     });
 }
 
