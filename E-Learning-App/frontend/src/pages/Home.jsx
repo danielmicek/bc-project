@@ -27,7 +27,7 @@ const usedTechnologies = [
 function Home() {
 
     const {isOpen: isOpenVerifyCertModal, onOpen: onOpenVerifyCertModal, onClose: onCloseVerifyCertModal} = useDisclosure();
-    const {isSignedIn} = useUser();
+    const {user, isSignedIn} = useUser();
 
     return (
         <>
@@ -35,6 +35,7 @@ function Home() {
             <VerifyCertificateModal title={"Overenie pravosti certifikátu"}
                                     isOpen={isOpenVerifyCertModal}
                                     onClose={onCloseVerifyCertModal}
+                                    userId = {user.id}
             />
 
             <div id = "BLACK_BACKGROUND" className="flex relative flex-col w-full min-h-screen LightRays mt-0 shadow-xl relative overflow-hidden"

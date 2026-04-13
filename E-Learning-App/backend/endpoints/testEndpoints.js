@@ -92,12 +92,19 @@ router.get("/getTestByTestId/:testId/:userId", ClerkExpressRequireAuth(), (reque
 });
 
 // ------------------GET REQUEST - GET CERTIFICATE BY ID--------------------------------------------------------------------
-router.get("/getCertificateById/:certId", (request, response)=> {
+router.get("/getCertificateById/:certId/:userId", ClerkExpressRequireAuth(), (request, response)=> {
     const certId = request.params.certId;
+    let userId = request.params.userId;
 
-    const getQuery = `SELECT u.username AS username FROM \"Certificates\" c 
-                  JOIN \"Users\" u ON c.user_id = u.user_id
-                  WHERE certificate_id = $1`;
+    const { userId: loggedInUserId } = request.auth;
+
+    // check whether user who is getting this certificate is the one logged in
+    // preventing such a situation when someone would want to get a certificate of other user
+    if (loggedInUserId !== userId) {
+        return response.status(403).send("Zakázaná akcia! Túto akciu môže vykonať iba vlastník profilu.");
+    }
+
+    const getQuery = "SELECT user_name AS username FROM \"Certificates\" WHERE certificate_id = $1";
     pool.query(getQuery, [certId])
         .then((result) => {
             console.log(result);
@@ -114,10 +121,49 @@ router.get("/getCertificateById/:certId", (request, response)=> {
         })
 });
 
+// ------------------GET REQUEST - GET CERTIFICATE BY USERNAME----------------------------------------------------------
+router.get("/getCertificateByUsername/:userName/:userId", ClerkExpressRequireAuth(), (request, response)=> {
+    const userName = request.params.userName;
+    let userId = request.params.userId;
+
+    const { userId: loggedInUserId } = request.auth;
+
+    // check whether user who is getting this certificate is the one logged in
+    // preventing such a situation when someone would want to get a certificate of other user
+    if (loggedInUserId !== userId) {
+        return response.status(403).send("Zakázaná akcia! Túto akciu môže vykonať iba vlastník profilu.");
+    }
+
+    const getQuery = "SELECT certificate_id AS \"certificateId\", user_name AS username, timestamp, percentage  FROM \"Certificates\" WHERE user_name = $1";
+    pool.query(getQuery, [userName])
+        .then((result) => {
+            console.log(result);
+            if (result.rows.length === 0) {
+                response.status(404).send({certificateFound: false});
+            }
+            else{
+                response.status(200).send({
+                    certificateFound: true,
+                    certificateId: result.rows[0].certificateId,
+                    certificateOwner: result.rows[0].username,
+                    timestamp: result.rows[0].timestamp,
+                    percentage: result.rows[0].percentage
+                });
+            }
+        })
+        .catch((error) => {
+            response.status(500).send("Chyba na strane servera");
+            console.log(error);
+        })
+});
+
 // -------------------------POST REQUEST - POST CERTIFICATE TO DB----------------------------------------------------
 router.post("/postCertificate", ClerkExpressRequireAuth(), async (request, response) => {
     const certId = request.body["certId"];
     const userId = request.body["userId"];
+    const userName = request.body["user_name"];
+    const timestamp = request.body["timestamp"];
+    const percentage = parseFloat(request.body["percentage"]);
 
     const { userId: loggedInUserId } = request.auth;
 
@@ -127,8 +173,8 @@ router.post("/postCertificate", ClerkExpressRequireAuth(), async (request, respo
         return response.status(403).send("Zakázaná akcia! Túto akciu môže vykonať iba vlastník profilu.");
     }
 
-    const insertQuery = "INSERT INTO \"Certificates\" VALUES ($1, $2)";
-    pool.query(insertQuery, [certId, userId])
+    const insertQuery = "INSERT INTO \"Certificates\" VALUES ($1, $2, $3, $4)";
+    pool.query(insertQuery, [certId, userName, timestamp, percentage])
         .then((result) => {
             console.log(result);
             response.status(200).send({message: "Certifikát úspešne pridaný"});

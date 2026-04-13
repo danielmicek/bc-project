@@ -143,9 +143,7 @@ const styles = StyleSheet.create({
     },
 });
 
-export default function Certificate({ userName, percentage, certificateId }) {
-    const date = new Date().toLocaleDateString("sk-SK");
-
+export default function Certificate({ certificateId, userName, timestamp, percentage }) {
     return (
         <Document title="Eleonore Certificate" author="eleonore">
             <Page size="A4" style={styles.page}>
@@ -191,7 +189,7 @@ export default function Certificate({ userName, percentage, certificateId }) {
                     <View style={styles.metaRow}>
                         <View style={styles.metaCol}>
                             <Text style={styles.label}>Dátum vystavenia</Text>
-                            <Text style={styles.metaValue}>{date}</Text>
+                            <Text style={styles.metaValue}>{timestamp}</Text>
                         </View>
                         <View style={styles.metaCol}>
                             <Text style={styles.label}>Platforma</Text>
