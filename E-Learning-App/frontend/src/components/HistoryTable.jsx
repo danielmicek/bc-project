@@ -39,7 +39,7 @@ export default function HistoryTable({tests}) {
         <Paper
             id="HISTORY_TABLE"
             className="flex h-[420px] w-full flex-col overflow-hidden rounded-[10px]"
-            sx={{ position: 'relative', borderRadius: '10px' }}
+            sx={{ position: 'relative', borderRadius: '10px', boxShadow: '5px 10px 30px rgba(255,255,255,0.5)' }}
         >
             <h1 className="py-3 pl-5 text-4xl font-bold tracking-wide opacity-67">História testov</h1>
             <div className="min-h-0 flex-1">

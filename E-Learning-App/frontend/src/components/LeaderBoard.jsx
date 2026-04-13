@@ -13,7 +13,7 @@ export default function LeaderBoard({title, friends, user, userScore}) {
 
     return (
         <div id="LEADERBOARD" className="relative flex h-[280px] w-full flex-col overflow-hidden rounded-[10px]
-                                         bg-base-100 shadow-md lg:h-[420px] lg:w-[320px] md:flex-none">
+                                         bg-base-100 lg:h-[420px] lg:w-[320px] md:flex-none shadow-[5px_10px_30px_rgba(255,255,255,0.5)]">
             <h1 className="p-4 pb-2 text-4xl font-bold tracking-wide opacity-60">{title}</h1>
             <Divider className="bg-gray-300"/>
 
