@@ -182,7 +182,7 @@ export default function Question({activeIndex, questionIndex, question, setQuest
             </div>
         )}
 
-        <ul id = "ANSWERS" className="relative flex flex-col gap-[20px] justify-self-center self-center w-[550px] h-fit text-white max-[750px]:w-[60vw] mt-3">
+        <ul id = "ANSWERS" className="relative flex flex-col gap-[20px] justify-self-center self-center md:w-[550px] h-fit text-white w-[70vw] mt-3">
             {question.answers.map((answer, i) => (
                     <li key = {i} className = "ans a"
                         style = {styleSetter(selectedArray, i, READ_ONLY, answer)}

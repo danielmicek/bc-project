@@ -164,202 +164,203 @@ export default function SignedInProfilePage() {
         sr.reveal(".STAT_CARD", {reset: true});
     }, [userTests]);
 
-    return (<>
-        {/*DELETE PROFILE MODAL*/}
-        <ModalComponent title={"Naozaj chceš vymazať svoj profil?"}
-                        mainText={"Profil bude nenávratne vymazaný"}
-                        isOpen={isOpenDeleteProfileModal}
-                        onClose={onCloseDeleteProfileModal}
-                        confirmButtonText = {"Áno"}
-                        declineButtonText = {"Nie"}
-                        confirmButtonclickHandler={async () => {
-                            try {
-                                const response = await DELETE_deleteUserProfile(user.id, getToken);
-                                toast.success(response);
-                                await signOut({ redirectUrl: "/profile" });
-                            } catch (error) {
-                                toast.error(error.message);
-                            }
-                        }}
-        />
-        <div id="BLACK_BACKGROUND" className="relative flex w-full flex-col min-h-screen justify-center shadow-xl bg-[#050505]">
-            {userTests === null ? <Loader/> :
-                <div className="container pb-40 h-full w-full flex flex-col items-center mt-20">
-                    <SpotlightCard className="custom-spotlight-card relative shadow-[5px_5px_17px_4px_rgba(149,_157,_165,_0.3)]
-                        w-[90%] h-fit rounded-lg bg-linear-to-br from-[#3B3B3B] to-[#1f1f1f]">
-                        <div id="MAIN_CONTAINER_WITH_PROFILE_PIC"
-                             className="relative shadow-[5px_10px_30px_rgba(255,255,255,0.5)]
-                                w-full h-full flex flex-col min-[900px]:flex-row items-center max-[900px]:justify-center max-[900px]:pt-5
-                                max-[480px]:px-3 min-[900px]:pl-20 rounded-lg">
+    return (
+        <>
+            <ModalComponent
+                title={"Naozaj chceš vymazať svoj profil?"}
+                mainText={"Profil bude nenávratne vymazaný"}
+                isOpen={isOpenDeleteProfileModal}
+                onClose={onCloseDeleteProfileModal}
+                confirmButtonText={"Áno"}
+                declineButtonText={"Nie"}
+                confirmButtonclickHandler={async () => {
+                    try {
+                        const response = await DELETE_deleteUserProfile(user.id, getToken);
+                        toast.success(response);
+                        await signOut({ redirectUrl: "/profile" });
+                    } catch (error) {
+                        toast.error(error.message);
+                    }
+                }}
+            />
+
+            <div id="BLACK_BACKGROUND" className="relative flex w-full flex-col min-h-screen justify-center shadow-xl bg-[#050505]">
+                {userTests === null ? <Loader/> :
+                    <div className="container pb-40 h-full w-full flex flex-col items-center mt-20">
+                        <SpotlightCard className="custom-spotlight-card relative shadow-[5px_5px_17px_4px_rgba(149,_157,_165,_0.3)] w-[90%] h-fit rounded-lg bg-linear-to-br from-[#3B3B3B] to-[#1f1f1f]">
+                            <div
+                                id="MAIN_CONTAINER_WITH_PROFILE_PIC"
+                                className="relative shadow-[5px_10px_30px_rgba(255,255,255,0.5)] w-full h-full flex flex-col min-[900px]:flex-row items-center max-[900px]:justify-center max-[900px]:pt-5 max-[480px]:px-3 min-[900px]:pl-20 rounded-lg"
+                            >
                                 <SignedIn>
                                     <UserAvatar/>
                                 </SignedIn>
-                                <div id="GRID_CONTAINER_LOGGED_PROFILE_PAGE"
-                                     className="flex flex-col relative min-[900px]:ml-20 
-                                                my-12.5 min-[900px]:border-l-2 min-[900px]:border-l-[#545454] max-[1024px]:items-center
-                                                max-[900px]:border-t-2 max-[900px]:border-t-[#545454] max-[900px]:pt-20 lg:pl-10">
-                                    <div id="USERNAME"
-                                         className="sm:text-4xl text-3xl font-bold mb-3.75 text-shadow-md max-[900px]:text-center
-                                     text-white">{user.username}
+
+                                <div
+                                    id="GRID_CONTAINER_LOGGED_PROFILE_PAGE"
+                                    className="flex flex-col relative min-[900px]:ml-20 my-12.5 min-[900px]:border-l-2 min-[900px]:border-l-[#545454] max-[1024px]:items-center max-[900px]:border-t-2 max-[900px]:border-t-[#545454] max-[900px]:pt-20 lg:pl-10"
+                                >
+                                    <div id="USERNAME" className="sm:text-4xl text-3xl font-bold mb-3.75 text-shadow-md max-[900px]:text-center text-white">
+                                        {user.username}
                                     </div>
-                                    <div id="EMAIL"
-                                         className="relative sm:text-xl text-lg text-[#BFBBBB] max-[900px]:text-center">
+                                    <div id="EMAIL" className="relative sm:text-xl text-lg text-[#BFBBBB] max-[900px]:text-center">
                                         {user.primaryEmailAddress.emailAddress}
                                     </div>
-                                    <div id="MEMBER_SICNE"
-                                         className="relative sm:text-lg text-mf text-[#BFBBBB] max-[900px]:text-center">
+                                    <div id="MEMBER_SICNE" className="relative sm:text-lg text-mf text-[#BFBBBB] max-[900px]:text-center">
                                         Profil vytvorený: {new Date(user.createdAt).toLocaleDateString()}
                                     </div>
 
-                                    <Button className="bg-[#3B3B3B] mt-3 text-[#BFBBBB] w-fit"
-                                            onPress={() => onOpenDeleteProfileModal()}>
+                                    <Button className="bg-[#3B3B3B] mt-3 text-[#BFBBBB] w-fit" onPress={() => onOpenDeleteProfileModal()}>
                                         Vymazať profil
                                     </Button>
 
-                                    <div id="SQUARES"
-                                         className="flex items-center flex-wrap min-[700px]:items-start justify-center mt-15 gap-5
-                                     max-[600px]:px-5">
+                                    <div id="SQUARES" className="flex items-center flex-wrap min-[700px]:items-start justify-center mt-15 gap-5 max-[600px]:px-5">
                                         <StatCard text="Priatelia" imgPath="/friends.png" value={userFriendList.length}/>
                                         <StatCard text="Testy" imgPath="/test.png" value={userTests.tests.length}/>
                                         <StatCard text="Celkové body" imgPath="/score.png" value={userScore}/>
                                     </div>
                                 </div>
+                            </div>
+                        </SpotlightCard>
 
+                        <div id="SEND_FR_AND_COPY_PROFILE_LINK_CONTAINER" className="flex min-[800px]:flex-row flex-col gap-3 mt-[25px] items-center w-[90%]">
+                            <div className="flex relativ min-[1100px]:w-[50%] w-full">
+                                <ClickToCopy username={user.username}/>
+                            </div>
 
+                            <form
+                                className="flex h-[55px] min-[1100px]:w-[50%] w-full gap-3"
+                                onSubmit={(event) => {
+                                    event.preventDefault();
+                                    void sendFriendRequest(user.username, user.id, inputRef.current.value, getToken);
+                                    inputRef.current.value = "";
+                                }}
+                            >
+                                <input
+                                    className="col-span-6 flex w-full rounded-lg border border-gray-300 bg-gray-50 px-2.5 py-4 text-sm text-gray-500 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                                    ref={inputRef}
+                                    type="text"
+                                    placeholder="Zadaj username alebo URL profilu"
+                                    pattern="^([a-zA-Z0-9\\-_\\s]{4,15}|https?:\\/\\/.+)$"
+                                    onInvalid={(event) => {
+                                        event.preventDefault();
+                                        toast.error("Musí byť username alebo URL")
+                                    }}
+                                    required
+                                />
+                                <Button type="submit" variant="light" className="bg-(--main-color-orange) font-bold h-[55px] px-6">
+                                    Poslať žiadosť
+                                </Button>
+                            </form>
                         </div>
-                </SpotlightCard>
-                <div id="SEND_FR_AND_COPY_PROFILE_LINK_CONTAINER"
-                     className="flex min-[800px]:flex-row flex-col gap-3 mt-[25px] items-center w-[90%]">
-                    <div className="flex relativ min-[1100px]:w-[50%] w-full">
-                        <ClickToCopy username={user.username}/>
-                    </div>
 
-                    <form className="flex h-[55px] min-[1100px]:w-[50%] w-full gap-3"
-                          onSubmit={(event) => {
-                              event.preventDefault(); // prevent page reload
-                              void sendFriendRequest(user.username, user.id, inputRef.current.value, getToken);
-                              inputRef.current.value = "";
-                          }}
-                    >
-                        <input className="col-span-6 flex w-full rounded-lg border border-gray-300 bg-gray-50 px-2.5 py-4
-                            text-sm text-gray-500 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600
-                            dark:bg-gray-700 dark:text-gray-400 dark:placeholder:text-gray-400 dark:focus:border-blue-500
-                            dark:focus:ring-blue-500"
-                            ref={inputRef}
-                            type="text"
-                            placeholder="Zadaj username alebo URL profilu"
-                            pattern="^([a-zA-Z0-9\-_\s]{4,15}|https?:\/\/.+)$" // regex for either being string of length 4-15 or url address which is validated in sendFriendRequest
-                            onInvalid={(event) => {
-                                event.preventDefault();
-                                toast.error("Musí byť username alebo URL")
-                            }} // show an error message when input is invalid
-                            required  // when present, it specifies that the input field must be filled out before submitting the form
-                        />
-                        <Button type="submit" variant="light"
-                                className="bg-(--main-color-orange) font-bold h-[55px] px-6">
-                            Poslať žiadosť
-                        </Button>
-                    </form>
-                </div>
+                        {certificateStatus.enabled ?
+                            <ExportCertificateContainer
+                                text={"Úspešne si absolvoval najvyššiu úroveň testu - Gold. Teraz si môžeš exportovať certifikát"}
+                                certificateStatus={certificateStatus}
+                            />
+                            :
+                            <ExportCertificateContainer
+                                text={"Na získanie certifikátu je potrebné úšpešné absolvovanie testu Gold (získanie medaile)"}
+                                certificateStatus={certificateStatus}
+                            />
+                        }
 
-                    {certificateStatus.enabled ?
-                        <ExportCertificateContainer text={"Úspešne si absolvoval najvyššiu úroveň testu - Gold. Teraz si môžeš exportovať certifikát"}
-                                                    certificateStatus = {certificateStatus}
-                        />
-                    :
-                        <ExportCertificateContainer text={"Na získanie certifikátu je potrebné úšpešné absolvovanie testu Gold (získanie medaile)"}
-                                                    certificateStatus = {certificateStatus}
-                        />
-                    }
-
-                <div className="flex min-[900px]:flex-row flex-col items-center h-fit w-[90%] mt-30 relative
-                    lg:gap-30 gap-10 pb-18 ">
-                    <SpotlightCard className="custom-spotlight-card flex relative flex-col h-[400px] max-[900px]:h-[300px]
-                                    min-[900px]:w-[50%] w-full rounded-lg border-1 border-white shadow-[5px_10px_30px_rgba(255,255,255,0.5)]">
-                        <FriendList type="friendList"
+                        <div className="flex min-[900px]:flex-row flex-col items-center h-fit w-[90%] mt-30 relative lg:gap-30 gap-10 pb-18 ">
+                            <SpotlightCard className="custom-spotlight-card flex relative flex-col h-[400px] max-[900px]:h-[300px] min-[900px]:w-[50%] w-full rounded-lg border-1 border-white shadow-[5px_10px_30px_rgba(255,255,255,0.5)]">
+                                <FriendList
+                                    type="friendList"
                                     list={userFriendList}
                                     setRequestList={setFriendRequestList}
                                     setFriendsList={setUserFriendList}
                                     userUsername={user.username}
                                     userId={user.id}
-                                    userEmail = {user.emailAddresses[0].emailAddress}
+                                    userEmail={user.emailAddresses[0].emailAddress}
                                     isLoading={isLoading}
-                        />
-                    </SpotlightCard>
+                                />
+                            </SpotlightCard>
 
-                    <SpotlightCard className="custom-spotlight-card flex relative flex-col h-[400px] max-[900px]:h-[300px]
-                                    min-[900px]:w-[50%] w-full rounded-lg border-1 border-white shadow-[5px_10px_30px_rgba(255,255,255,0.5)]">
-                        <FriendList type="friendRequestList"
+                            <SpotlightCard className="custom-spotlight-card flex relative flex-col h-[400px] max-[900px]:h-[300px] min-[900px]:w-[50%] w-full rounded-lg border-1 border-white shadow-[5px_10px_30px_rgba(255,255,255,0.5)]">
+                                <FriendList
+                                    type="friendRequestList"
                                     list={friendRequestsList}
                                     setRequestList={setFriendRequestList}
                                     setFriendsList={setUserFriendList}
                                     userUsername={user.username}
                                     userId={user.id}
-                                    userEmail = {user.emailAddresses[0].emailAddress}
+                                    userEmail={user.emailAddresses[0].emailAddress}
                                     isLoading={isLoading}
-                        />
-                    </SpotlightCard>
+                                />
+                            </SpotlightCard>
 
+                            <Button
+                                className="bg-(--main-color-orange) font-bold absolute bottom-0 right-0"
+                                onPress={async () => {
+                                    try{
+                                        setIsLoading(true)
+                                        await Promise.all([
+                                            friendRequestListLoader(user.id, setFriendRequestList, getToken),
+                                            friendListLoader(user.id, setUserFriendList, getToken)
+                                        ]);
+                                    }
+                                    catch(error){}
+                                    finally {
+                                        setIsLoading(false);
+                                        toast.success('Aktualizované');
+                                    }
+                                }}
+                            >
+                                Aktualizovať ↻
+                            </Button>
+                        </div>
 
-                    <Button className="bg-(--main-color-orange) font-bold absolute bottom-0 right-0"
-                            onPress={async () => {
-                                try{
-                                    setIsLoading(true)
-                                    await Promise.all([
-                                        friendRequestListLoader(user.id, setFriendRequestList, getToken),
-                                        friendListLoader(user.id, setUserFriendList, getToken)
-                                    ]);
-                                }
-                                catch(error){}
-                                finally {
-                                    setIsLoading(false);
-                                    toast.success('Aktualizované');
-                                }
-                            }}>Aktualizovať ⟳</Button>
-                </div>
+                        <div
+                            id="STATS_CONTAINER"
+                            className="flex min-[900px]:flex-row flex-col items-center justify-center h-fit w-[90%] mt-30 lg:pt-0 pt-15 mb-25 relative min-[900px]:gap-10 gap-5"
+                        >
+                            <h1 id="STATS_TITLE" className="absolute top-0 left-0 text-white font-bold text-5xl">Štatistiky</h1>
 
+                            <Stats userTests={userTests} userScore={userScore}/>
+                            <Divider orientation="vertical" className="bg-gray-500 h-130 mt-10 hidden min-[900px]:block"/>
 
-                <div id="STATS_CONTAINER"
-                     className="flex min-[900px]:flex-row flex-col items-center justify-center h-fit w-[90%] mt-30
-                     lg:pt-0 pt-15 mb-25 relative min-[900px]:gap-10 gap-5">
-                    <h1 id = "STATS_TITLE" className="absolute top-0 left-0 text-white font-bold text-5xl">Štatistiky</h1>
+                            <div className="flex flex-col gap-10 items-center mt-5 min-[900px]:w-[50%] w-[100%] lg:mt-0 mt-15 ">
+                                <PieChartComponent
+                                    title={"Graf počtu testov"}
+                                    easyTests={easyTests}
+                                    mediumTests={mediumTests}
+                                    hardTests={hardTests}
+                                />
 
-                    <Stats userTests={userTests}
-                           userScore={userScore}
-                    />
-                    <Divider orientation="vertical" className="bg-gray-500 h-130 mt-10 hidden min-[900px]:block"/>
+                                <Divider className="bg-gray-500"/>
 
-                    <div className="flex flex-col gap-10 items-center mt-5 min-[900px]:w-[50%] w-[100%] lg:mt-0 mt-15 ">
+                                <BarChartComponent
+                                    title={"Graf úspešnosti testov"}
+                                    easyTests={easyTests}
+                                    mediumTests={mediumTests}
+                                    hardTests={hardTests}
+                                />
+                            </div>
+                        </div>
 
-                        <PieChartComponent title={"Graf počtu testov"}
-                                        easyTests={easyTests}
-                                        mediumTests={mediumTests}
-                                        hardTests={hardTests}
-                        />
+                        <Divider className="bg-gray-500 w-[50%] mb-25"/>
 
-                        <Divider className="bg-gray-500"/>
+                        <BasicSparkLineComponent title={"Graf progresu v čase"} tests={userTests.tests}/>
 
-                        <BarChartComponent title={"Graf úspešnosti testov"}
-                                           easyTests={easyTests}
-                                           mediumTests={mediumTests}
-                                           hardTests={hardTests}
-                        />
+                        <div className="mt-50 flex w-[90%] flex-col items-stretch gap-15 lg:flex-row">
+                            <div className="w-full md:min-w-0 md:flex-1">
+                                <HistoryTable tests={userTests.tests}/>
+                            </div>
+                            <Divider className="bg-gray-500 flex my-8 h-90 lg:block hidden" orientation="vertical"/>
+                            <LeaderBoard
+                                title={"Rebríček"}
+                                friends={userFriendList}
+                                user={user}
+                                userScore={userScore}
+                            />
+                        </div>
                     </div>
-                </div>
-
-                <Divider className="bg-gray-500 w-[50%] mb-25"/>
-
-                <BasicSparkLineComponent title={"Graf progresu v čase"} tests={userTests.tests}/>
-
-                <HistoryTable tests={userTests.tests}/>
-
-                <LeaderBoard title={"Rebríček priateľov"}
-                             friends={userFriendList}
-                             user={user}
-                             userScore={userScore}
-                />
-            </div>}
-        </div>
-
-    </>)
+                }
+            </div>
+        </>
+    );
 }

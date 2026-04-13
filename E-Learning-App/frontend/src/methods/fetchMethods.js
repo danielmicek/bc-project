@@ -235,7 +235,7 @@ export async function GET_createdTest(testDifficulty, testId, getToken, onOpenAi
     try {
         return await apiClient.get(`/api/test/createTest/${testDifficulty}?testId=${encodeURIComponent(testId)}`);
     } catch (error) {
-        //if (error.status === 429 && onOpenAiLimitModal) onOpenAiLimitModal();
+        console.log(error.status);
         throw error;
     }
 }

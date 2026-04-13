@@ -290,6 +290,10 @@ router.get("/createTest/:testDifficulty", ClerkExpressRequireAuth(), async (requ
     }
     catch(err){
         console.log("Error during crating the test");
+        if(err.status === 503){
+            response.status(503).send("Chyba na strane Gemini API");
+            return
+        }
         response.status(500).send("Chyba na strane servera");
     }
 })
@@ -408,9 +412,9 @@ router.get("/resetAiLimit", async (req, res) => {
 });
 
 // ------------------GET REQUEST - KEEP BACKEND ALIVE BECAUSE OF SERVER SETTINGS----------------------------------------
-// the server turns off the backend after 15 minutres of inactivity, os we need to aritificially keep it alive
+// the server turns off the backend after 15 minutes of inactivity, os we need to aritificially keep it alive
 router.get("/keepBackendAlive", (request, response)=> {
-    response.status(204).send("Backend aktívny");
+    response.status(204).send("OK");
 });
 
 export default router;

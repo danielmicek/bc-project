@@ -21,13 +21,14 @@ export default function Test() {
     const [testLengthMinutes, setTestLengthMinutes] = useState(null);
     const [testSessionToken, setTestSessionToken] = useState(null);
     const [timerGoing, setTimerGoing] = useState( false);
-    const [blockedByAiLimit, setBlockedByAiLimit] = useState( false);
+    const [blockedByAi, setBlockedByAi] = useState( false);
     const [testStatus, setTestStatus] = useState("ongoing"); // "ongoing" / "paused" / "submitted" / "ended"
     const {isOpen: isOpenEndTestModal, onOpen: onOpenEndTestModal, onClose: onCloseEndTestModal} = useDisclosure();
     const {isOpen: isOpenSubmitTestModal, onOpen: onOpenSubmitTestModal, onClose: onCloseSubmitTestModal} = useDisclosure();
     const {isOpen: isOpenTestResultsModal, onOpen: onOpenTestResultsModal, onClose: onCloseTestResultsModal} = useDisclosure();
     const {isOpen: isOpenLeavePageModal, onOpen: onOpenLeavePageModal, onClose: onCloseLeavePageModal} = useDisclosure();
     const {isOpen: isOpenAiLimitModal, onOpen: onOpenAiLimitModal, onClose: onCloseAiLimitModal} = useDisclosure();
+    const {isOpen: isOpenAiHighDemandModal, onOpen: onOpenAiHighDemandModal, onClose: onCloseAiHighDemandModal} = useDisclosure();
     const TEST_DIFFICULTY = searchParams.get("testDifficulty")
     const [TEST_ID] = useState(() => searchParams.get("testID"));
     const READ_ONLY = searchParams.get("readOnly") === "true"
@@ -92,7 +93,11 @@ export default function Test() {
             }
             catch (error) {
                 setIsLoading(false)
-                setBlockedByAiLimit(true)
+                setBlockedByAi(true)
+                if(error.status === 503){
+                    onOpenAiHighDemandModal()
+                    return
+                }
                 onOpenAiLimitModal()
             }
         }
@@ -140,6 +145,23 @@ export default function Test() {
                         }}
                         declineButtonclickHandler = {() => {
                             onCloseAiLimitModal()
+                            navigate("/courseInfoPage");
+                        }}
+        />
+        {/*AI HIGH DEMANT*/}
+        <ModalComponent title={"Vysoký dopyt na AI model"}
+                        mainText={"Model AI zaznamenal vysoký dopyt na requesty a potrebuje si oddýchnuť."}
+                        secondaryText1={"Oddýchni si aj ty alebo medzičasom študuj materiály!"}
+                        isOpen={isOpenAiHighDemandModal}
+                        onClose={onCloseAiHighDemandModal}
+                        confirmButtonText = {"Študovať materiály"}
+                        declineButtonText = {"Oddychovať v menu"}
+                        confirmButtonclickHandler = {() => {
+                            onCloseAiHighDemandModal()
+                            navigate("/learning");
+                        }}
+                        declineButtonclickHandler = {() => {
+                            onCloseAiHighDemandModal()
                             navigate("/courseInfoPage");
                         }}
         />
@@ -211,10 +233,10 @@ export default function Test() {
 
         <div id = "BLACK_BACKGROUND" className="flex flex-col min-h-screen justify-center shadow-xl relative"
              style={{backgroundColor: "#050505"}}>
-            {blockedByAiLimit ? null : (isLoading || !userIsLoaded || !questions ? <Loader/> :
+            {blockedByAi ? null : (isLoading || !userIsLoaded || !questions ? <Loader/> :
                 testStatus === "ongoing" && !READ_ONLY ?
                     <> {/*TEST ONGOING*/}
-                        <div className = "container pb-20 h-full flex flex-col items-center">
+                        <div className = " pb-20 h-full flex flex-col items-center">
                             <Timer minutes = {testLengthMinutes ?? 0}
                                    timerGoing={timerGoing}
                                    setTimerGoing = {setTimerGoing}
