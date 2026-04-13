@@ -29,10 +29,9 @@ export default function Chapter() {
             <Link to = "/learning">
                 <Button variant="light" className="bg-(--main-color-orange) font-bold absolute left-3 top-3">Späť na rozpis kapitol</Button>
             </Link>
-            <div className="container pb-20 h-full flex flex-col items-center mt-20 relative">
+            <div className="container mb-20 h-full flex flex-col items-center mt-20 relative">
                 <iframe src={`https://brash-sweatpants-9cd.notion.site/ebd//${notionPageId}`}
-                        width="100%" height="600" frameBorder="0"
-                        allowFullScreen/>
+                        width="100%" height="100%" frameBorder="0" allowFullScreen/>
             </div>
         </div>
     )
