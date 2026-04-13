@@ -289,6 +289,7 @@ router.get("/createTest/:testDifficulty", ClerkExpressRequireAuth(), async (requ
         });
     }
     catch(err){
+        await decreaseAiLimit()
         console.log("Error during crating the test");
         if(err.status === 503){
             response.status(503).send("Chyba na strane Gemini API");
