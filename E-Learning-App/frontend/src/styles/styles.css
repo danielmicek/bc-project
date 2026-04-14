@@ -20,6 +20,10 @@
     }
 }
 
+@utility no-scrollbar {
+    @apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
+}
+
 .container{
     @apply mx-auto;
 }

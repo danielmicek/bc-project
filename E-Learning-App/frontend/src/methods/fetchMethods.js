@@ -223,6 +223,17 @@ export async function GET_getCertificateByUsername(username, userId, getToken){
     }
 }
 
+export async function DELETE_deleteCertificateByUsername(username, userId, getToken){
+    const apiClient = getApiClient(getToken);
+
+    try{
+        return await apiClient.delete(`/api/test/deleteCertificateByUsername/${username}/${userId}`);
+    } catch(error){
+        throw error;
+        //return JSON.parse(error.message)
+    }
+}
+
 export async function POST_postCertificate(certId, user_name, userId, timestamp, percentage, getToken) {
     const apiClient = getApiClient(getToken);
 

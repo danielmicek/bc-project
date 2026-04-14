@@ -7,7 +7,7 @@ export default function DetailsModal({
                                          onClose}) {
 
     return (
-        <Modal className="max-w-3xl w-[95%] max-h-[500px] overflow-scroll" backdrop={"blur"} isOpen={isOpen} onClose={onClose}
+        <Modal className="max-w-3xl w-[95%] max-h-[500px] overflow-y-scroll no-scrollbar" backdrop={"blur"} isOpen={isOpen} onClose={onClose}
                classNames={{
                    wrapper: "z-[999999]",
                    backdrop: "z-[999998]",

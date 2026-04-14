@@ -124,7 +124,7 @@ router.get("/getCertificateById/:certId/:userId", ClerkExpressRequireAuth(), (re
 // ------------------GET REQUEST - GET CERTIFICATE BY USERNAME----------------------------------------------------------
 router.get("/getCertificateByUsername/:userName/:userId", ClerkExpressRequireAuth(), (request, response)=> {
     const userName = request.params.userName;
-    let userId = request.params.userId;
+    const userId = request.params.userId;
 
     const { userId: loggedInUserId } = request.auth;
 
@@ -178,6 +178,34 @@ router.post("/postCertificate", ClerkExpressRequireAuth(), async (request, respo
         .then((result) => {
             console.log(result);
             response.status(200).send({message: "Certifikát úspešne pridaný"});
+        })
+        .catch((error) => {
+            console.log(error);
+            response.status(500).send("Chyba na strane servera")
+        })
+})
+
+// -------------------------POST REQUEST - DELETE CERTIFICATE FROM DB---------------------------------------------------
+// this endpoint is used only in case there exist a test with higher score, this certificate is then generated
+router.delete("/deleteCertificateByUsername/:username/:userId", ClerkExpressRequireAuth(), async (request, response) => {
+    const userName = request.params.username;
+    const userId = request.params.userId;
+
+    const { userId: loggedInUserId } = request.auth;
+
+    // check whether the user who is deleting this certificate is the one logged in
+    // preventing such a situation when someone would want to delete certificate of other user
+    if (loggedInUserId !== userId) {
+        return response.status(403).send("Zakázaná akcia! Túto akciu môže vykonať iba vlastník profilu.");
+    }
+
+    const deleteQuery = "DELETE FROM \"Certificates\" WHERE user_name = $1";
+    pool.query(deleteQuery, [userName])
+        .then((result) => {
+            console.log(result);
+            if (result.rows.length === 0) response.status(200).send({message: "Certifikát úspešne odstránený"});
+            else response.status(404).send({message: "Certifikát nenájdený"});
+            
         })
         .catch((error) => {
             console.log(error);

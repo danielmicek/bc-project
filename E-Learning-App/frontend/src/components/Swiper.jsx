@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -17,6 +17,16 @@ export default function SwiperComponent({questions, setQuestions = ()=>{}}) {
 
     const refSwiper = useRef(null);
     const [swiperNavigationVisible, setSwiperNavigationVisible] = React.useState(window.innerWidth > 640);
+
+    // for dynamic resizing of question component in case when selected answer changes from 2 to 3 rows
+    const updateSwiperLayout = useCallback(() => {
+        if (!refSwiper.current) return;
+
+        requestAnimationFrame(() => {
+            refSwiper.current.updateAutoHeight();
+            refSwiper.current.update();
+        });
+    }, []);
 
     useEffect(() => {
         function handleResize() {
@@ -45,6 +55,7 @@ export default function SwiperComponent({questions, setQuestions = ()=>{}}) {
                         <Question questionIndex = {index}
                                   question = {question}
                                   setQuestions = {setQuestions}
+                                  onLayoutChange = {updateSwiperLayout}
                         />
                     </SwiperSlide>
 

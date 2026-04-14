@@ -2,9 +2,14 @@ import React, {useState} from "react";
 import {Button} from "@heroui/react";
 import {PDFDownloadLink} from "@react-pdf/renderer";
 import Certificate from "./Certificate.jsx";
-import {GET_getCertificateByUsername, POST_postCertificate} from "../methods/fetchMethods.js";
+import {
+    DELETE_deleteCertificateByUsername,
+    GET_getCertificateByUsername,
+    POST_postCertificate
+} from "../methods/fetchMethods.js";
 import {getUniqueTestID} from "../methods/methodsClass.js";
 import {useAuth, useUser} from "@clerk/clerk-react";
+import {toast} from "react-hot-toast";
 
 export default function ExportCertificateContainer({
     text,
@@ -17,28 +22,45 @@ export default function ExportCertificateContainer({
 
     async function clickHandler() {
         setIsPreparing(true);
+        let CERTIFICATE_DELETED_FLAG = false;
 
-        const foundCertificate = await GET_getCertificateByUsername(user.username, user.id, getToken);
+        try{
+            const foundCertificate = await GET_getCertificateByUsername(user.username, user.id, getToken);
+            console.log(foundCertificate.percentage,  certificateStatus.percentage);
 
-        if (foundCertificate.certificateFound) {
-            setCertificate({
-                certificateId: foundCertificate.certificateId,
-                owner: foundCertificate.certificateOwner,
-                timestamp: foundCertificate.timestamp,
-                percentage: foundCertificate.percentage
-            });
-        } else {
-            const certId = getUniqueTestID("ELC");
-            const timestamp = new Date().toISOString().slice(0, 10);
-            const newCertificate = {
-                certificateId: certId,
-                owner: user.username,
-                timestamp,
-                percentage: certificateStatus.percentage
-            };
+            // delete certificate with a lower percentage than is the highest test percentage of the user
+            if(foundCertificate.certificateFound && (foundCertificate.percentage < certificateStatus.percentage) ){
+                console.log("delete certificate");
+                try{
+                    await DELETE_deleteCertificateByUsername(user.username, user.id, getToken);
+                    CERTIFICATE_DELETED_FLAG = true;
+                } catch (error){
+                    toast.error(JSON.parse(error.message))
+                }
+            }
+            console.log(foundCertificate.certificateFound, CERTIFICATE_DELETED_FLAG);
+            if (foundCertificate.certificateFound && !CERTIFICATE_DELETED_FLAG) {
+                setCertificate({
+                    certificateId: foundCertificate.certificateId,
+                    owner: foundCertificate.certificateOwner,
+                    timestamp: foundCertificate.timestamp,
+                    percentage: foundCertificate.percentage
+                });
+            } else {
+                const certId = getUniqueTestID("ELC");
+                const timestamp = new Date().toISOString().slice(0, 10);
+                const newCertificate = {
+                    certificateId: certId,
+                    owner: user.username,
+                    timestamp,
+                    percentage: certificateStatus.percentage
+                };
 
-            setCertificate(newCertificate);
-            await POST_postCertificate(certId, user.username, user.id, timestamp, certificateStatus.percentage, getToken);
+                setCertificate(newCertificate);
+                await POST_postCertificate(certId, user.username, user.id, timestamp, certificateStatus.percentage, getToken);
+            }
+        } catch(error) {
+            toast.error(JSON.parse(error.message))
         }
 
         setIsPreparing(false);

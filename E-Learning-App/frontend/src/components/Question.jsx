@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {useAuth} from "@clerk/clerk-react";
 import {useSearchParams} from "react-router-dom";
 import {GET_keepBackendAlive} from "@/methods/fetchMethods.js";
@@ -116,7 +116,7 @@ function saveQuestionStateIntoTest(selectedArray, freeAnswerText, setQuestions, 
 }
 
 // questionIndex is the index in test structure
-export default function Question({activeIndex, questionIndex, question, setQuestions}) {
+export default function Question({activeIndex, questionIndex, question, setQuestions, onLayoutChange = () => {}}) {
     if(!question || !question.answers) return null;
 
     const [searchParams] = useSearchParams();
@@ -127,6 +127,7 @@ export default function Question({activeIndex, questionIndex, question, setQuest
     const isFreeAnswerQuestion = question.free_answer === true;
     const indexToSave = questionIndex ?? activeIndex;
     const { getToken } = useAuth()
+    const questionRef = useRef(null);
 
     const[selectedArray, setSelectedArray] = useState(() =>
         question.answers.map((answer) => Boolean(answer.selected))
@@ -149,7 +150,24 @@ export default function Question({activeIndex, questionIndex, question, setQuest
         saveQuestionStateIntoTest(selectedArray, freeAnswerText, setQuestions, indexToSave, isFreeAnswerQuestion)
     }, [selectedArray, freeAnswerText]);
 
-    return <div className="flex flex-col justify-center items-center">
+    // these 2 useEffects -> for dynamic resizing of a question component in case when the selected answer changes from 2 to 3 rows
+    useEffect(() => {
+        onLayoutChange();
+    }, [selectedArray, freeAnswerText, onLayoutChange]);
+
+    useEffect(() => {
+        if (!questionRef.current) return;
+
+        const observer = new ResizeObserver(() => {
+            onLayoutChange();
+        });
+
+        observer.observe(questionRef.current);
+
+        return () => observer.disconnect();
+    }, [onLayoutChange]);
+
+    return <div ref={questionRef} className="flex flex-col justify-center items-center ">
         <div className="pb-8 self-center flex flex-col gap-0 overflow-hidden max-[750px]:w-[70vw] mb-5">
 
             <div id = "BODY" className="flex items-center justify-center text-center text-white font-bold text-xl w-full pb-3 ">{question.body}</div>

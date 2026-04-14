@@ -212,11 +212,11 @@ export function getAStreak(tests){
 // find if a gold medal exists
 // get the highest percentage of the test with a gold medal reward
 export function findGoldMedal(tests){
-    let highestPercentage = 0;
+    let highestPercentage = 0.0;
 
     for(const test of tests){
         if(test.difficulty === "hard" && test.medal === "Gold"){
-            if(test.percentage > highestPercentage) highestPercentage = test.percentage;
+            if(parseFloat(test.percentage) > highestPercentage) highestPercentage = parseFloat(test.percentage);
         }
     }
     return {enabled: highestPercentage !== 0, percentage: highestPercentage};

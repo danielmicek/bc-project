@@ -171,7 +171,7 @@ export function getMedal(grade, testDifficulty){
 export function getTestLengthMinutes(testDifficulty) {
     switch(testDifficulty){
         case "easy":
-            return 0.2;
+            return 20;
         case "medium":
             return 40;
         case "hard":
