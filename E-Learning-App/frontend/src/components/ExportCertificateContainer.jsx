@@ -26,11 +26,9 @@ export default function ExportCertificateContainer({
 
         try{
             const foundCertificate = await GET_getCertificateByUsername(user.username, user.id, getToken);
-            console.log(foundCertificate.percentage,  certificateStatus.percentage);
 
             // delete certificate with a lower percentage than is the highest test percentage of the user
             if(foundCertificate.certificateFound && (foundCertificate.percentage < certificateStatus.percentage) ){
-                console.log("delete certificate");
                 try{
                     await DELETE_deleteCertificateByUsername(user.username, user.id, getToken);
                     CERTIFICATE_DELETED_FLAG = true;
@@ -38,7 +36,6 @@ export default function ExportCertificateContainer({
                     toast.error(JSON.parse(error.message))
                 }
             }
-            console.log(foundCertificate.certificateFound, CERTIFICATE_DELETED_FLAG);
             if (foundCertificate.certificateFound && !CERTIFICATE_DELETED_FLAG) {
                 setCertificate({
                     certificateId: foundCertificate.certificateId,
