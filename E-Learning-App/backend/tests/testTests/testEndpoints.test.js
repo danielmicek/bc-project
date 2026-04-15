@@ -245,7 +245,9 @@ describe("testEndpoints", () => {
     it("GET /getCertificateById/:certId returns certificateFound=false when missing", async () => {
         hoisted.queryMock.mockResolvedValueOnce({ rows: [] });
 
-        const res = await request(app).get("/getCertificateById/cert-x");
+        const res = await request(app)
+            .get("/getCertificateById/cert-x/user-1")
+            .set("x-test-auth-user", "user-1");
 
         expect(res.status).toBe(404);
         expect(res.body).toEqual({ certificateFound: false });
@@ -255,7 +257,9 @@ describe("testEndpoints", () => {
     it("GET /getCertificateById/:certId returns certificate owner when found", async () => {
         hoisted.queryMock.mockResolvedValueOnce({ rows: [{ username: "john" }] });
 
-        const res = await request(app).get("/getCertificateById/cert-x");
+        const res = await request(app)
+            .get("/getCertificateById/cert-x/user-1")
+            .set("x-test-auth-user", "user-1");
 
         expect(res.status).toBe(200);
         expect(res.body).toEqual({ certificateFound: true, certificateOwner: "john" });
