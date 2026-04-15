@@ -2,15 +2,15 @@ import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from "
 import React, {useRef} from "react";
 import {toast} from "react-hot-toast";
 import {GET_getCertificateById} from "../methods/fetchMethods.js";
-import {useAuth} from "@clerk/clerk-react";
+import {useAuth, useUser} from "@clerk/clerk-react";
 
 export default function VerifyCertificateModal({title,
                                                isOpen,
-                                               onClose,
-                                               userId}) {
+                                               onClose}) {
 
     const inputRef = useRef(null);
     const { getToken } = useAuth();
+    const {user} = useUser();
 
     return (
         <>
@@ -24,7 +24,7 @@ export default function VerifyCertificateModal({title,
                                 <form className="flex h-[55px] px-1 gap-3"
                                       onSubmit={async (event) => {
                                           event.preventDefault(); // prevent page reload
-                                          const foundCertificate = await GET_getCertificateById(inputRef.current.value, userId, getToken)
+                                          const foundCertificate = await GET_getCertificateById(inputRef.current.value, user.id, getToken)
                                           if(foundCertificate.certificateFound) toast.success(
                                               "Platný certifikát používateľa " + foundCertificate.certificateOwner,
                                               {
