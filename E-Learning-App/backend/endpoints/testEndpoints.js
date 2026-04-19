@@ -255,6 +255,7 @@ router.get("/createTest/:testDifficulty", ClerkExpressRequireAuth(), async (requ
     let NUM_OF_HARD_QUESTIONS;
     let NUM_OF_MEDIUM_FREE_ANSWER_QUESTIONS;
     let NUM_OF_HARD_FREE_ANSWER_QUESTIONS;
+    let geminiRequestWasSent = false;
 
     try{
         easyQuestions = await getQuestionsBasedOnDifficulty(EASY, testDifficulty)
@@ -305,6 +306,7 @@ router.get("/createTest/:testDifficulty", ClerkExpressRequireAuth(), async (requ
             shuffleArray(allElementsExceptLast)
             question.answers = [...allElementsExceptLast, lastElement];   // the last choice - "neodpovedať" stays last after shuffle
         }
+        geminiRequestWasSent = true;
         const aiResponse =
             await getAiResponse(
                 "You will receive JSON. Edit it in-place.\n" +
@@ -315,12 +317,13 @@ router.get("/createTest/:testDifficulty", ClerkExpressRequireAuth(), async (requ
                 "- Keep EXACT same JSON structure: same keys, nesting, array lengths, and order.\n" +
                 "- Do NOT add/remove/rename keys. Do NOT add extra fields or text.\n" +
                 "- Do NOT change ids, numbers, names, units, code, punctuation that changes meaning or language (KEEP SLOVAK)\n" +
-                "- Leave the last answers element unchanged (answers[answers.length-1]).\n" +
+                "- The last answers element must be \"Neodpovedať\".\n" +
                 "INPUT:\n" + JSON.stringify(generatedTestQuestions)
             )
 
         if(!aiResponse){
             response.status(500).send({errorMessage: "Chyba na strane servera"});
+            await decreaseAiLimit()
             return
         }
 
@@ -340,10 +343,9 @@ router.get("/createTest/:testDifficulty", ClerkExpressRequireAuth(), async (requ
             console.log(err);
             response.status(500).send({errorMessage: "Chyba na strane servera"});
             return
+        } finally {
+            await decreaseAiLimit()
         }
-
-        // decrease ai requests limit
-        await decreaseAiLimit()
 
         const issuedAt = Date.now();
         const expiresAt = issuedAt + (testLengthMinutes * 60 * 1000);
@@ -363,7 +365,7 @@ router.get("/createTest/:testDifficulty", ClerkExpressRequireAuth(), async (requ
         });
     }
     catch(err){
-        await decreaseAiLimit()
+        if(geminiRequestWasSent) await decreaseAiLimit()
         console.log("Error during crating the test");
         if(err.status === 503){
             response.status(503).send("Chyba na strane Gemini API");

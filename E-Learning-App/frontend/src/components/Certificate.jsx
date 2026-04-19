@@ -144,6 +144,16 @@ const styles = StyleSheet.create({
 });
 
 export default function Certificate({ certificateId, userName, timestamp, percentage }) {
+
+    // formatting date to be like 13. 04. 2026
+    const formattedTimestamp = timestamp
+        ? new Intl.DateTimeFormat("sk-SK", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+        }).format(new Date(timestamp))
+        : "";
+
     return (
         <Document title="Eleonore Certificate" author="eleonore">
             <Page size="A4" style={styles.page}>
@@ -189,7 +199,7 @@ export default function Certificate({ certificateId, userName, timestamp, percen
                     <View style={styles.metaRow}>
                         <View style={styles.metaCol}>
                             <Text style={styles.label}>Dátum vystavenia</Text>
-                            <Text style={styles.metaValue}>{timestamp}</Text>
+                            <Text style={styles.metaValue}>{formattedTimestamp}</Text>
                         </View>
                         <View style={styles.metaCol}>
                             <Text style={styles.label}>Platforma</Text>
