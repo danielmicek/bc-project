@@ -1,7 +1,6 @@
 import {useEffect, useMemo, useRef, useState} from "react";
 import {useAuth} from "@clerk/clerk-react";
 import {useSearchParams} from "react-router-dom";
-import {GET_keepBackendAlive} from "@/methods/fetchMethods.js";
 
 
 function handleClick(selectedArray, setSelectedArray, index, difficulty, multiselect, dontAnswerIndex, isFreeAnswerQuestion, setFreeAnswerText) {
@@ -140,8 +139,6 @@ export default function Question({activeIndex, questionIndex, question, setQuest
     useEffect(() => {
         setSelectedArray(question.answers.map((answer) => Boolean(answer.selected)));
         setFreeAnswerText(question.free_answer_text ?? "");
-
-        GET_keepBackendAlive(getToken).then()
     }, [question.id]);
 
     // save answers into the test structure after each click on any answer

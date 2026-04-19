@@ -30,6 +30,7 @@ export default function Test() {
     const {isOpen: isOpenAiLimitModal, onOpen: onOpenAiLimitModal, onClose: onCloseAiLimitModal} = useDisclosure();
     const {isOpen: isOpenAiHighDemandModal, onOpen: onOpenAiHighDemandModal, onClose: onCloseAiHighDemandModal} = useDisclosure();
     const {isOpen: isOpenSubmitErrorModal, onOpen: onOpenSubmitErrorModal, onClose: onCloseSubmitErrorModal} = useDisclosure();
+    const {isOpen: isOpenErrorModal, onOpen: onOpenErrorModal, onClose: onCloseErrorModal} = useDisclosure();
     const TEST_DIFFICULTY = searchParams.get("testDifficulty")
     const [TEST_ID] = useState(() => searchParams.get("testID"));
     const READ_ONLY = searchParams.get("readOnly") === "true"
@@ -95,11 +96,10 @@ export default function Test() {
             catch (error) {
                 setIsLoading(false)
                 setBlockedByAi(true)
-                if(error.status === 503){
-                    onOpenAiHighDemandModal()
-                    return
-                }
-                onOpenAiLimitModal()
+                if(error.status === 503) onOpenAiHighDemandModal()
+                else if(error.status === 429) onOpenAiLimitModal()
+                else onOpenErrorModal()
+
             }
         }
         void loadQuestions()
@@ -165,7 +165,7 @@ export default function Test() {
         />
         {/*SUBMIT_TEST ERROR MODAL*/}
         <ModalComponent title={"Chyba pri vyhodnocovaní testu"}
-                        mainText={"e nám ľúto, no poočas vyhodnocovania testu nastala chyba."}
+                        mainText={"Je nám ľúto, no poočas vyhodnocovania testu nastala chyba."}
                         secondaryText1={"Naber sily a sku to znova pri ďalšom teste!"}
                         isOpen={isOpenSubmitErrorModal}
                         onClose={onCloseSubmitErrorModal}
@@ -176,6 +176,23 @@ export default function Test() {
                             goToPage("/learning", navigate)
                         }}
                         declineButtonclickHandler = {() => onCloseSubmitErrorModal()}
+        />
+        {/*CREATE_TEST ERROR MODAL*/}
+        <ModalComponent title={"Chyba pri generovaní testu"}
+                        mainText={"Použivateľ nie je prihlásený alebo boli zadané nesprávne údaje potrebné na generovanie testu"}
+                        secondaryText1={"Test nebolo možné vygenerovať!"}
+                        isOpen={isOpenErrorModal}
+                        onClose={onCloseErrorModal}
+                        confirmButtonText = {"Späť do menu"}
+                        declineButtonText = {"Študovať materiály"}
+                        confirmButtonclickHandler = {() => {
+                            onCloseErrorModal()
+                            navigate("/courseInfoPage")
+                        }}
+                        declineButtonclickHandler = {() => {
+                            onCloseErrorModal()
+                            navigate("/learning");
+                        }}
         />
         {/*LEAVE/REFRESH PAGE (BROWSER BACK/REFRESH -BUTTON) MODAL*/}
         <ModalComponent

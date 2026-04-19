@@ -490,7 +490,8 @@ router.get("/resetAiLimit", async (req, res) => {
 });
 
 // ------------------GET REQUEST - KEEP BACKEND ALIVE BECAUSE OF SERVER SETTINGS----------------------------------------
-// the server turns off the backend after 15 minutes of inactivity, os we need to aritificially keep it alive
+// the server turns off the backend after 15 minutes of inactivity, so we need to artificially keep it alive by calling
+// this endpoint every 10 minutes from cron-job.org
 router.get("/keepBackendAlive", (request, response)=> {
     response.status(204).send("OK");
 });

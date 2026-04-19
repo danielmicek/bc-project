@@ -11,6 +11,7 @@ export function CourseInfoPage(){
 
     // get aiLimit
     useEffect(() => {
+        if(!isSignedIn) return
         async function loadAiLimit() {
             const tmp = await GET_aiLimit(getToken);
             console.log(tmp); // todo delete this line

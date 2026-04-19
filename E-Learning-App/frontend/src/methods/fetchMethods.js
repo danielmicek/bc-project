@@ -175,12 +175,6 @@ export async function DELETE_deleteFriendRequest(userId, friendId, getToken){
 /*----------------------------------------------------------------------------------------------*/
 
 /*-------------TEST API CALLS----------------------------------------------------------------*/
-export async function GET_keepBackendAlive(getToken) {
-    const apiClient = getApiClient(getToken);
-
-    await apiClient.get("/api/test/keepBackendAlive");
-}
-
 export async function GET_getTestByTestId(testId, getToken, userId){
     const apiClient = getApiClient(getToken);
     return await apiClient.get(`/api/test/getTestByTestId/${testId}/${userId}`);
@@ -264,7 +258,6 @@ export async function GET_createdTest(testDifficulty, testId, getToken, onOpenAi
     try {
         return await apiClient.get(`/api/test/createTest/${testDifficulty}?testId=${encodeURIComponent(testId)}`);
     } catch (error) {
-        console.log(error.status);
         throw error;
     }
 }
@@ -287,6 +280,10 @@ export async function GET_allChapters(getToken) {
 /*-------------GET AI LIMIT----------------------------------------------------------------*/
 export async function GET_aiLimit(getToken) {
     const apiClient = getApiClient(getToken);
-    return await apiClient.get("/api/test/getAiLimit");
+
+    try{
+        return await apiClient.get("/api/test/getAiLimit");
+    } catch(error){
+    }
 }
 /*---------------------------------------------------------------------------------------------*/
