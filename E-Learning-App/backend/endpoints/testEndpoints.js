@@ -410,7 +410,8 @@ router.post("/submitTest", ClerkExpressRequireAuth(), async (request, response)=
         return response.status(403).send("Neplatný test token");
     }
 
-    if (Date.now() > Number(tokenPayload.expiresAt)) { // in case time was changed on the frontend
+    // in case time was changed on the frontend
+    if (Date.now() > Number(tokenPayload.expiresAt) + 10000) { // 10 seconds as reserve
         return response.status(408).send("Čas na test vypršal");
     }
 

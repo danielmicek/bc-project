@@ -1,7 +1,10 @@
 import React from "react";
 import {CountdownCircleTimer} from "react-countdown-circle-timer";
 import {POST_submitTest} from "../methods/fetchMethods.js";
-import {useSearchParams} from "react-router-dom";
+import {useNavigate, useSearchParams} from "react-router-dom";
+import ModalComponent from "@/components/ModalComponent.jsx";
+import {goToPage} from "@/methods/methodsClass.js";
+import {useDisclosure} from "@heroui/use-disclosure";
 
 const renderTime = (dimension, time) => {
     return (
@@ -27,8 +30,26 @@ export default function Timer({
                                   testSessionToken,
                                   getToken}) {
     const [searchParams, setSearchParams] = useSearchParams();
+    const {isOpen: isOpenSubmitErrorModal, onOpen: onOpenSubmitErrorModal, onClose: onCloseSubmitErrorModal} = useDisclosure();
+    const navigate = useNavigate();
+
     return (
         <div className="flex w-fit m-[20px] mt-15 gap-[10px] max-[750px]:justify-self-center">
+
+            {/*SUBMIT_TEST ERROR MODAL*/}
+            <ModalComponent title={"Chyba pri vyhodnocovaní testu"}
+                            mainText={"e nám ľúto, no poočas vyhodnocovania testu nastala chyba."}
+                            secondaryText1={"Naber sily a sku to znova pri ďalšom teste!"}
+                            isOpen={isOpenSubmitErrorModal}
+                            onClose={onCloseSubmitErrorModal}
+                            confirmButtonText = {"Študovať materiály"}
+                            declineButtonText = {"Späť do menu"}
+                            confirmButtonclickHandler = {() => {
+                                onCloseSubmitErrorModal()
+                                goToPage("/learning", navigate)
+                            }}
+                            declineButtonclickHandler = {() => onCloseSubmitErrorModal()}
+            />
 
             <CountdownCircleTimer /*MINUTES*/
                 isPlaying={timerGoing}
@@ -38,23 +59,28 @@ export default function Timer({
                 duration={minutes*60}
                 initialRemainingTime={minutes*60-1}
                 onComplete={async (totalElapsedTime) => {
-                    const result = await POST_submitTest(
-                        questions,
-                        TEST_DIFFICULTY,
-                        userId,
-                        TEST_ID,
-                        testSessionToken,
-                        setIsLoading,
-                        getToken,
-                    )
-                    setQuestions(result.structure)
-                    onCloseSubmitTestModal()
-                    onOpenTestResultsModal()
-                    setTestStatus("submitted")
-                    setSearchParams({ readOnly: "true" });
-                    if(totalElapsedTime === minutes*60){
-                        return {shouldRepeat:true}
+                    try {
+                        const result = await POST_submitTest(
+                            questions,
+                            TEST_DIFFICULTY,
+                            userId,
+                            TEST_ID,
+                            testSessionToken,
+                            setIsLoading,
+                            getToken,
+                        )
+
+                        setQuestions(result.structure)
+                        onCloseSubmitTestModal()
+                        onOpenTestResultsModal()
+                        setTestStatus("submitted")
+                        setSearchParams({testID: TEST_ID, testDifficulty: TEST_DIFFICULTY, readOnly: "true"});
+                        return { shouldRepeat: false }
+                    } catch (error) {
+                        onOpenSubmitErrorModal()
+                        return { shouldRepeat: false }
                     }
+
                 }}
             >
                 {({ remainingTime, color }) => (
@@ -70,8 +96,8 @@ export default function Timer({
                 colors="var(--main-color-orange)"
                 duration={60}
                 initialRemainingTime={minutes*60-1}
-                onComplete={(totalElapsedTime) => {
-                    return {shouldRepeat: totalElapsedTime === minutes*60}
+                onComplete={() => {
+                    return { shouldRepeat: false }
                 }}
             >
                 {({ remainingTime, color }) => (

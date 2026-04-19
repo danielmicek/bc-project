@@ -13,7 +13,7 @@ export default function ModalComponent({title,
                                        declineButtonclickHandler = onClose,
                                        signInFlag = false,  // if signInFlag is true, a different confirmation button is rendered
                                        confirmButtonText,
-                                       declineButtonText}) {
+                                       declineButtonText = null}) {
 
     return (
         <Modal
@@ -39,9 +39,9 @@ export default function ModalComponent({title,
                         </ModalBody>
 
                         <ModalFooter>
-                            <Button  variant="faded" onPress={declineButtonclickHandler}>
+                            {declineButtonText && <Button  variant="faded" onPress={declineButtonclickHandler}>
                                 {declineButtonText}
-                            </Button>
+                            </Button>}
                             {signInFlag ?
                                 <SignedOut>
                                     <SignInButton className = "bg-(--main-color-orange) font-bold" mode={"modal"}>

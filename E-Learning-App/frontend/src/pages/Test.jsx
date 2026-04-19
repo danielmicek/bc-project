@@ -29,6 +29,7 @@ export default function Test() {
     const {isOpen: isOpenLeavePageModal, onOpen: onOpenLeavePageModal, onClose: onCloseLeavePageModal} = useDisclosure();
     const {isOpen: isOpenAiLimitModal, onOpen: onOpenAiLimitModal, onClose: onCloseAiLimitModal} = useDisclosure();
     const {isOpen: isOpenAiHighDemandModal, onOpen: onOpenAiHighDemandModal, onClose: onCloseAiHighDemandModal} = useDisclosure();
+    const {isOpen: isOpenSubmitErrorModal, onOpen: onOpenSubmitErrorModal, onClose: onCloseSubmitErrorModal} = useDisclosure();
     const TEST_DIFFICULTY = searchParams.get("testDifficulty")
     const [TEST_ID] = useState(() => searchParams.get("testID"));
     const READ_ONLY = searchParams.get("readOnly") === "true"
@@ -110,26 +111,6 @@ export default function Test() {
         setTimerGoing(prev => !prev)
     }, [isOpenSubmitTestModal, isOpenEndTestModal, isOpenLeavePageModal])
 
-    /*// load finished test by testId after the timer ends to get results
-    useEffect(() => {
-        if(testStatus === "paused") return;
-
-        async function loadFinishedTest() {
-            try{
-                const tmp = READ_ONLY ? await GET_getTestByTestId(TEST_ID) : await GET_createdTest(TEST_DIFFICULTY)
-                setQuestions(READ_ONLY ? tmp.test.structure : tmp.createdTest)
-            }
-            catch (error) {
-                toast.error("Error. Skús znova neskôr")
-            }
-            finally {
-                setIsLoading(false)
-                setTimerGoing(true)
-            }
-        }
-        void loadFinishedTest()
-    }, [testStatus])*/
-
     return <>
         {/*AI LIMIT LOW*/}
         <ModalComponent title={"AI limit vyčerpaný"}
@@ -182,6 +163,20 @@ export default function Test() {
                         }}
                         declineButtonclickHandler = {() => goToPage("/courseInfoPage", navigate)}
         />
+        {/*SUBMIT_TEST ERROR MODAL*/}
+        <ModalComponent title={"Chyba pri vyhodnocovaní testu"}
+                        mainText={"e nám ľúto, no poočas vyhodnocovania testu nastala chyba."}
+                        secondaryText1={"Naber sily a sku to znova pri ďalšom teste!"}
+                        isOpen={isOpenSubmitErrorModal}
+                        onClose={onCloseSubmitErrorModal}
+                        confirmButtonText = {"Študovať materiály"}
+                        declineButtonText = {"Späť do menu"}
+                        confirmButtonclickHandler = {() => {
+                            onCloseSubmitErrorModal()
+                            goToPage("/learning", navigate)
+                        }}
+                        declineButtonclickHandler = {() => onCloseSubmitErrorModal()}
+        />
         {/*LEAVE/REFRESH PAGE (BROWSER BACK/REFRESH -BUTTON) MODAL*/}
         <ModalComponent
             title={"Naozaj chceš vykonať požadovanú akciu??"}
@@ -214,20 +209,24 @@ export default function Test() {
                         declineButtonText = {"Nie"}
                         confirmButtonclickHandler={async () => {
                             onCloseSubmitTestModal()
-                            const result = await POST_submitTest(
-                                questions,
-                                TEST_DIFFICULTY,
-                                user.id,
-                                TEST_ID,
-                                testSessionToken,
-                                setIsLoading,
-                                getToken,
-                            )
-                            setQuestions(result.structure)
-                            setTestResults(result.results);
-                            onOpenTestResultsModal()
-                            setTestStatus("submitted")
-                            setSearchParams({testID: TEST_ID, testDifficulty: TEST_DIFFICULTY, readOnly: "true" });
+                            try{
+                                const result = await POST_submitTest(
+                                    questions,
+                                    TEST_DIFFICULTY,
+                                    user.id,
+                                    TEST_ID,
+                                    testSessionToken,
+                                    setIsLoading,
+                                    getToken,
+                                )
+                                setQuestions(result.structure)
+                                setTestResults(result.results);
+                                onOpenTestResultsModal()
+                                setTestStatus("submitted")
+                                setSearchParams({testID: TEST_ID, testDifficulty: TEST_DIFFICULTY, readOnly: "true" });
+                            } catch (error) {
+                                onOpenSubmitErrorModal()
+                            }
                         }}
         />
 
