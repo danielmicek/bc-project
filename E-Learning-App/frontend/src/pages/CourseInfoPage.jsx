@@ -6,7 +6,7 @@ import {GET_aiLimit} from "@/methods/fetchMethods.js";
 export function CourseInfoPage(){
     const [aiLimit, setAiLimit] = useState(0);
 
-    const {isSignedIn} = useUser();
+    const {isLoaded, isSignedIn} = useUser();
     const { getToken } = useAuth();
 
     // get aiLimit
@@ -19,7 +19,7 @@ export function CourseInfoPage(){
         }
 
         void loadAiLimit();
-    }, []);
+    }, [isLoaded]);
 
     return(
         <>
