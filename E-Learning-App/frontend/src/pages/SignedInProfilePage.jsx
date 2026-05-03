@@ -241,7 +241,7 @@ export default function SignedInProfilePage() {
                                     ref={inputRef}
                                     type="text"
                                     placeholder="Zadaj username alebo URL profilu"
-                                    pattern="^([a-zA-Z0-9\\-_\\s]{4,15}|https?:\\/\\/.+)$"
+                                    pattern={String.raw`^([a-zA-Z0-9_\-]{4,15}|https://eleonore-app\.onrender\.com/userPage/\?username=[a-zA-Z0-9_\-]{4,15})$`}
                                     onInvalid={(event) => {
                                         event.preventDefault();
                                         toast.error("Musí byť username alebo URL")

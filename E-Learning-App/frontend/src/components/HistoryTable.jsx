@@ -7,12 +7,12 @@ import {Link} from "react-router-dom";
 
 const columns = [
     { field: 'id', headerName: 'Poradie', width: 210, sortable: false, headerAlign: 'center', align: 'center'},
-    { field: 'grade', headerName: 'Znamka', width: 210, sortable: false, headerAlign: 'center', align: 'center' },
-    { field: 'percentage', headerName: 'Percenta', width: 210, headerAlign: 'center', align: 'center', type: "number" },
+    { field: 'grade', headerName: 'Známka', width: 210, sortable: false, headerAlign: 'center', align: 'center' },
+    { field: 'percentage', headerName: 'Percentá', width: 210, headerAlign: 'center', align: 'center', type: "number" },
     { field: 'medal', headerName: 'Medaila', width: 210, sortable: false, headerAlign: 'center', align: 'center'},
     {
         field: 'timestamp',
-        headerName: 'Datum',
+        headerName: 'Dátum',
         description: 'This column has a value getter and is not sortable.',
         width: 210,
         type: "dateTime",
@@ -20,7 +20,7 @@ const columns = [
     },
     {
         field: 'view',
-        headerName: 'Nahlad',
+        headerName: 'Náhľad',
         width: 210, sortable: false, headerAlign: 'center', align: 'center',
         renderCell: (params) => (
             <Link to={`/test?testID=${params.row.testId}&readOnly=true`}>
