@@ -1,10 +1,10 @@
 import {useAuth, useUser} from "@clerk/clerk-react";
 import SignedInProfilePage from "./SignedInProfilePage.jsx";
 import '../styles/styles.css';
-import React, {useEffect} from "react";
+import {useEffect} from "react";
 import {getUser_info} from "../methods/methodsClass.js";
 import TypingAnimatedText from "../components/TypingAnimatedText.jsx";
-import SlidingCircle from "../components/SlidingCircle.jsx";
+import RegistrationComponent from "../components/RegistrationComponent.jsx";
 import Loader from "../components/Loader.jsx";
 import LightRays from "@/components/LightRays.jsx";
 
@@ -13,6 +13,38 @@ export function Profile() {
 
     const {isSignedIn, user, isLoaded} = useUser();
     const { getToken } = useAuth();
+    const profileFeatures = [
+        {
+            title: "Študuj materiály",
+            description: "Prechádzaj kapitoly v jasnom poradí a vráť sa k téme kedykoľvek.",
+            iconPath: "/learning-icon.png",
+        },
+        {
+            title: "Otestuj vedomosti",
+            description: "Rýchlo si over, čo už vieš a kde máš ešte medzery",
+            iconPath: "/test-white.png",
+        },
+        {
+            title: "Sleduj progres",
+            description: "Maj prehľad o hotových častiach, skóre a ďalšom kroku.",
+            iconPath: "/progress.png",
+        },
+        {
+            title: "Pozri štatistiky",
+            description: "Výsledky, aktivita a trendy sú pokope v prehľadnom profile.",
+            iconPath: "/stats.png",
+        },
+        {
+            title: "Získaj certifikát",
+            description: "Po úspešnom zvládnutí kurzu máš možnosť exportovať svoj certifikát.",
+            iconPath: "/certificate.png",
+        },
+        {
+            title: "Pridávaj priateľov",
+            description: "Porovnávaj progres a uč sa spolu s ľuďmi, ktorí ťa posúvajú vpred.",
+            iconPath: "/friends-white.png",
+        },
+    ];
 
     // Call the postRequest function when the user state changes to save the user's information to the database
     useEffect(() => {
@@ -21,22 +53,18 @@ export function Profile() {
         }
     }, [isSignedIn, user]);
 
-    // remove scrolling on the non-signed-in page
+    // Keep profile scrollable so the global footer remains reachable.
     useEffect(() => {
-        if (window.location.pathname.includes("/profile") && !isSignedIn) {
-            document.body.classList.add("overflow-hidden", "no-scrollbar");
-        } else {
-            document.body.classList.remove("overflow-hidden", "no-scrollbar");
-        }
+        document.body.classList.remove("overflow-hidden", "no-scrollbar");
 
         return () => {
             document.body.classList.remove("overflow-hidden", "no-scrollbar");
         };
-    }, [isSignedIn]);
+    }, []);
 
-    return <div id="BLACK_BACKGROUND" className={`flex flex-col bg-black justify-center overflow-y-hidden items-center shadow-xl relative ${isSignedIn ? "min-h-screen" : ""}`}>
+    return <div id="BLACK_BACKGROUND" className="flex min-h-screen flex-col bg-black justify-center overflow-hidden items-center shadow-xl relative">
         <div className="absolute inset-0 bg-black/70"></div>
-        <div className ={`container relative flex flex-col items-center justify-center ${isSignedIn ? "" : "h-[100vh]"}`}>
+        <div className ={`container relative flex flex-col items-center justify-center ${isSignedIn ? "" : "min-h-screen"}`}>
             {!isLoaded ? <Loader/>
                 :
                 isSignedIn ?
@@ -62,36 +90,45 @@ export function Profile() {
                                 saturation={1}
                             />
                         </div>
-                        <SlidingCircle/>
-                        <div id = "GRID_CONTAINER" className="relative grid gap-10 px-10 md:mb-30 pt-10 md:mt-0 md:pb-10 pb-[30vh] overflow-auto grid-cols-1 md:grid-cols-2">
-                            <div className="profilePageGridElement flex items-center justify-center text-white font-bold text-2xl gap-5 md:col-span-2">
-                                <TypingAnimatedText words={["Tvoja cesta", "začína tu", "a teraz."]}/>
+                        <section
+                            id="GRID_CONTAINER"
+                            className="relative z-10 grid min-h-screen w-full max-w-7xl grid-cols-1 items-start gap-8 px-5 pt-8 pb-12 sm:px-8 md:pt-10 md:pb-14 lg:min-h-[calc(100vh-120px)] lg:grid-cols-[minmax(0,1fr)_360px] lg:items-end lg:px-10 xl:gap-12"
+                        >
+                            <div className="flex min-w-0 flex-col gap-7">
+                                <div className="max-w-3xl space-y-4 text-center lg:text-left">
+                                    <h1 className="text-balance text-4xl font-black leading-tight text-white sm:text-5xl lg:text-6xl">
+                                        <TypingAnimatedText words={["Tvoja cesta", "začína tu", "a teraz."]}/>
+                                    </h1>
+                                    <p className="mx-auto max-w-2xl text-base leading-7 text-white/70 sm:text-lg lg:mx-0">
+                                        Vytvor si účet a odomkni si osobný priestor na učenie, testy,
+                                        štatistiky, certifikáty aj prehľadný progres.
+                                    </p>
+                                </div>
+
+                                <div className="lg:hidden">
+                                    <RegistrationComponent/>
+                                </div>
+
+                                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                                    {profileFeatures.map(({title, description, iconPath}) => (
+                                        <article
+                                            key={title}
+                                            className="group min-h-[150px] rounded-lg border border-white/10 bg-white/[0.07] p-4 text-left shadow-[0_18px_50px_rgba(0,0,0,0.22)] backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-[var(--main-color-orange)]/60 hover:bg-white/[0.1]"
+                                        >
+                                            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-[var(--main-color-orange)]/15 text-[var(--main-color-orange)] ring-1 ring-[var(--main-color-orange)]/25 transition group-hover:bg-[var(--main-color-orange)] group-hover:text-black">
+                                                <img src={iconPath} alt="" className="h-6 w-6 object-contain"/>
+                                            </div>
+                                            <h2 className="text-lg font-bold text-white">{title}</h2>
+                                            <p className="mt-2 text-sm leading-6 text-white/62">{description}</p>
+                                        </article>
+                                    ))}
+                                </div>
                             </div>
-                            <div className= "profilePageGridElement gap-5">
-                                <img src="/learning-icon.png" alt="learning-icon" className="justify-self-center h-8"/>
-                                Študuj materiály
+
+                            <div className="hidden lg:block">
+                                <RegistrationComponent/>
                             </div>
-                            <div className= "profilePageGridElement gap-5">
-                                <img src="/test-white.png" alt="test" className="justify-self-center h-8"/>
-                                Otestuj svoje vedomosti
-                            </div>
-                            <div className= "profilePageGridElement gap-5">
-                                <img src="/progress.png" alt="progress" className="justify-self-center h-8"/>
-                                Sleduj svoj progres
-                            </div>
-                            <div className= "profilePageGridElement gap-5">
-                                <img src="/stats.png" alt="stats" className="justify-self-center h-8"/>
-                                Sleduj štatistiky
-                            </div>
-                            <div className= "profilePageGridElement gap-5">
-                                <img src="/certificate.png" alt="certificate" className="justify-self-center h-8"/>
-                                Získaj certifikát
-                            </div>
-                            <div className= "profilePageGridElement gap-5">
-                                <img src="/friends-white.png" alt="friends-white" className="justify-self-center h-8"/>
-                                Pridávaj si priateľov
-                            </div>
-                        </div>
+                        </section>
                     </>
             }
         </div>
